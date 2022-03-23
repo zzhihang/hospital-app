@@ -1,0 +1,29 @@
+.sanjiao, .gengduo{
+  position: relative;
+}
+.sanjiao:before{
+  content: '';
+  display: inline-block;
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-right: 8px solid rgb(247, 74, 75);
+  border-left: 8px solid transparent;
+  transform: rotate(315deg);
+  position: absolute;
+  top: 8px;
+  left: -10px;
+}
+
+.gengduo:before{
+  content: '';
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-top: 3px solid #FFE7BE;
+  border-right: 3px solid #FFE7BE;
+  transform: rotate(45deg) translateY(-52%);
+  position: absolute;
+  top: 50%;
+  left: -10px;
+}
