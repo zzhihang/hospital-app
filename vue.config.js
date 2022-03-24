@@ -30,40 +30,6 @@ module.exports = {
                     '^/mtest': ''
                 }
             },
-            '/ibaodian': {
-                target: 'https://testm.ibaodian.com/',
-                changeOrigin: true,
-                ws: true,
-                pathRewrite: {
-                    '^/ibaodian': ''
-                }
-            },
-            '/user': {
-                target: 'https://testv.ibaodian.com/',
-                changeOrigin: true,
-                ws: true,
-                pathRewrite: {
-                    '^/user': '/user'
-                }
-            },
-            '/app': {
-                target: 'https://testv.ibaodian.com/',
-                changeOrigin: true,
-                ws: true,
-            },
-            '/web': {
-                target: 'https://testv.ibaodian.com/',
-                changeOrigin: true,
-                ws: true,
-            },
-            '/wxpay': {
-                target: 'https://testbill.ibaodian.com/',
-                changeOrigin: true,
-                ws: true,
-            },
-
-            
-
         }
     },
     css: {

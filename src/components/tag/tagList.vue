@@ -1,6 +1,6 @@
 <template>
     <div class="tag-list">
-        <van-tabs v-model="active" type="card">
+        <van-tabs v-model="active" type="card" title-active-color="#D94F17" title-inactive-color="#999999">
             <van-tab title="标签 1" v-for="(item, index) in 10" :key="index">内容 1</van-tab>
         </van-tabs>
     </div>
@@ -22,14 +22,22 @@
 </script>
 
 <style lang="less" scoped>
-/deep/.van-tab{
-    background: rgba(153, 153, 153, 0.1);
-    margin-right: 10px;
-}
+    /deep/.van-tab{
+        background: rgba(153, 153, 153, 0.1);
+        margin-right: 10px;
+    }
     /deep/.van-tabs__nav--card .van-tab{
         border: none !important;
+        border-radius: 4px;
     }
     /deep/.van-tabs__nav--card{
         border: none !important;
+    }
+    /deep/.van-tabs__nav{
+        padding-left: 0;
+        margin-left: 0;
+    }
+    /deep/.van-tabs__nav--card .van-tab.van-tab--active{
+        background: rgba(217, 79, 23, 0.1);
     }
 </style>

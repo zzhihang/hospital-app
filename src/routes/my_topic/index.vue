@@ -20,17 +20,27 @@
             </ul>
         </div>
 
-        <tagList />
+        <div class="tab-list">
+            <tagList />
+        </div>
+        <div class="card-list">
+            <card v-for="(item, index) in 2" :key="index"/>
+        </div>
+        <bottom-box></bottom-box>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
     import tagList from "../../components/tag/tagList";
+    import card from "./components/card";
+    import bottomBox from "./components/bottomBox";
 
     export default {
         components: {
-            tagList
+            tagList,
+            card,
+            bottomBox
         }
     }
 </script>
@@ -75,5 +85,18 @@
                 margin-top: 8px;
             }
         }
+    }
+    .tab-list{
+        padding: 15px;
+        background: #FFFFFF;
+        border-bottom: 1px solid #999999;
+    }
+    .card-list{
+        .card{
+            margin-bottom: 5px;
+        }
+    }
+    .body{
+        padding-bottom: 60px;
     }
 </style>
