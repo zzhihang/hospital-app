@@ -1,7 +1,7 @@
 <template>
     <div class="tag-list">
         <van-tabs v-model="active" type="card" title-active-color="#D94F17" title-inactive-color="#999999">
-            <van-tab title="标签 1" v-for="(item, index) in 10" :key="index">内容 1</van-tab>
+            <van-tab title="标签 1" v-for="(item, index) in 10" :key="index"></van-tab>
         </van-tabs>
     </div>
 </template>

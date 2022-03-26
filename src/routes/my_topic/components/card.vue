@@ -19,12 +19,12 @@
             <span class="date">2022.03.10  12:10</span>
             <div class="action">
                 <span>
-                    <van-icon name="chat-o" size="15"/>
+                    <van-icon class="mt4 mr4" :name="commentIcon" size="15"/>
                     <span>13</span>
                 </span>
-                <span class="ml10 mr10">|</span>
+                <span class="ml10 mr10" style="color: #F5F5F5;">|</span>
                 <span>
-                    <van-icon name="chat-o" size="15"/>
+                    <van-icon class="mr4" :name="dianzanIcon" size="15"/>
                     <span>13</span>
                 </span>
             </div>
@@ -50,7 +50,14 @@
         components: {
             avatar,
             comment
-        }
+        },
+        data() {
+            return {
+                commentIcon: require('@static/img/topic/icon_pinglun.png'),
+                dianzanIcon: require('@static/img/topic/icon_dianzan.png'),
+                dianguozanIcon: require('@static/img/topic/icon_dianzan_pressed.png'),
+            }
+        },
     }
 </script>
 
@@ -77,7 +84,7 @@
 
     .bottom-info {
         @flex-sb-center();
-
+        margin-top: 4px;
         .date {
             color: #999999;
             font-size: 12px;

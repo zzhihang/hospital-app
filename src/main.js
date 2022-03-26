@@ -4,30 +4,31 @@ import router from './router/index'
 import "amfe-flexible";
 import axios from 'axios'
 import qs from 'qs';
-
 import './static/css/reset.css'
 import './static/css/cover.less'
 import './static/css/common.less'
 import './static/css/icon.less'
-import Bridge from "static/js/bridge.js"
-import {getParams} from "static/js/util";
+import Bridge from "@static/js/bridge.js"
+import {getParams} from "@static/js/util";
+import confirm from 'components/confirm'
+Vue.prototype.$bridge = Bridge;
 
-Vue.prototype.$bridge = Bridge
-
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 
 Vue.prototype.params = getParams(); //全局注入url params参数
+
+Vue.prototype.$confirm = confirm;
 
 //axios请求拦截
 axios.interceptors.request.use((request) => {
   let REQUEST_DATA = request.data
   //对白名单提交contenttype不做stringfy处理 直接提交request payload到后端
-  const whiteList = ['application/x-www-form-urlencoded; charset=UTF-8']
-  if(whiteList.includes(request.headers['Content-Type'])){
-    return request
-  }
+  // const whiteList = ['application/x-www-form-urlencoded; charset=UTF-8']
+  // if(whiteList.includes(request.headers['Content-Type'])){
+  //   return request
+  // }
   //提交格式为formdata
-  request.data = qs.stringify(REQUEST_DATA)
+  request.data = qs.stringify(REQUEST_DATA);
   return request;
 
 }, function (error) {

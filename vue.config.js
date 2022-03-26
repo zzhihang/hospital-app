@@ -22,13 +22,29 @@ module.exports = {
         compress: true,
         disableHostCheck: true,
         proxy: {
-            '/mtest': {
-                target: 'https://testm.ibaodian.com/',
+            '/zhuanti': {
+                target: 'http://115.28.186.138',
+                changeOrigin: true,
+                ws: true,
+                secure: false
+            },
+            '/userlabels': {
+                target: 'http://115.28.186.138',
+                changeOrigin: true,
+                ws: true,
+            },
+            '/api': {
+                target: 'http://115.28.186.138',
                 changeOrigin: true,
                 ws: true,
                 pathRewrite: {
-                    '^/mtest': ''
+                    "^/api": "/"
                 }
+            },
+            '/testLogin': {
+                target: 'http://115.28.186.138',
+                changeOrigin: true,
+                ws: true,
             },
         }
     },
@@ -126,8 +142,8 @@ module.exports = {
         config.resolve.alias
             .set('@', resolve('src'))
             .set('assets', resolve('src/assets'))
-            .set('static', resolve('src/static'))
-            .set('service', resolve('src/service'))
+            .set('@static', resolve('src/static'))
+            .set('@service', resolve('src/service'))
             .set('@routes', resolve('src/routes'))
             .set('components', resolve('src/components'));
 

@@ -23,6 +23,7 @@
         <div class="tab-list">
             <tagList />
         </div>
+        <div class="van-hairline--bottom"></div>
         <div class="card-list">
             <card v-for="(item, index) in 2" :key="index"/>
         </div>
@@ -35,19 +36,27 @@
     import tagList from "../../components/tag/tagList";
     import card from "./components/card";
     import bottomBox from "./components/bottomBox";
+    import {userinfo, zhuantiList, testLogin, userLabels} from "../../service/topic";
 
     export default {
         components: {
             tagList,
             card,
             bottomBox
+        },
+        created() {
+            testLogin()
+            zhuantiList({page: 1, size: 8});
+            userinfo();
+            userLabels();
         }
     }
 </script>
 
 <style lang="less" scoped>
     .main-box {
-        background: #FFFBF9;
+        background: url('../../static/img/topic/bg_shang.png') no-repeat;
+        background-size: cover;
         box-shadow: 0 -1px 12px 0 rgba(153, 153, 153, 0.18);
         border-radius: 36px 36px 0 0;
         padding: 20px 15px;
@@ -89,7 +98,6 @@
     .tab-list{
         padding: 15px;
         background: #FFFFFF;
-        border-bottom: 1px solid #999999;
     }
     .card-list{
         .card{

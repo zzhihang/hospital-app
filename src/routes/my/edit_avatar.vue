@@ -1,16 +1,14 @@
 <template>
     <div>
-        <message-card></message-card>
+
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import messageCard from './components/messageCard'
+
     export default {
-        components: {
-            messageCard
-        }
+
     }
 </script>
 
