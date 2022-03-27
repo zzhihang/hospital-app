@@ -11,6 +11,7 @@ import './static/css/icon.less'
 import Bridge from "@static/js/bridge.js"
 import {getParams} from "@static/js/util";
 import confirm from 'components/confirm'
+import store from './store';
 Vue.prototype.$bridge = Bridge;
 
 Vue.config.productionTip = false;
@@ -35,6 +36,15 @@ axios.interceptors.request.use((request) => {
   return Promise.reject(error);
 });
 
+// 添加响应拦截器
+axios.interceptors.response.use(function (response) {
+  return response.data;
+}, function (error) {
+  // 超出 2xx 范围的状态码都会触发该函数。
+  // 对响应错误做点什么
+  return Promise.reject(error);
+});
+
 
 
 router.beforeEach((to, from, next) => {
@@ -51,6 +61,7 @@ router.beforeEach((to, from, next) => {
 
 new Vue({
   router,
+  store,
   render: h => h(App),
 }).$mount('#app')
 

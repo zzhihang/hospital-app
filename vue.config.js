@@ -145,6 +145,7 @@ module.exports = {
             .set('@static', resolve('src/static'))
             .set('@service', resolve('src/service'))
             .set('@routes', resolve('src/routes'))
+            .set('store', resolve('src/store'))
             .set('components', resolve('src/components'));
 
         const cdn = {

@@ -40,6 +40,17 @@ export const testLogin = () => {
 * @Author: zhuzhhm@yonyou.com
 * @date: 2022/3/26 22:22
 */
-export const userLabels = () => {
+export const userLabelList = () => {
     return axios.get('/userlabels/list')
+};
+
+/**
+ * @Description:
+ * @Param:
+ * @return:
+ * @Author: zhuzhhm@yonyou.com
+ * @date: 2022/3/26 22:22
+ */
+export const userLabelAdd = () => {
+    return axios.get('/userlabels/add')
 };

@@ -21,7 +21,7 @@
         </div>
 
         <div class="tab-list">
-            <tagList />
+            <tagList :data="labelList"/>
         </div>
         <div class="van-hairline--bottom"></div>
         <div class="card-list">
@@ -36,7 +36,7 @@
     import tagList from "../../components/tag/tagList";
     import card from "./components/card";
     import bottomBox from "./components/bottomBox";
-    import {userinfo, zhuantiList, testLogin, userLabels} from "../../service/topic";
+    import {userinfo, zhuantiList, testLogin, userLabelList} from "../../service/topic";
 
     export default {
         components: {
@@ -44,12 +44,22 @@
             card,
             bottomBox
         },
+        data() {
+            return {
+                labelList: []
+            }
+        },
         created() {
             testLogin()
             zhuantiList({page: 1, size: 8});
-            userinfo();
-            userLabels();
-        }
+            this.getLabels();
+        },
+        methods: {
+            async getLabels() {
+                const {data} = await userLabelList();
+                this.labelList = data;
+            }
+        },
     }
 </script>
 
