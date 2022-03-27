@@ -37,6 +37,7 @@
     import card from "./components/card";
     import bottomBox from "./components/bottomBox";
     import {userinfo, zhuantiList, testLogin, userLabelList} from "../../service/topic";
+    import {zhuantiDetail} from "@/service/topic";
 
     export default {
         components: {
@@ -50,14 +51,18 @@
             }
         },
         created() {
-            testLogin()
-            zhuantiList({page: 1, size: 8});
+            testLogin();
             this.getLabels();
+            this.getDetail();
         },
         methods: {
             async getLabels() {
                 const {data} = await userLabelList();
                 this.labelList = data;
+            },
+            async getDetail(){
+                const {id} = this.$route.query;
+                const {data} = await zhuantiDetail(id)
             }
         },
     }

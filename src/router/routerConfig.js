@@ -6,14 +6,20 @@ const routes = [
             title: '首页'
         }
     }, {
-        path: '/my_topic',
-        component: r => require.ensure([], () => r(require('@routes/my_topic'))),
+        path: '/topic',
+        component: r => require.ensure([], () => r(require('@routes/topic'))),
+        meta:{
+            title: '知识专题'
+        },
+    },{
+        path: '/topic/detail',
+        component: r => require.ensure([], () => r(require('@routes/topic/detail'))),
         meta:{
             title: '我的专题'
-        }
+        },
     },{
-        path: '/create_topic',
-        component: r => require.ensure([], () => r(require('@routes/create_topic'))),
+        path: '/top/create',
+        component: r => require.ensure([], () => r(require('@routes/topic/create'))),
         meta:{
             title: '创建专题'
         }
@@ -53,8 +59,19 @@ const routes = [
         meta:{
             title: '头像'
         }
+    },{
+        path: '/dynamic',
+        component: r => require.ensure([], () => r(require('@routes/dynamic'))),
+        meta:{
+            title: '发布动态'
+        }
+    },{
+        path: '/label_list',
+        component: r => require.ensure([], () => r(require('@routes/dynamic/labelList'))),
+        meta:{
+            title: '管理标签'
+        }
     },
-
 
 ];
 

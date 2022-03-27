@@ -7,17 +7,18 @@
  **/
 
 import axios from "axios";
-import {getEnvConfig} from "../static/js/env.config";
 
-const env = getEnvConfig();
+const uploadInstance = axios.create({
+    headers: { 'Content-Type': 'multipart/form-data' }
+});
 
 /**
- * @Description 项目埋点方法
- * @Param
- * @return
- * @Author zhuzh_hb@mingya.com.cn
- * @Date 2021/5/14 17:05
- **/
-export const statistics = (data) => {
-    return axios.post(env.SHOST + '/web/vip/statistics.shtml', data)
+* @Description: 上传
+* @Param:
+* @return:
+* @Author: zhuzhhm@yonyou.com
+* @date: 2022/3/27 17:01
+*/
+export const upload = (formData) => {
+    return uploadInstance.post('/api/upload', formData)
 }

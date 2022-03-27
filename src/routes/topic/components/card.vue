@@ -1,6 +1,13 @@
 <template>
     <div class="card">
-        <avatar></avatar>
+        <div class="avatar-action">
+            <avatar></avatar>
+            <van-popover @select="onSelectPopover" v-model="showPopover" placement="bottom-end" trigger="click" :actions="actions">
+                <template #reference>
+                    <van-image :src="require('../../../static/img/topic/icon_action.png')"></van-image>
+                </template>
+            </van-popover>
+        </div>
         <div class="detail">
             <p>体验地图是基于用户研究开展的需要借助用户画像去界定范围，形成用户材料，再去考虑用何种体验可视化地图展现。
                 <span class="topic">#朱志航话题</span>
@@ -23,7 +30,7 @@
                     <span>13</span>
                 </span>
                 <span class="ml10 mr10" style="color: #F5F5F5;">|</span>
-                <span>
+                <span @click="onZanClick">
                     <van-icon class="mr4" :name="dianzanIcon" size="15"/>
                     <span>13</span>
                 </span>
@@ -39,10 +46,12 @@
 
 <script>
     import Vue from 'vue';
-    import {Icon, Image as VanImage} from 'vant';
+    import {Icon, Image as VanImage, Popover} from 'vant';
     import comment from './comment'
     import avatar from './avatar'
+    import {deleteDongtai, dianZan} from "@/service/topic";
 
+    Vue.use(Popover);
     Vue.use(VanImage);
     Vue.use(Icon);
 
@@ -56,6 +65,27 @@
                 commentIcon: require('@static/img/topic/icon_pinglun.png'),
                 dianzanIcon: require('@static/img/topic/icon_dianzan.png'),
                 dianguozanIcon: require('@static/img/topic/icon_dianzan_pressed.png'),
+                showPopover: false,
+                actions: [
+                    { text: '编辑', action: 'edit', icon: require('@static/img/topic/icon_bianji.png')},
+                    { text: '删除', action: 'del', icon: require('@static/img/topic/icon_shanchu.png')},
+                ],
+            }
+        },
+        methods: {
+            onSelectPopover(e) {
+                if(e.action === 'edit'){
+
+                }
+                if(e.action === 'del'){
+                    this.$confirm({message: '您确定要删除此动态？'}, async () => {
+                        const {data} = await deleteDongtai();
+                        //TODO 删除
+                    })
+                }
+            },
+            async onZanClick(){
+                const {data} = await dianZan(this.data.id)
             }
         },
     }
@@ -107,5 +137,11 @@
         border-top: 1px solid #ddd;
         padding-top: 10px;
         @flex-sb-center();
+    }
+    .avatar-action{
+        @flex-sb-center();
+        .van-image{
+            width:20px;
+        }
     }
 </style>

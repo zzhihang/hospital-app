@@ -13,6 +13,8 @@
     "axios": "^0.21.1",
     "compression-webpack-plugin": "1.1.12",
     "core-js": "^3.6.5",
+    "js-audio-recorder": "^1.0.7",
+    "lamejs": "^1.2.1",
     "postcss-px2rem": "^0.3.0",
     "qs": "^6.10.1",
     "resetcss.css": "^1.0.6",
