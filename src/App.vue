@@ -15,11 +15,18 @@
 <script>
   import Vue from 'vue';
   import { Tabbar, TabbarItem } from 'vant';
+  import {testLogin} from "@/service/topic";
 
   Vue.use(Tabbar);
   Vue.use(TabbarItem);
 export default {
   name: 'App',
-  methods: {},
+  methods: {
+
+  },
+  created(){
+    //TODO test login use
+    testLogin();
+  }
 }
 </script>

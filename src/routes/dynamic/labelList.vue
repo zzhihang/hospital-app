@@ -8,7 +8,7 @@
             <span style="font-weight: bold;color: #D94F17;flex: 1;" @click="onAddClick"><van-icon name="add-o" size="16"/>添加标签</span>
         </div>
         <van-cell-group>
-            <van-cell v-for="(item, index) in data" :key="index" :title="`#${item.label}`">
+            <van-cell v-for="(item, index) in data" :key="index" :title="`#${item.label}`" @click="chooseLabel(item)">
                 <template #right-icon v-if="ifManage">
                     <van-icon name="close" size="20" @click="onDeleteLable(item.labelId)"/>
                 </template>
@@ -51,6 +51,9 @@
           }
         },
         methods: {
+            chooseLabel(e){
+               this.$emit('chooseLabel', e)
+            },
             async getList() {
                 const {data} = await userLabelList();
                 this.data = data;
@@ -76,6 +79,9 @@
                 })
             },
             onAddClick(){
+                if(this.data.length === 20){
+                    return this.$toast.fail('专题只能添加20个标签');
+                }
                 this.addShow = true;
             },
             async confirm(){

@@ -1,53 +1,77 @@
 <template>
     <div class="body">
         <van-field
-                v-model="message"
+                v-model="dynamic"
                 rows="1"
                 autosize
                 type="textarea"
                 placeholder="点击此处说点什么..."
         />
-        <div class="pl10" style="background: #FFFFFF;">
+        <div class="pl10" style="background: #FFFFFF;overflow-x: scroll;">
             <van-uploader
                     accept=".png, .jpg, .jpeg"
                     v-if="imgList.length"
+                    capture="camera"
                     v-model="imgList"
                     multiple
+                    max-count="2"
                     :after-read="afterRead"
                     upload-icon="plus"
             />
             <van-uploader
                     class="file-uploader"
+                    max-count="9"
                     accept=".doc,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    v-if="fileList.length"
                     :after-read="afterReadFile"
                     v-model="fileList"
                     upload-icon="plus"
             >
-                <template #preview-cover>
-                    hha
+                <template #preview-cover="{file}">
+                    <div class="file-cover-box">
+                        <van-image :src="getFile(file)"/>
+                        <span class="file-name">{{file && file.name}}</span>
+                    </div>
                 </template>
             </van-uploader>
+            <div class="recorder-list">
+                <div class="recorder" v-if="recorderList.length" v-for="(item, index) in recorderList" :key="index">
+                    {{item.timeLong}}
+                </div>
+            </div>
         </div>
         <div class="tool-bar van-hairline--top">
             <div class="tool-bar-item" v-for="(item, index) in toolbar" :key="index" @click="item.click">
-                <van-uploader v-if="item.type === 'image'" accept=".png, .jpg, .jpeg" :after-read="afterRead2">
+                <van-uploader
+                        v-if="item.type === 'image'"
+                        accept=".png, .jpg, .jpeg"
+                        :after-read="afterRead2"
+                        capture="camera"
+                        max-count="9"
+                        :disabled="imgList.length === 9 || fileList.length > 0 || recorderList.length > 0"
+                >
                     <van-icon :name="item.icon"></van-icon>
                 </van-uploader>
                 <van-uploader v-else-if="item.type === 'file'"
+                              max-count="9"
+                              :disabled="fileList.length === 9 || imgList.length > 0 || recorderList.length > 0"
                               accept=".doc,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                               :after-read="afterReadFile2">
                     <van-icon :name="item.icon"></van-icon>
                 </van-uploader>
+                <van-icon :class="{disabled: recorderList.length === 1 || imgList.length > 0 || fileList.length > 0}" v-else-if="item.type === 'recorder'"
+                          :name="item.icon"
+                ></van-icon>
                 <van-icon v-else :name="item.icon"></van-icon>
             </div>
         </div>
         <div class="action-bar">
-            <van-button class="cancel-button" type="default">取消</van-button>
-            <van-button class="submit-button" type="primary" disabled>发表</van-button>
+            <van-button class="cancel-button" type="default" @click="cancel">取消</van-button>
+            <van-button class="submit-button" type="primary" disabled @click="pushlish">发表</van-button>
         </div>
-        <recorder :show.sync="luyinPanelShow"></recorder>
+        <recorder :show.sync="luyinPanelShow" @recorderSuccess="recorderSuccess"></recorder>
         <van-popup v-model="biaoqianPanelShow" get-container="body" position="right" :style="{ height: '100%', width: '80%' }">
-            <label-list @cancelClick="cancelClick"></label-list>
+            <label-list @cancelClick="cancelClick" @chooseLabel="chooseLabel"></label-list>
         </van-popup>
     </div>
 </template>
@@ -88,7 +112,11 @@
                     }
                 }, {
                     icon: require('@static/img/dynamic/btn_yuyin.png'),
+                    type: 'recorder',
                     click: () => {
+                        if(this.recorderList.length === 1 || this.imgList.length > 0 || this.fileList.length > 0){
+                            return false;
+                        }
                         this.luyinPanelShow = true;
                     }
                 }, {
@@ -101,10 +129,25 @@
                 biaoqianPanelShow: false,
                 imgList: [],
                 fileList: [],
+                recorderList: [],
+                dynamic: '',
             }
         },
         methods: {
+            recorderSuccess(e){
+                this.recorderList.push(e)
+            },
+            cancel(){
+              this.$router.go(-1)
+            },
+            pushlish(){
+
+            },
             cancelClick() {
+                this.biaoqianPanelShow = false;
+            },
+            chooseLabel(e){
+                this.dynamic = this.dynamic + '#' + e.label;
                 this.biaoqianPanelShow = false;
             },
             upload(file){
@@ -125,6 +168,14 @@
             async afterReadFile2(file){
                 const {data} = await this.upload(file.file);
                 this.fileList.push({url: data.data.url}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
+            },
+            getFile(file){
+                const type = file.type;
+                if(type.includes('pdf')){
+                    return require('@static/img/dynamic/pic_pdf.png')
+                }else{
+                    return require('@static/img/dynamic/pic_word.png')
+                }
             }
         },
     }
@@ -182,5 +233,37 @@
             height: 53px;
             width: 53px;
         }
+        /deep/.van-uploader__file-name, /deep/.van-uploader__file-icon{
+           visibility: hidden;
+        }
+        /deep/.van-uploader__preview-cover{
+            display: flex;
+            justify-content: center;
+        }
+        .file-cover-box{
+            display: flex;
+            align-items: center;
+            .file-name{
+                color: #666666;
+                font-size: 12px;
+                margin-left: 8px;
+            }
+            .van-image{
+                width: 27px;
+                height: 33px;
+            }
+        }
+    }
+    .recorder{
+        width: 185px;
+        height: 40px;
+        border: 1px solid #FE7B35;
+        opacity: 0.3;
+        margin-bottom: 15px;
+        background: #FFFAF7;
+        border-radius: 6px;
+    }
+    .van-icon.disabled{
+        opacity: 0.5;
     }
 </style>

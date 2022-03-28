@@ -57,7 +57,8 @@
                 const result = await upload(formData);
                 if(result.status === 200){
                     this.$toast.success('录制成功');
-                    this.$emit('update:show', false)
+                    this.$emit('update:show', false);
+                    this.$emit('recorderSuccess', result.data.data)
                 }
             },
             bindEvents(){
