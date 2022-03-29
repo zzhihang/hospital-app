@@ -1,8 +1,8 @@
 <template>
     <div class="body">
         <div class="main-box">
-            <h6>用户研究方法</h6>
-            <p class="intro">用户体验设计是以用户为中心的一种设计手段，以用户需求为目标而进行的设计。</p>
+            <h6 class="ellipsis2">{{model.title}}</h6>
+            <p class="intro">{{model.introduction}}</p>
             <div class="van-hairline--top"></div>
             <ul>
                 <li>
@@ -19,13 +19,15 @@
                 </li>
             </ul>
         </div>
-
         <div class="tab-list">
             <tagList :data="labelList"/>
         </div>
         <div class="van-hairline--bottom"></div>
         <div class="card-list">
             <card v-for="(item, index) in 2" :key="index"/>
+        </div>
+        <div class="publish-dynamic" @click="onPublishClick">
+            <van-image :src="require('../../static/img/topic/icon_dabudongtai.png')"></van-image>
         </div>
         <bottom-box></bottom-box>
     </div>
@@ -36,9 +38,11 @@
     import tagList from "../../components/tag/tagList";
     import card from "./components/card";
     import bottomBox from "./components/bottomBox";
-    import {userinfo, zhuantiList, testLogin, userLabelList} from "../../service/topic";
+    import {testLogin, userLabelList} from "../../service/topic";
     import {zhuantiDetail} from "@/service/topic";
+    import {Image as VanImage} from 'vant';
 
+    Vue.use(VanImage)
     export default {
         components: {
             tagList,
@@ -47,7 +51,8 @@
         },
         data() {
             return {
-                labelList: []
+                model: {},
+                list: []
             }
         },
         created() {
@@ -62,7 +67,17 @@
             },
             async getDetail(){
                 const {id} = this.$route.query;
-                const {data} = await zhuantiDetail(id)
+                const {data} = await zhuantiDetail({zhuantiId: id});
+                this.model = data.zhuanti;
+                this.list = data.items
+            },
+            onPublishClick(){
+                this.$router.push({
+                    path: '/dynamic',
+                    query: {
+                        zhuantiId: this.$route.query.id
+                    }
+                })
             }
         },
     }
@@ -121,5 +136,10 @@
     }
     .body{
         padding-bottom: 60px;
+    }
+    .publish-dynamic{
+        position: fixed;
+        right: 10px;
+        bottom: 60px;
     }
 </style>

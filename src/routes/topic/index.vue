@@ -1,6 +1,9 @@
 <template>
     <div class="subject-list">
         <subject class="subject" v-for="(item, index) in list" :key="index" @click.native="goDetail(item.id)" :data="item"></subject>
+        <div class="float-button">
+            <van-image :src="require('../../static/img/topic/btn_chuangjianzhuti.png')" @click="createSubject"/>
+        </div>
     </div>
 </template>
 
@@ -8,6 +11,8 @@
     import Vue from 'vue';
     import subject from "./components/subject";
     import {zhuantiList} from "@/service/topic";
+    import {Image as VanImage} from 'vant';
+    Vue.use(VanImage)
 
     export default {
         components: {
@@ -25,6 +30,11 @@
             async getData() {
                 const {data} = await zhuantiList({page: 1, size: 8});
                 this.list = data.records;
+            },
+            createSubject(){
+                this.$router.push({
+                    path: '/topic/create'
+                })
             },
             goDetail(id) {
                 this.$router.push({

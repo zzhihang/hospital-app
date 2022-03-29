@@ -1,12 +1,18 @@
 <template>
     <van-action-sheet class="luyin-panel" v-model="show" @close="onClose" closeable>
         <div @click="onStart" v-if="!recording">
-            <van-image :src="require('../../static/img/dynamic/btn_luzhi.png')"></van-image>
+            <van-image :src="require('../../../static/img/dynamic/btn_luzhi.png')"></van-image>
             <p>点击开始录制</p>
         </div>
         <div @click="onEnd" v-if="recording">
             <h1>{{timeLong}}″</h1>
-            <van-image :src="require('../../static/img/dynamic/btn_luzhi.png')"></van-image>
+            <van-circle v-model="timeLong"
+                        :rate="60"
+                        layer-color="#F5F5F5"
+                        color="#FE7B35"
+            >
+                <div class="circle-spot"></div>
+            </van-circle>
             <p>录制中,点击完成录制</p>
         </div>
     </van-action-sheet>
@@ -14,12 +20,13 @@
 
 <script>
     import Vue from 'vue';
-    import {ActionSheet, Image as VanImage} from 'vant';
+    import {ActionSheet, Circle, Image as VanImage} from 'vant';
+    import Recorder from 'js-audio-recorder';
+    import {upload} from "../../../service/commonService";
 
+    Vue.use(Circle);
     Vue.use(VanImage);
     Vue.use(ActionSheet);
-    import Recorder from 'js-audio-recorder';
-    import {upload} from "@/service/commonService";
     export default {
         props: ['show'],
         created(){
@@ -102,5 +109,13 @@
 
     /deep/ .van-action-sheet__content {
         overflow-y: unset;
+    }
+    .circle-spot{
+        height: 25px;
+        width: 25px;
+        background: #FE7B35;
+        border-radius: 4px;
+        display: inline-block;
+        margin-top: 30px;
     }
 </style>

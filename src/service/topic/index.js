@@ -74,26 +74,8 @@ export const userLabelDelete = (id) => {
  * @Author: zhuzhhm@yonyou.com
  * @date: 2022/3/26 22:22
  */
-export const zhuantiDetail = (id) => {
-    return axios.post(`/zhuanti/detail`, {
-        "zhuantiId": 4,
-        "page": 1,
-        "size": 10,
-        "labelList": [
-            {
-                "labelId": 1,
-                "label": "标签"
-            },
-            {
-                "labelId": 2,
-                "label": "马太效应"
-            }
-        ]
-    },{
-        headers: {
-            "Content-Type": "application/json"
-        }
-    })
+export const zhuantiDetail = (data) => {
+    return axios.post(`/zhuanti/detail`, data)
 };
 
 /**
@@ -119,3 +101,26 @@ export const dianZan = (itemId) => {
         itemId
     })
 };
+
+/**
+ * @Description: 发布动态 添加 - 修改
+ * @Param:
+ * @return:
+ * @Author: zhuzhhm@yonyou.com
+ * @date: 2022/3/27 15:15
+ */
+export const postDynamic = (data) => {
+    return axios.post(`/zhuanti/item/post`,data)
+};
+
+/**
+ * @Description: 发布动态 添加 - 修改
+ * @Param:
+ * @return:
+ * @Author: zhuzhhm@yonyou.com
+ * @date: 2022/3/27 15:15
+ */
+export const createTopic = (data) => {
+    return axios.post(`/zhuanti/bz/post`,data)
+};
+

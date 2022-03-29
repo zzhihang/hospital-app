@@ -18,7 +18,7 @@ const routes = [
             title: '我的专题'
         },
     },{
-        path: '/top/create',
+        path: '/topic/create',
         component: r => require.ensure([], () => r(require('@routes/topic/create'))),
         meta:{
             title: '创建专题'

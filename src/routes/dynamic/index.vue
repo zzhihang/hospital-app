@@ -4,6 +4,8 @@
                 v-model="dynamic"
                 rows="1"
                 autosize
+                :border="false"
+                :disabled="recorderList.length > 0"
                 type="textarea"
                 placeholder="点击此处说点什么..."
         />
@@ -35,9 +37,12 @@
                 </template>
             </van-uploader>
             <div class="recorder-list">
-                <div class="recorder" v-if="recorderList.length" v-for="(item, index) in recorderList" :key="index">
-                    {{item.timeLong}}
-                </div>
+                <audio-player
+                        v-if="recorderList.length"
+                        v-for="(item, index) in recorderList"
+                        :long="item.timeLong"
+                        :key="index"
+                />
             </div>
         </div>
         <div class="tool-bar van-hairline--top">
@@ -67,7 +72,9 @@
         </div>
         <div class="action-bar">
             <van-button class="cancel-button" type="default" @click="cancel">取消</van-button>
-            <van-button class="submit-button" type="primary" disabled @click="pushlish">发表</van-button>
+            <van-button class="submit-button" type="primary"
+                        :disabled="recorderList.length === 0 && imgList.length === 0 && fileList.length === 0 && !dynamic"
+                        @click="publish">发表</van-button>
         </div>
         <recorder :show.sync="luyinPanelShow" @recorderSuccess="recorderSuccess"></recorder>
         <van-popup v-model="biaoqianPanelShow" get-container="body" position="right" :style="{ height: '100%', width: '80%' }">
@@ -80,9 +87,11 @@
     import Vue from 'vue';
     import {Button, Field, Icon, Popup, Uploader} from 'vant';
     import {Image as VanImage} from 'vant';
-    import recorder from "@/routes/dynamic/recorder";
+    import recorder from "@/routes/dynamic/components/recorder";
     import labelList from "@/routes/dynamic/labelList";
     import {upload} from "@/service/commonService";
+    import audioPlayer from "@/routes/dynamic/components/audioPlayer";
+    import {postDynamic} from "@/service/topic";
 
     Vue.use(VanImage);
     Vue.use(Uploader);
@@ -94,7 +103,8 @@
     export default {
         components: {
             recorder,
-            labelList
+            labelList,
+            audioPlayer
         },
         data() {
             return {
@@ -130,6 +140,7 @@
                 imgList: [],
                 fileList: [],
                 recorderList: [],
+                labelList: [],
                 dynamic: '',
             }
         },
@@ -140,14 +151,43 @@
             cancel(){
               this.$router.go(-1)
             },
-            pushlish(){
-
+            async publish(){
+                const params = {
+                    zhuantiId: this.$route.query.zhuantiId
+                };
+                let type = 'text';
+                let list = [];
+                if(this.fileList.length){
+                    type = 'doc';
+                    list = this.fileList;
+                }
+                if(this.imgList.length){
+                    type = 'pic';
+                    list = this.imgList;
+                }
+                if(this.recorderList.length){
+                    type = 'voice';
+                    list = this.recorderList;
+                }
+                params.type = type;
+                params.contentObject = JSON.stringify(list);
+                params.labelListStr = JSON.stringify(this.labelList);
+                params.title = this.dynamic;
+                if(type === 'text'){
+                    params.contentObject = this.dynamic;
+                }
+                const result = await postDynamic(params);
+                if(result.status){
+                    this.$toast.success('发布成功');
+                   // this.$router.go(-1);
+                }
             },
             cancelClick() {
                 this.biaoqianPanelShow = false;
             },
             chooseLabel(e){
-                this.dynamic = this.dynamic + '#' + e.label;
+                this.labelList.push(e);
+                this.dynamic = this.dynamic + this.labelList.map(item => '#' + item.label).join('');
                 this.biaoqianPanelShow = false;
             },
             upload(file){
@@ -254,15 +294,7 @@
             }
         }
     }
-    .recorder{
-        width: 185px;
-        height: 40px;
-        border: 1px solid #FE7B35;
-        opacity: 0.3;
-        margin-bottom: 15px;
-        background: #FFFAF7;
-        border-radius: 6px;
-    }
+
     .van-icon.disabled{
         opacity: 0.5;
     }
