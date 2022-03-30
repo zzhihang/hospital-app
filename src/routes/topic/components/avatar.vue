@@ -3,8 +3,8 @@
         <van-image
                 v-if="hasPhoto"
                 round
-                src="https://img01.yzcdn.cn/vant/cat.jpeg"></van-image>
-        <span>朱志航</span>
+                :src="photo"></van-image>
+        <span>{{name}}</span>
     </div>
 </template>
 
@@ -14,6 +14,8 @@
     Vue.use(VanImage);
     export default {
         props: {
+            name: {},
+            photo: {},
             size: {
                 type: String,
                 default: 'big'

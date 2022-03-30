@@ -18,6 +18,11 @@
                 active: ''
             }
         },
+        computed: {
+            dataList(){
+                return [{label: '全部'}].concat(this.data);
+            }
+        }
     }
 </script>
 

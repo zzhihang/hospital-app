@@ -79,17 +79,6 @@ export const zhuantiDetail = (data) => {
 };
 
 /**
-* @Description: 删除某条动态
-* @Param:
-* @return:
-* @Author: zhuzhhm@yonyou.com
-* @date: 2022/3/27 15:15
-*/
-export const deleteDongtai = (id) => {
-    return axios.get(`/zhuanti/detail/${id}`)
-};
-
-/**
 * @Description: 点赞/取消点赞
 * @Param:
 * @return:
@@ -97,10 +86,23 @@ export const deleteDongtai = (id) => {
 * @date: 2022/3/27 15:15
 */
 export const dianZan = (itemId) => {
-    return axios.post(`/zhuanti/up`,{
+    return axios.post(`/zhuanti/up/post`,{
         itemId
     })
 };
+
+/**
+* @Description: 回复别人
+* @Param:
+* @return:
+* @Author: zhuzhhm@yonyou.com
+* @date: 2022/3/30 21:59
+*/
+
+export const commentPost = (data) => {
+    return axios.post(`/zhuanti/comment/post`,data)
+};
+
 
 /**
  * @Description: 发布动态 添加 - 修改
@@ -122,5 +124,16 @@ export const postDynamic = (data) => {
  */
 export const createTopic = (data) => {
     return axios.post(`/zhuanti/bz/post`,data)
+};
+
+/**
+ * @Description: 删除
+ * @Param:
+ * @return:
+ * @Author: zhuzhhm@yonyou.com
+ * @date: 2022/3/27 15:15
+ */
+export const deleteTopic = (id) => {
+    return axios.post(`/zhuanti/item/delete`,{id})
 };
 

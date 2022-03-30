@@ -13,6 +13,7 @@ import {getParams} from "@static/js/util";
 import confirm from 'components/confirm'
 import store from './store';
 import toast from "@/components/toast";
+import {Toast} from "vant";
 Vue.prototype.$bridge = Bridge;
 
 Vue.config.productionTip = false;
@@ -45,6 +46,7 @@ axios.interceptors.response.use(function (response) {
 }, function (error) {
   // 超出 2xx 范围的状态码都会触发该函数。
   // 对响应错误做点什么
+  Toast.fail('服务器出小差了,请稍后重试')
   return Promise.reject(error);
 });
 

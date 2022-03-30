@@ -1,16 +1,16 @@
 <template>
     <div class="comment">
-        <avatar size="small"></avatar>
+        <avatar size="small" :name="data.userName" :photo="data.headimgurl"></avatar>
         <div class="comment-box">
-            <p class="content">用户体验地图是通过“故事化+图形化”的方式，直观的展示用户在产品使用过程中的情绪曲线，帮助我们从全局视角审视产品。</p>
+            <p class="content" @click="onCommentItemClick">{{data.content}}</p>
             <div class="reply-list">
-                <div>
+                <div v-for="(item, index) in data.children" :key="index">
                     <div class="user-info">
-                        <avatar size="small"></avatar>
+                        <avatar size="small" :name="item.userName" :photo="item.headimgurl"></avatar>
                         <span class="font13 ml6 mr6" style="color: #666;">回复</span>
-                        <avatar size="small" :has-photo="false"></avatar>
+                        <avatar size="small" :has-photo="false" :name="item.toUserName"></avatar>
                     </div>
-                    <p class="reply-content">说的对，确实是这样的，受益匪浅。</p>
+                    <p class="reply-content">{{item.content}}</p>
                 </div>
             </div>
         </div>
@@ -22,9 +22,15 @@
     import avatar from "./avatar";
 
     export default {
+        props: ['data'],
         components: {
             avatar
-        }
+        },
+        methods: {
+            onCommentItemClick() {
+                this.$emit('onCommentItemClick', this.data)
+            }
+        },
     }
 </script>
 

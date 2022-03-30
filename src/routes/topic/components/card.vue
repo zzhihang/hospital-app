@@ -1,7 +1,7 @@
 <template>
     <div class="card">
         <div class="avatar-action">
-            <avatar></avatar>
+            <avatar :name="data.userName" :photo="data.headimgurl"></avatar>
             <van-popover @select="onSelectPopover" v-model="showPopover" placement="bottom-end" trigger="click" :actions="actions">
                 <template #reference>
                     <van-image :src="require('../../../static/img/topic/icon_action.png')"></van-image>
@@ -9,56 +9,98 @@
             </van-popover>
         </div>
         <div class="detail">
-            <p>体验地图是基于用户研究开展的需要借助用户画像去界定范围，形成用户材料，再去考虑用何种体验可视化地图展现。
-                <span class="topic">#朱志航话题</span>
+            <p>{{data.title}}
+                <span class="topic">{{getLabelString(data.labelList)}}</span>
             </p>
-            <div class="img-list">
+            <div class="doc-list">
+                <doc-card
+                        v-if="data.type === 'doc'"
+                        v-for="(item, index) in data.contentObject"
+                        :name="item.name"
+                        :type="item.type"
+                        :url="item.url"
+                        :key="index"/>
+            </div>
+            <div class="img-list" v-if="data.type === 'pic'">
                 <van-image
                         class="mr5"
                         round
                         width="110"
                         height="110"
                         radius="6"
-                        src="https://img01.yzcdn.cn/vant/cat.jpeg" v-for="(item, index) in 3" :key="index"></van-image>
+                        :src="item.url"
+                        v-for="(item, index) in data.contentObject"
+                        :key="index" />
             </div>
+            <teplate v-for="(item, index) in data.contentObject" :key="index">
+                <audio-player v-if="data.type === 'voice'" :long="item.timeLong"/>
+            </teplate>
         </div>
         <div class="bottom-info">
-            <span class="date">2022.03.10  12:10</span>
+            <span class="date">{{data.ctime}}</span>
             <div class="action">
-                <span>
+                <span @click="onCommentClick">
                     <van-icon class="mt4 mr4" :name="commentIcon" size="15"/>
-                    <span>13</span>
+                    <span>{{data.commentCount}}</span>
                 </span>
                 <span class="ml10 mr10" style="color: #F5F5F5;">|</span>
                 <span @click="onZanClick">
                     <van-icon class="mr4" :name="dianzanIcon" size="15"/>
-                    <span>13</span>
+                    <span>{{data.upCount}}</span>
                 </span>
             </div>
         </div>
         <div class="comment-list">
             <h6 class="font16 mt22">评论</h6>
-            <comment class="mt20" v-for="(item, index) in 5" :key="index"></comment>
+            <comment
+                    class="mt20"
+                    :data="item"
+                    v-for="(item, index) in data.comments"
+                    :key="index"
+                    @onCommentItemClick="onCommentItemClick"
+            />
         </div>
         <div class="more">查看更多>></div>
+        <div class="comment-input" v-show="commentShow">
+            <h2><span>评论</span>{{this.currentCommentTo}}</h2>
+            <div class="input-area">
+                <van-field
+                        ref="commentInput"
+                        v-model="content"
+                        rows="2"
+                        autosize
+                        type="textarea"
+                        maxlength="100"
+                        placeholder="请输入您要评论的内容"
+                        show-word-limit
+                />
+                <span class="send-button" :class="{active: content.length > 0}" @click="sendComment">发表</span>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import {Icon, Image as VanImage, Popover} from 'vant';
+    import {Field, Icon, Image as VanImage, Popover} from 'vant';
     import comment from './comment'
     import avatar from './avatar'
-    import {deleteDongtai, dianZan} from "@/service/topic";
+    import {commentPost, deleteTopic, dianZan} from "@/service/topic";
+    import docCard from "@/routes/topic/components/docCard";
+    import audioPlayer from "@/routes/dynamic/components/audioPlayer";
 
+    Vue.use(Field);
     Vue.use(Popover);
     Vue.use(VanImage);
     Vue.use(Icon);
 
     export default {
+        props: ['data'],
         components: {
             avatar,
-            comment
+            comment,
+            docCard,
+            audioPlayer
         },
         data() {
             return {
@@ -70,6 +112,10 @@
                     { text: '编辑', action: 'edit', icon: require('@static/img/topic/icon_bianji.png')},
                     { text: '删除', action: 'del', icon: require('@static/img/topic/icon_shanchu.png')},
                 ],
+                type: 'doc',
+                content: '',
+                commentShow: false,
+                currentCommentTo: ''
             }
         },
         methods: {
@@ -79,13 +125,48 @@
                 }
                 if(e.action === 'del'){
                     this.$confirm({message: '您确定要删除此动态？'}, async () => {
-                        const {data} = await deleteDongtai();
-                        //TODO 删除
+                        const result = await deleteTopic(this.data.id);
+                        if(result.status === 200){
+                            this.$toast.success('删除成功');
+                            this.$emit('deleteSuccess')
+                        }
                     })
                 }
             },
             async onZanClick(){
-                const {data} = await dianZan(this.data.id)
+                const result = await dianZan(this.data.id);
+                if(result.status === 200){
+                    this.$toast.success('操作成功')
+                }
+            },
+            onCommentClick(name){
+                this.currentCommentTo = name || this.data.userName;
+                this.$refs.commentInput.focus();
+                this.commentShow = true;
+            },
+            onCommentItemClick(data){
+                this.onCommentClick(data.userName);
+                this.parentId = data.id;
+            },
+            getLabelString(data){
+                if(!data || !data.length){
+                    return ''
+                }
+                const d = data.map(item => item.label);
+                return '#' + d.join('#')
+            },
+            async sendComment(){
+                const params = {
+                    itemId: this.data.id,
+                    content: this.content
+                };
+                if(this.parentId){
+                    params.parentId = this.parentId;
+                }
+                const result = await commentPost(params);
+                if(result.status === 200){
+                    this.$toast.success('评论成功');
+                }
             }
         },
     }
@@ -108,8 +189,15 @@
         color: #D94F17;
     }
 
-    .img-list {
+    .img-list, .doc-list {
         margin-top: 15px;
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+        .doc-card{
+            flex-shrink: 0;
+            margin-right: 10px;
+        }
     }
 
     .bottom-info {
@@ -142,6 +230,40 @@
         @flex-sb-center();
         .van-image{
             width:20px;
+        }
+    }
+    .comment-input{
+        background: #FFFFFF;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 15px 15px 20px;
+        h2{
+            font-size: 14px;
+            color: #333333;
+            span{
+                font-weight: normal;
+                color: #666666;
+            }
+        }
+        .van-field{
+            background: #F5F5F5;
+            flex: 1;
+        }
+        .input-area{
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .send-button{
+            flex-shrink: 0;
+            color: #BBBBBB;
+            font-size: 16px;
+            margin-left: 13px;
+            &.active{
+                color: @main-color;
+            }
         }
     }
 </style>

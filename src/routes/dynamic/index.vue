@@ -29,7 +29,7 @@
                     v-model="fileList"
                     upload-icon="plus"
             >
-                <template #preview-cover="{file}">
+                    <template #preview-cover="file">
                     <div class="file-cover-box">
                         <van-image :src="getFile(file)"/>
                         <span class="file-name">{{file && file.name}}</span>
@@ -179,7 +179,7 @@
                 const result = await postDynamic(params);
                 if(result.status){
                     this.$toast.success('发布成功');
-                   // this.$router.go(-1);
+                    this.$router.go(-1);
                 }
             },
             cancelClick() {
@@ -207,7 +207,7 @@
             },
             async afterReadFile2(file){
                 const {data} = await this.upload(file.file);
-                this.fileList.push({url: data.data.url}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
+                this.fileList.push({url: data.data.url, name: file.file.name, type: file.file.type}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
             },
             getFile(file){
                 const type = file.type;
@@ -265,7 +265,7 @@
     .file-uploader{
         /deep/.van-uploader__file{
             flex-direction: row;
-            width: unset;
+            width: 162px;
             height: 53px;
             padding: 0 30px 0 10px;
         }

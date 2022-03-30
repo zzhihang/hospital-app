@@ -1,90 +1,100 @@
 <template>
     <div class="body">
-        <div class="upload">
-            <van-uploader :after-read="afterRead" v-model="fileList" max-count="1">
-                <div class="upload-box">
-                    <van-image :src="require('../../static/img/topic/icon_zhaoxiangji.png')"/>
+        <van-form @submit="onSubmit">
+            <div class="upload">
+                <van-uploader :after-read="afterRead" v-model="fileList" max-count="1">
+                    <div class="upload-box">
+                        <van-image :src="require('../../static/img/topic/icon_zhaoxiangji.png')"/>
+                    </div>
+                </van-uploader>
+            </div>
+            <van-cell-group>
+                <div class="van-hairline--bottom">
+                    <h1 class="field-title van-field-title">专题名称</h1>
+                    <van-field
+                            :rules="[{ required: true, message: '请填写专题名称' }]"
+                            v-model="formData.title"
+                            placeholder="请设置专题名称"
+                    />
                 </div>
-            </van-uploader>
-        </div>
-        <van-cell-group>
-            <div class="van-hairline--bottom">
-                <h1 class="field-title van-field-title">专题名称</h1>
+                <div class="van-hairline--bottom mr15 ml15"></div>
                 <van-field
-                        v-model="formData.title"
-                        required
-                        placeholder="请设置专题名称"
+                        label-class="van-field-title"
+                        v-model="formData.introduction"
+                        rows="1"
+                        autosize
+                        :rules="[{ required: true, message: '请填写专题简介' }]"
+                        label="专题简介"
+                        type="textarea"
+                        maxlength="100"
+                        placeholder="请简要描述专题简介..."
+                        show-word-limit
                 />
-            </div>
-            <div class="van-hairline--bottom mr15 ml15"></div>
-            <van-field
-                    label-class="van-field-title"
-                    v-model="formData.introduction"
-                    rows="1"
-                    autosize
-                    required
-                    label="专题简介"
-                    type="textarea"
-                    maxlength="100"
-                    placeholder="请简要描述专题简介..."
-                    show-word-limit
-            />
-        </van-cell-group>
+            </van-cell-group>
 
-        <van-cell-group>
-            <div>
-                <h1 class="field-title van-field-title">专题费用</h1>
-                <van-cell required>
-                    <van-radio-group v-model="formData.free" direction="horizontal">
-                        <van-radio name="1">付费专题</van-radio>
-                        <van-radio name="0">免费专题</van-radio>
-                    </van-radio-group>
-                </van-cell>
-                <h6 class="sub-title">
-                    <span>设置专题费用</span>
-                    <span class="font12" style="color: #D94F17">(创建后不可更改)</span>
-                </h6>
+            <van-cell-group>
+                <div>
+                    <h1 class="field-title van-field-title">专题费用</h1>
+                    <van-cell>
+                        <van-radio-group
+                                v-model="formData.free"
+                                direction="horizontal"
+                                @change="onFreeChange"
+                                :rules="[{ required: true, message: '请选择' }]"
+                        >
+                            <van-radio name="1">付费专题</van-radio>
+                            <van-radio name="0">免费专题</van-radio>
+                        </van-radio-group>
+                    </van-cell>
+                    <h6 class="sub-title">
+                        <span>设置专题费用</span>
+                        <span class="font12" style="color: #D94F17">(创建后不可更改)</span>
+                    </h6>
+                    <van-field
+                            v-model="formData.price"
+                            :disabled="formData.free === '0'"
+                            type="number"
+                            :rules="[{ required: true, message: '请设置专题费用' }]"
+                            placeholder="¥ 50-6000的整数"
+                    />
+                </div>
+                <div class="van-hairline--bottom"></div>
+                <div class="van-hairline--bottom mr15 ml15"></div>
                 <van-field
-                        v-model="formData.price"
-                        required
-                        type="number"
-                        placeholder="¥ 50-6000的整数"
+                        readonly
+                        label-class="van-field-title"
+                        clickable
+                        name="picker"
+                        :value="formData.subscribeTypeText"
+                        right-icon="arrow"
+                        label="有效期"
+                        :rules="[{ required: true, message: '请选择有效期' }]"
+                        input-align="right"
+                        placeholder="请选择"
+                        @click="showPicker = true"
                 />
-            </div>
-            <div class="van-hairline--bottom"></div>
-            <div class="van-hairline--bottom mr15 ml15"></div>
-            <van-field
-                    required
-                    readonly
-                    label-class="van-field-title"
-                    clickable
-                    name="picker"
-                    :value="formData.subscribeType"
-                    right-icon="arrow"
-                    label="有效期"
-                    placeholder="请选择"
-                    @click="showPicker = true"
-            />
-            <van-popup v-model="showPicker" position="bottom">
-                <van-picker
-                        show-toolbar
-                        :columns="columns"
-                        @confirm="onConfirm"
-                        @cancel="showPicker = false"
-                />
-            </van-popup>
-        </van-cell-group>
+                <van-popup v-model="showPicker" position="bottom">
+                    <van-picker
+                            show-toolbar
+                            v-model="formData.subscribeType"
+                            :columns="columns"
+                            @confirm="onConfirm"
+                            @cancel="showPicker = false"
+                    />
+                </van-popup>
+            </van-cell-group>
 
-        <van-cell-group>
-            <van-field name="switch" label="全员禁言">
-                <template #input>
-                    <van-switch v-model="formData.forbidden" size="20" />
-                </template>
-            </van-field>
-        </van-cell-group>
-        <div class="button-box">
-            <van-button class="submit-button" type="primary" @click="submit">完成</van-button>
-        </div>
+            <van-cell-group>
+                <van-field name="switch" label="全员禁言" input-align="right">
+                    <template #input>
+                        <van-switch v-model="formData.forbidden" size="20" active-value="1" inactive-value="0"/>
+                    </template>
+                </van-field>
+            </van-cell-group>
+            <div class="button-box">
+                <van-button class="submit-button" type="primary" @click="submit">完成</van-button>
+            </div>
+        </van-form>
     </div>
 </template>
 
@@ -107,6 +117,7 @@
     import {createTopic} from "@/service/topic";
     import {upload} from "@/service/commonService";
 
+    Vue.use(Form);
     Vue.use(VanImage)
     Vue.use(Button);
     Vue.use(Cell);
@@ -136,11 +147,19 @@
                     introduction: '',
                     imgUrl: '',
                     subscribeType: '',
+                    subscribeTypeText: '',
                     free: '',
                     price: '',
                     forbidden: 0,
                 }
             }
+        },
+        watch: {
+          fileList(){
+              if(this.fileList.length === 0){
+                  this.formData.imgUrl = ''
+              }
+          }
         },
         methods: {
             async afterRead(file) {
@@ -149,16 +168,31 @@
                 const {data} = await upload(formData);
                 this.formData.imgUrl = data.data.url;
             },
-            onConfirm(){
+            onConfirm(e) {
                 this.showPicker = false;
+                this.formData.subscribeType = e.value;
+                this.formData.subscribeTypeText = e.text;
             },
-            async submit(){
+            async submit() {
+                if(!this.fileList.length){
+                    return this.$toast.fail('请上传图片')
+                }
                 const result = await createTopic(this.formData);
-                if(result.status === 200){
+                if (result.status === 200) {
                     this.$toast.success('操作成功');
                     this.$router.go(-1);
+                }else{
+                    this.$toast.fail(result.msg);
                 }
-            }
+            },
+            onFreeChange(e) {
+                this.formData.free = e;
+                if (e === '0') {
+                    this.formData.price = 0
+                } else {
+                    this.formData.price = ''
+                }
+            },
         }
     }
 </script>
@@ -176,19 +210,23 @@
         padding-right: 15px;
         padding-top: 15px;
     }
-    /deep/.van-field-title{
+
+    /deep/ .van-field-title {
         font-size: 18px;
         color: #333333;
         font-weight: bold;
     }
-    .sub-title{
+
+    .sub-title {
         font-weight: normal;
         color: #333333;
     }
-    .van-cell-group{
+
+    .van-cell-group {
         margin-top: 5px;
     }
-    .button-box{
+
+    .button-box {
         background: #FFFFFF;
         position: fixed;
         bottom: 0;
@@ -196,17 +234,20 @@
         right: 0;
         padding: 27px 15px 30px;
     }
-    .submit-button{
+
+    .submit-button {
         height: 44px;
         width: 100%;
     }
-    .upload-box{
+
+    .upload-box {
         width: 180px;
         height: 120px;
         background: url("../../static/img/topic/pic_tupian.png");
         background-size: cover;
         @flex-all-center();
-        .van-image{
+
+        .van-image {
             height: 54px;
             width: 54px;
         }
