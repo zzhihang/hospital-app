@@ -4,7 +4,7 @@
         <div class="comment-box">
             <p class="content" @click="onCommentItemClick">{{data.content}}</p>
             <div class="reply-list">
-                <div v-for="(item, index) in data.children" :key="index">
+                <div class="reply-item" v-for="(item, index) in data.children" :key="index">
                     <div class="user-info">
                         <avatar size="small" :name="item.userName" :photo="item.headimgurl"></avatar>
                         <span class="font13 ml6 mr6" style="color: #666;">回复</span>
@@ -52,6 +52,12 @@
             .user-info{
                 display: flex;
                 align-items: center;
+            }
+            .reply-item{
+                margin-bottom: 13px;
+                &:last-child{
+                    margin-bottom: 0;
+                }
             }
         }
     }

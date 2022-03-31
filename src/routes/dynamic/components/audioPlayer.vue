@@ -1,7 +1,8 @@
 <template>
-    <div class="recorder">
+    <div class="recorder" @click="play">
         <van-image :src="require('../../../static/img/dynamic/icon_shengbo.png')"/>
         <span>{{long}}S</span>
+        <audio style="display:none;" :src="url" ref="player" controls="controls"></audio>
     </div>
 </template>
 
@@ -11,7 +12,12 @@
     Vue.use(VanImage);
 
     export default {
-        props: ['long']
+        props: ['long', 'url'],
+        methods: {
+            play() {
+                this.$refs.player.play();
+            }
+        },
     }
 </script>
 

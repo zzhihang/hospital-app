@@ -33,7 +33,7 @@
                         :key="index" />
             </div>
             <teplate v-for="(item, index) in data.contentObject" :key="index">
-                <audio-player v-if="data.type === 'voice'" :long="item.timeLong"/>
+                <audio-player v-if="data.type === 'voice'" :long="item.timeLong" :url="item.url"/>
             </teplate>
         </div>
         <div class="bottom-info">
@@ -52,15 +52,18 @@
         </div>
         <div class="comment-list">
             <h6 class="font16 mt22">评论</h6>
-            <comment
-                    class="mt20"
-                    :data="item"
-                    v-for="(item, index) in data.comments"
-                    :key="index"
-                    @onCommentItemClick="onCommentItemClick"
-            />
+            <template v-if="data.comments.length > 0">
+                <comment
+                        class="mt20"
+                        :data="item"
+                        v-for="(item, index) in data.comments"
+                        :key="index"
+                        @onCommentItemClick="onCommentItemClick"
+                />
+            </template>
+            <div v-else class="comment-none">暂无评论，快来评论吧</div>
         </div>
-        <div class="more">查看更多>></div>
+        <div class="more" v-if="data.comments.length > 8">查看更多>></div>
         <div class="comment-input" v-show="commentShow">
             <h2><span>评论</span>{{this.currentCommentTo}}</h2>
             <div class="input-area">
@@ -265,5 +268,11 @@
                 color: @main-color;
             }
         }
+    }
+    .comment-none{
+        color: #999999;
+        text-align: center;
+        margin-top: 10px;
+        font-size: 14px;
     }
 </style>

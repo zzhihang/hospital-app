@@ -1,6 +1,6 @@
 <template>
     <div class="body">
-        <van-image class="top-img" :src="model.imgUrl" />
+        <van-image class="top-img" :src="model.imgUrl"/>
         <div class="box-father">
             <div class="main-box">
                 <h6 class="ellipsis2">{{model.title}}</h6>
@@ -25,10 +25,17 @@
                 <tagList :data="labelList"/>
             </div>
             <div class="van-hairline--bottom"></div>
-            <div class="card-list" v-if="list.length">
-                <card v-for="(item, index) in list" :key="index" :data="item" @deleteSucces="deleteSuccess"/>
-            </div>
-            <my-empty v-else/>
+            <van-list
+                    v-model="loading"
+                    :finished="finished"
+                    finished-text="没有更多了"
+                    @load="onLoad"
+            >
+                <div class="card-list" v-if="list.length">
+                    <card v-for="(item, index) in list" :key="index" :data="item" @deleteSucces="deleteSuccess"/>
+                </div>
+                <my-empty v-else/>
+            </van-list>
         </div>
         <bottom-box></bottom-box>
         <div class="publish-dynamic" @click="onPublishClick">
@@ -44,9 +51,11 @@
     import bottomBox from "./components/bottomBox";
     import {userLabelList} from "../../service/topic";
     import {zhuantiDetail} from "@/service/topic";
-    import {Image as VanImage} from 'vant';
+    import {Image as VanImage, List} from 'vant';
     import myEmpty from "@/components/empty/myEmpty";
-    Vue.use(VanImage)
+
+    Vue.use(VanImage);
+    Vue.use(List);
     export default {
         components: {
             tagList,
@@ -59,42 +68,54 @@
                 model: {},
                 list: [],
                 labelList: [],
+                loading: false,
+                finished: false,
+                pageIndex: 0
             }
         },
         created() {
             this.getLabels();
-            this.getDetail();
+            //this.getDetail();
         },
         methods: {
             async getLabels() {
                 const {data} = await userLabelList();
                 this.labelList = data;
             },
-            async getDetail(){
+            async getDetail() {
                 const {id} = this.$route.query;
-                const {data} = await zhuantiDetail({zhuantiId: id, page: 1, size: 10});
+                const {data} = await zhuantiDetail({zhuantiId: id, page: this.pageIndex, size: 10});
                 this.model = data.zhuanti;
-                this.list = data.items.records
+                this.list = this.list.concat(data.items.records);
+                this.loading = false;
+                if (data.items.records < 10) {
+                    this.finished = true;
+                }
             },
-            deleteSuccess(){
+            deleteSuccess() {
                 this.getDetail();
             },
-            onPublishClick(){
+            onPublishClick() {
                 this.$router.push({
                     path: '/dynamic',
                     query: {
                         zhuantiId: this.$route.query.id
                     }
                 })
+            },
+            onLoad() {
+                this.pageIndex = this.pageIndex + 1;
+                this.getDetail();
             }
         },
     }
 </script>
 
 <style lang="less" scoped>
-    .box-father{
+    .box-father {
         transform: translateY(-40px);
     }
+
     .main-box {
         background: url('../../static/img/topic/bg_shang.png') no-repeat;
         background-size: cover;
@@ -102,6 +123,7 @@
         border-radius: 36px 36px 0 0;
         padding: 20px 15px;
         font-size: 16px;
+
         h6 {
             font-size: 18px;
         }
@@ -135,27 +157,33 @@
             }
         }
     }
-    .tab-list{
+
+    .tab-list {
         padding: 15px;
         background: #FFFFFF;
     }
-    .card-list{
-        .card{
+
+    .card-list {
+        .card {
             margin-bottom: 5px;
         }
     }
-    .body{
+
+    .body {
         padding-bottom: 60px;
     }
-    .publish-dynamic{
+
+    .publish-dynamic {
         position: fixed;
         right: 10px;
         bottom: 60px;
-        .van-image{
+
+        .van-image {
             width: 60px;
         }
     }
-    .top-img{
+
+    .top-img {
         width: 100%;
         max-height: 250px;
         overflow: hidden;

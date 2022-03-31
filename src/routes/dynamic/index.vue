@@ -2,13 +2,15 @@
     <div class="body">
         <van-field
                 v-model="dynamic"
-                rows="1"
+                rows="20"
                 autosize
                 :border="false"
                 :disabled="recorderList.length > 0"
                 type="textarea"
                 placeholder="点击此处说点什么..."
-        />
+        >
+            <template #extra>fadsfsadfsd</template>
+        </van-field>
         <div class="pl10" style="background: #FFFFFF;overflow-x: scroll;">
             <van-uploader
                     accept=".png, .jpg, .jpeg"
