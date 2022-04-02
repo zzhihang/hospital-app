@@ -9,9 +9,10 @@
             </van-popover>
         </div>
         <div class="detail">
-            <p>{{data.title}}
-                <span class="topic">{{getLabelString(data.labelList)}}</span>
-            </p>
+            <div>
+                <p v-html='data.title'></p>
+                <!--<span class="topic">{{getLabelString(data.labelList)}}</span>-->
+            </div>
             <div class="doc-list">
                 <doc-card
                         v-if="data.type === 'doc'"
@@ -45,7 +46,7 @@
                 </span>
                 <span class="ml10 mr10" style="color: #F5F5F5;">|</span>
                 <span @click="onZanClick">
-                    <van-icon class="mr4" :name="dianzanIcon" size="15"/>
+                    <van-icon class="mr4" :name="ifZan ? dianzanPressIcon : dianzanIcon" size="15"/>
                     <span>{{data.upCount}}</span>
                 </span>
             </div>
@@ -88,7 +89,7 @@
     import {Field, Icon, Image as VanImage, Popover} from 'vant';
     import comment from './comment'
     import avatar from './avatar'
-    import {commentPost, deleteTopic, dianZan} from "@/service/topic";
+    import {commentPost, deleteTopic, dianZan} from "@/service/topic/topService";
     import docCard from "@/routes/topic/components/docCard";
     import audioPlayer from "@/routes/dynamic/components/audioPlayer";
 
@@ -109,6 +110,7 @@
             return {
                 commentIcon: require('@static/img/topic/icon_pinglun.png'),
                 dianzanIcon: require('@static/img/topic/icon_dianzan.png'),
+                dianzanPressIcon: require('@static/img/topic/icon_dianzan_pressed.png'),
                 dianguozanIcon: require('@static/img/topic/icon_dianzan_pressed.png'),
                 showPopover: false,
                 actions: [
@@ -118,13 +120,34 @@
                 type: 'doc',
                 content: '',
                 commentShow: false,
-                currentCommentTo: ''
+                currentCommentTo: '',
+                ifZan: String(this.data.up) === '1'
+            }
+        },
+        watch: {
+            labelList: {
+                handler(){
+                    this.data.labelList.forEach(item => {
+                        const keyword = '#' + item.label;
+                        const reg = new RegExp(keyword, 'ig');
+                        this.data.title = this.data.title.replace(reg, `<span style="color: #D94F17;">${keyword}</span>`);
+
+                    });
+                },
+                immediate: true,
+                deep: true
             }
         },
         methods: {
             onSelectPopover(e) {
                 if(e.action === 'edit'){
-
+                    this.$router.push({
+                        path: '/dynamic',
+                        query: {
+                            id: this.data.id,
+                            zhuantiId: this.$route.query.id
+                        }
+                    })
                 }
                 if(e.action === 'del'){
                     this.$confirm({message: '您确定要删除此动态？'}, async () => {
@@ -139,11 +162,13 @@
             async onZanClick(){
                 const result = await dianZan(this.data.id);
                 if(result.status === 200){
+                    this.$emit('onZanClick');
+                    this.ifZan = !this.ifZan;
                     this.$toast.success('操作成功')
                 }
             },
             onCommentClick(name){
-                this.currentCommentTo = name || this.data.userName;
+                this.currentCommentTo = this.data.userName;
                 this.$refs.commentInput.focus();
                 this.commentShow = true;
             },

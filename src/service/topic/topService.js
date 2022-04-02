@@ -79,6 +79,17 @@ export const zhuantiDetail = (data) => {
 };
 
 /**
+ * @Description:
+ * @Param:
+ * @return:
+ * @Author: zhuzhhm@yonyou.com
+ * @date: 2022/3/26 22:22
+ */
+export const zhuantiInfo = (data) => {
+    return axios.post(`/zhuanti/info`, data)
+};
+
+/**
 * @Description: 点赞/取消点赞
 * @Param:
 * @return:
@@ -136,4 +147,17 @@ export const createTopic = (data) => {
 export const deleteTopic = (id) => {
     return axios.post(`/zhuanti/item/delete`,{id})
 };
+
+/**
+ * @Description: 删除
+ * @Param:
+ * @return:
+ * @Author: zhuzhhm@yonyou.com
+ * @date: 2022/3/27 15:15
+ */
+export const dyncmicInfo = (id) => {
+    return axios.post(`/zhuanti/item/info`,{id})
+};
+
+
 

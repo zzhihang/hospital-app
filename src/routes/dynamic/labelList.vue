@@ -23,7 +23,7 @@
 <script>
     import Vue from 'vue';
     import {Cell, CellGroup, Dialog, Field, Icon} from 'vant';
-    import {userLabelAdd, userLabelDelete, userLabelList} from "@/service/topic";
+    import {userLabelAdd, userLabelDelete, userLabelList} from "@/service/topic/topService";
 
     Vue.use(Icon);
     Vue.use(Cell);

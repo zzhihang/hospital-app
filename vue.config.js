@@ -33,6 +33,11 @@ module.exports = {
                 changeOrigin: true,
                 ws: true,
             },
+            '/sysmessage': {
+                target: 'http://115.28.186.138',
+                changeOrigin: true,
+                ws: true,
+            },
             '/api': {
                 target: 'http://115.28.186.138',
                 changeOrigin: true,

@@ -1,31 +1,37 @@
 <template>
-    <van-list
-            v-model="loading"
-            :finished="finished"
-            finished-text="没有更多了"
-            @load="onLoad"
-    >
+    <div>
         <div class="subject-list">
-            <subject class="subject" v-for="(item, index) in list" :key="index" @click.native="goDetail(item.id)"
-                     :data="item"></subject>
-            <div class="float-button">
-                <van-image :src="require('../../static/img/topic/btn_chuangjianzhuti.png')" @click="createSubject"/>
-            </div>
+            <van-list
+                    v-model="loading"
+                    :finished="finished"
+                    :immediate-check="false"
+                    @load="onLoad"
+            >
+                <subject class="subject" v-for="(item, index) in list" :key="index" @click.native="goDetail(item.id)"
+                         :data="item"></subject>
+                <div class="float-button">
+                    <van-image width="44" height="44" :src="require('../../static/img/topic/btn_chuangjianzhuti.png')"
+                               @click="createSubject"/>
+                </div>
+            </van-list>
         </div>
-    </van-list>
+        <my-empty description="暂无专题" v-if="!list.length"/>
+    </div>
 </template>
 
 <script>
     import Vue from 'vue';
     import subject from "./components/subject";
-    import {zhuantiList} from "@/service/topic";
+    import {zhuantiList} from "@/service/topic/topService";
     import {Image as VanImage, List} from 'vant';
+    import myEmpty from "@/components/empty/myEmpty";
 
     Vue.use(VanImage);
     Vue.use(List);
     export default {
         components: {
-            subject
+            subject,
+            myEmpty
         },
         data() {
             return {
@@ -43,7 +49,7 @@
                 const {data} = await zhuantiList({page: this.pageIndex, size: 8});
                 this.list = this.list.concat(data.records);
                 this.loading = false;
-                if (data.records < 8) {
+                if (data.records.length < 8) {
                     this.finished = true;
                 }
             },
@@ -70,8 +76,7 @@
 
 <style lang="less" scoped>
     .subject-list {
-        padding: 20px 15px;
-
+        padding: 20px 15px 40px;
         .subject {
             margin-bottom: 15px;
         }

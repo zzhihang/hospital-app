@@ -1,7 +1,7 @@
 <template>
     <van-empty
             :image="require('../../static/img/empty.png')"
-            description="暂无动态"
+            :description="description"
     />
 </template>
 
@@ -11,7 +11,12 @@
 
     Vue.use(Empty);
     export default {
-
+        props: {
+            description: {
+                type: String,
+                default: '暂无动态'
+            }
+        }
     }
 </script>
 

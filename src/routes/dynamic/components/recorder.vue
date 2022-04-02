@@ -6,8 +6,9 @@
         </div>
         <div @click="onEnd" v-if="recording">
             <h1>{{timeLong}}″</h1>
-            <van-circle v-model="timeLong"
-                        :rate="60"
+            <van-circle v-model="circleModel"
+                        rate="100"
+                        :speed="speed"
                         layer-color="#F5F5F5"
                         color="#FE7B35"
             >
@@ -36,7 +37,9 @@
         data() {
             return {
                 recording: false, //默认非录制状态
-                timeLong: 0
+                timeLong: 0,
+                speed: 100 /60,
+                circleModel: 0
             }
         },
         methods: {
@@ -116,6 +119,6 @@
         background: #FE7B35;
         border-radius: 4px;
         display: inline-block;
-        margin-top: 30px;
+        margin-top: 35px;
     }
 </style>

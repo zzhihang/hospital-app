@@ -1,6 +1,15 @@
 <template>
     <div class="body">
-        <van-image class="top-img" :src="model.imgUrl"/>
+        <div style="position:relative;">
+            <van-image class="top-img" :src="model.imgUrl"/>
+            <div class="badge-box">
+                <van-image v-if="String(model.free) === '0'" height="18" :src="require('../../static/img/topic/pic_biaoqian.png')" />
+            </div>
+            <div class="action-edit" @click="onEditDetail">
+                <van-icon name="edit" />
+                <span>编辑</span>
+            </div>
+        </div>
         <div class="box-father">
             <div class="main-box">
                 <h6 class="ellipsis2">{{model.title}}</h6>
@@ -22,24 +31,24 @@
                 </ul>
             </div>
             <div class="tab-list">
-                <tagList :data="labelList"/>
+                <tagList :data="labelList" @onChange="onChange"/>
             </div>
             <div class="van-hairline--bottom"></div>
             <van-list
                     v-model="loading"
                     :finished="finished"
-                    finished-text="没有更多了"
+                    :immediate-check="false"
                     @load="onLoad"
             >
-                <div class="card-list" v-if="list.length">
-                    <card v-for="(item, index) in list" :key="index" :data="item" @deleteSucces="deleteSuccess"/>
+                <div class="card-list">
+                    <card v-for="(item, index) in list" :key="index" :data="item" @onZanClick="deleteSuccess" @deleteSucces="deleteSuccess"/>
                 </div>
-                <my-empty v-else/>
             </van-list>
+            <my-empty v-if="!list.length"/>
         </div>
         <bottom-box></bottom-box>
         <div class="publish-dynamic" @click="onPublishClick">
-            <van-image :src="require('../../static/img/topic/icon_dabudongtai.png')"></van-image>
+            <van-image :src="require('../../static/img/topic/icon_dabudongtai@2x.png')"></van-image>
         </div>
     </div>
 </template>
@@ -49,13 +58,14 @@
     import tagList from "../../components/tag/tagList";
     import card from "./components/card";
     import bottomBox from "./components/bottomBox";
-    import {userLabelList} from "../../service/topic";
-    import {zhuantiDetail} from "@/service/topic";
-    import {Image as VanImage, List} from 'vant';
+    import {userLabelList} from "../../service/topic/topService";
+    import {zhuantiDetail} from "@/service/topic/topService";
+    import {Image as VanImage, List, Icon} from 'vant';
     import myEmpty from "@/components/empty/myEmpty";
 
     Vue.use(VanImage);
     Vue.use(List);
+    Vue.use(Icon);
     export default {
         components: {
             tagList,
@@ -70,27 +80,50 @@
                 labelList: [],
                 loading: false,
                 finished: false,
-                pageIndex: 0
+                pageIndex: 1,
+                tagModel: {}
             }
         },
         created() {
             this.getLabels();
-            //this.getDetail();
+            this.getDetail();
         },
         methods: {
+            onChange(e){
+                this.tagModel = e;
+                this.pageIndex = 1;
+                this.list = [];
+                this.getDetail();
+            },
             async getLabels() {
                 const {data} = await userLabelList();
                 this.labelList = data;
             },
             async getDetail() {
                 const {id} = this.$route.query;
-                const {data} = await zhuantiDetail({zhuantiId: id, page: this.pageIndex, size: 10});
+                const params = {
+                    zhuantiId: id,
+                    page: this.pageIndex,
+                    size: 10
+                };
+                if(this.tagModel.labelId){
+                    params.labelList = JSON.stringify([this.tagModel])
+                }
+                const {data} = await zhuantiDetail(params);
                 this.model = data.zhuanti;
                 this.list = this.list.concat(data.items.records);
                 this.loading = false;
-                if (data.items.records < 10) {
+                if (data.items.records.length < 10) {
                     this.finished = true;
                 }
+            },
+            onEditDetail(){
+                this.$router.push({
+                    path: '/topic/create',
+                    query: {
+                        id: this.$route.query.id
+                    }
+                })
             },
             deleteSuccess() {
                 this.getDetail();
@@ -176,10 +209,10 @@
     .publish-dynamic {
         position: fixed;
         right: 10px;
-        bottom: 60px;
+        bottom: 80px;
 
         .van-image {
-            width: 60px;
+            width: 44px;
         }
     }
 
@@ -187,5 +220,24 @@
         width: 100%;
         max-height: 250px;
         overflow: hidden;
+    }
+    .action-edit{
+        width: 72px;
+        height: 26px;
+        line-height: 26px;
+        text-align: center;
+        color: #333333;
+        border-radius: 13px 0 0 13px;
+        position: absolute;
+        opacity: 0.7;
+        background: #DCDEDD;
+        right: 0;
+        top: 159px;
+        font-size: 14px;
+    }
+    .badge-box{
+        position: absolute;
+        top: 5px;
+        right: 10px;
     }
 </style>

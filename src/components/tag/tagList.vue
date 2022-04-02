@@ -1,7 +1,7 @@
 <template>
     <div class="tag-list">
-        <van-tabs v-model="active" type="card" title-active-color="#D94F17" title-inactive-color="#999999">
-            <van-tab :title="item.label" v-for="(item, index) in data" :key="index"></van-tab>
+        <van-tabs v-model="active" type="card" @change="onChange" title-active-color="#D94F17" title-inactive-color="#999999">
+            <van-tab :title="item.label" v-for="(item, index) in dataList" :key="index"></van-tab>
         </van-tabs>
     </div>
 </template>
@@ -22,7 +22,13 @@
             dataList(){
                 return [{label: '全部'}].concat(this.data);
             }
-        }
+        },
+        methods: {
+            onChange(e) {
+                const data = this.dataList[e]
+                this.$emit('onChange', data);
+            }
+        },
     }
 </script>
 

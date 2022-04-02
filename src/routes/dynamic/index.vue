@@ -2,14 +2,13 @@
     <div class="body">
         <van-field
                 v-model="dynamic"
-                rows="20"
+                rows="15"
                 autosize
                 :border="false"
                 :disabled="recorderList.length > 0"
                 type="textarea"
                 placeholder="点击此处说点什么..."
         >
-            <template #extra>fadsfsadfsd</template>
         </van-field>
         <div class="pl10" style="background: #FFFFFF;overflow-x: scroll;">
             <van-uploader
@@ -43,10 +42,14 @@
                         v-if="recorderList.length"
                         v-for="(item, index) in recorderList"
                         :long="item.timeLong"
+                        @onDeleteClick="onDeleteClick"
                         :key="index"
                 />
             </div>
         </div>
+        <!--<div class="topic-list">-->
+            <!--<span v-for="(item, index) in labelList" :key="index">#{{item.label}}</span>-->
+        <!--</div>-->
         <div class="tool-bar van-hairline--top">
             <div class="tool-bar-item" v-for="(item, index) in toolbar" :key="index" @click="item.click">
                 <van-uploader
@@ -93,7 +96,7 @@
     import labelList from "@/routes/dynamic/labelList";
     import {upload} from "@/service/commonService";
     import audioPlayer from "@/routes/dynamic/components/audioPlayer";
-    import {postDynamic} from "@/service/topic";
+    import {dyncmicInfo, postDynamic} from "@/service/topic/topService";
 
     Vue.use(VanImage);
     Vue.use(Uploader);
@@ -146,9 +149,30 @@
                 dynamic: '',
             }
         },
+        created(){
+            if(this.$route.query.id){
+                this.getDetail()
+            }
+        },
         methods: {
+            async getDetail(){
+                const {data} = await dyncmicInfo(this.$route.query.id);
+                this.dynamic = data.title;
+                this.labelList = data.labelList;
+                if(data.type === 'pic'){
+                    this.imgList = data.content;
+                }else if(data.type === 'doc'){
+                    this.fileList = data.content;
+                }else if(data.type === 'voice'){
+                    this.recorderList = data.content;
+                }
+            },
             recorderSuccess(e){
-                this.recorderList.push(e)
+                this.recorderList.push(e);
+                this.dynamic = ''; //语音和文字不允许同时发布；
+            },
+            onDeleteClick(){
+                this.recorderList = [];
             },
             cancel(){
               this.$router.go(-1)
@@ -171,6 +195,9 @@
                     type = 'voice';
                     list = this.recorderList;
                 }
+                if(this.$route.query.id){
+                    params.id = this.$route.query.id;
+                }
                 params.type = type;
                 params.contentObject = JSON.stringify(list);
                 params.labelListStr = JSON.stringify(this.labelList);
@@ -188,8 +215,11 @@
                 this.biaoqianPanelShow = false;
             },
             chooseLabel(e){
+                if(this.labelList.includes(e)){
+                    return this.$toast.fail('不能重复选择')
+                }
                 this.labelList.push(e);
-                this.dynamic = this.dynamic + this.labelList.map(item => '#' + item.label).join('');
+                this.dynamic = this.dynamic + '#' + e.label;
                 this.biaoqianPanelShow = false;
             },
             upload(file){
@@ -205,7 +235,7 @@
                 this.imgList.push({url: data.data.url}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
             },
             async afterReadFile(file){
-                const {data} = await this.upload(file.file);
+                 await this.upload(file.file);
             },
             async afterReadFile2(file){
                 const {data} = await this.upload(file.file);
@@ -299,5 +329,15 @@
 
     .van-icon.disabled{
         opacity: 0.5;
+    }
+    .topic-list{
+        background: #FFFFFF;
+        font-size: 14px;
+        color: @main-color;
+        padding-left: 10px;
+        padding-bottom: 10px;
+        span{
+            margin-right: 4px;
+        }
     }
 </style>

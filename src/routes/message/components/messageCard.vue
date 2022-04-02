@@ -1,17 +1,17 @@
 <template>
     <div class="message-card">
         <div class="title">
-            <!--<van-image-->
-                    <!--round-->
-                    <!--height="30"-->
-                    <!--width="30"-->
-                    <!--:src="require(type === 'fuwu' ? '../../../static/img/icon_fuwutongzhi.png' : '../../../img/icon_xiaoxitongzhi.png')"></van-image>-->
+            <van-image
+                    round
+                    height="30"
+                    width="30"
+                    :src="require(data.type === 'service' ? '../../../static/img/icon_fuwutongzhi.png' : '../../../static/img/icon_xiaoxitongzhi.png')" />
             <div class="right">
-                <h1>消息通知</h1>
-                <p>2022-03-10 14:37:30</p>
+                <h1>{{data.type === 'service' ? '服务通知' : '消息通知'}}</h1>
+                <p>{{data.ctime}}</p>
             </div>
         </div>
-        <p class="message">您成功订阅了何思远的用户研究方法专题。</p>
+        <p class="message">{{data.message}}。</p>
     </div>
 </template>
 
@@ -22,9 +22,10 @@
     Vue.use(VanImage);
 
     export default {
+        props: ['data'],
         data() {
             return {
-                type: 'xiaoxi'
+
             }
         },
     }

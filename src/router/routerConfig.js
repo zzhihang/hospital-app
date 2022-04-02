@@ -1,15 +1,16 @@
 const routes = [
     {
-        path: '/index',
-        component: r => require.ensure([], () => r(require('@routes/index'))),
+        path: '/login',
+        component: r => require.ensure([], () => r(require('@routes/login'))),
         meta:{
-            title: '首页'
+            title: '登录'
         }
     }, {
         path: '/topic',
         component: r => require.ensure([], () => r(require('@routes/topic'))),
         meta:{
-            title: '知识专题'
+            title: '知识专题',
+            showTabBar: true
         },
     },{
         path: '/topic/detail',
@@ -27,7 +28,14 @@ const routes = [
         path: '/message',
         component: r => require.ensure([], () => r(require('@routes/message'))),
         meta:{
-            title: '消息'
+            title: '消息',
+            showTabBar: true
+        }
+    },{
+        path: '/order',
+        component: r => require.ensure([], () => r(require('@routes/order'))),
+        meta:{
+            title: '钱包明细'
         }
     },{
         path: '/order/detail',
@@ -39,13 +47,20 @@ const routes = [
         path: '/my',
         component: r => require.ensure([], () => r(require('@routes/my'))),
         meta:{
-            title: '我的'
+            title: '我的',
+            showTabBar: true
         }
     },{
         path: '/my/info',
         component: r => require.ensure([], () => r(require('@routes/my/info'))),
         meta:{
             title: '编辑资料'
+        }
+    },{
+        path: '/my/wallet',
+        component: r => require.ensure([], () => r(require('@routes/my/wallet'))),
+        meta:{
+            title: '我的钱包'
         }
     },{
         path: '/my/edit_name',

@@ -65,7 +65,7 @@
                         label-class="van-field-title"
                         clickable
                         name="picker"
-                        :value="formData.subscribeTypeText"
+                        v-model="formData.subscribeTypeText"
                         right-icon="arrow"
                         label="有效期"
                         :rules="[{ required: true, message: '请选择有效期' }]"
@@ -76,7 +76,7 @@
                 <van-popup v-model="showPicker" position="bottom">
                     <van-picker
                             show-toolbar
-                            v-model="formData.subscribeType"
+                            :value="formData.subscribeType"
                             :columns="columns"
                             @confirm="onConfirm"
                             @cancel="showPicker = false"
@@ -87,14 +87,14 @@
             <van-cell-group>
                 <van-field name="switch" label="全员禁言" input-align="right">
                     <template #input>
-                        <van-switch v-model="formData.forbidden" size="20" active-value="1" inactive-value="0"/>
+                        <van-switch v-model="formData.forbidden" size="20" :active-value="1" :inactive-value="0"/>
                     </template>
                 </van-field>
             </van-cell-group>
-            <div class="button-box">
-                <van-button class="submit-button" type="primary" @click="submit">完成</van-button>
-            </div>
         </van-form>
+        <div class="button-box">
+            <van-button class="submit-button" type="primary" @click="submit">完成</van-button>
+        </div>
     </div>
 </template>
 
@@ -114,7 +114,7 @@
         Switch,
         Uploader
     } from 'vant';
-    import {createTopic} from "@/service/topic";
+    import {createTopic, zhuantiInfo} from "@/service/topic/topService";
     import {upload} from "@/service/commonService";
 
     Vue.use(Form);
@@ -154,14 +154,20 @@
                 }
             }
         },
-        watch: {
-          fileList(){
-              if(this.fileList.length === 0){
-                  this.formData.imgUrl = ''
-              }
-          }
+        created(){
+            const {id} = this.$route.query;
+            id && this.getDetail();
         },
         methods: {
+            async getDetail(){
+                const {id} = this.$route.query;
+                const {data} = await zhuantiInfo({id});
+                const model = data;
+                this.formData = model;
+                this.formData.free = String(model.free);
+                this.formData.subscribeTypeText = this.columns.filter((item) => item.value === model.subscribeType)[0].text;
+                this.fileList.push({url: model.imgUrl});
+            },
             async afterRead(file) {
                 const formData = new FormData();
                 formData.append('file', file.file);
@@ -189,15 +195,26 @@
                 this.formData.free = e;
                 if (e === '0') {
                     this.formData.price = 0
-                } else {
-                    this.formData.price = ''
                 }
             },
-        }
+        },
+        watch: {
+            fileList(){
+                if(this.fileList.length === 0){
+                    this.formData.imgUrl = ''
+                }
+            }
+        },
     }
 </script>
 
 <style lang="less" scoped>
+    .body{
+        @flex-column();
+        .van-form{
+            flex: 1;
+        }
+    }
     .upload {
         background: #FFFFFF;
         text-align: center;
@@ -228,10 +245,11 @@
 
     .button-box {
         background: #FFFFFF;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        margin-top: 30px;
+        /*position: fixed;*/
+        /*bottom: 0;*/
+        /*left: 0;*/
+        /*right: 0;*/
         padding: 27px 15px 30px;
     }
 
