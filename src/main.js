@@ -62,7 +62,16 @@ router.beforeEach((to, from, next) => {
     }
   }
   next()
-})
+});
+
+Vue.directive("bozhu", { //博主按钮权限管理 v-bozhu
+  inserted (el, binding) {
+    let permission = sessionStorage.getItem('isBozhu')
+    if (permission !== 'true') {
+      el.parentNode && el.parentNode.removeChild(el);
+    }
+  }
+});
 
 new Vue({
   router,

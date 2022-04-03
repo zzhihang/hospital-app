@@ -64,6 +64,7 @@
                 const {data} = await userinfo();
                 this.setUserInfo(data);
                 this.setIsBozhu(data.userType === 1);
+                window.sessionStorage.setItem('isBozhu', data.userType === 1);
             }
         },
         created() {

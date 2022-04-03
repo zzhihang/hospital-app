@@ -2,7 +2,7 @@
     <div class="card">
         <div class="avatar-action">
             <avatar :name="data.userName" :photo="data.headimgurl"></avatar>
-            <van-popover @select="onSelectPopover" v-model="showPopover" placement="bottom-end" trigger="click" :actions="actions">
+            <van-popover v-bozhu @select="onSelectPopover" v-model="showPopover" placement="bottom-end" trigger="click" :actions="actions">
                 <template #reference>
                     <van-image :src="require('../../../static/img/topic/icon_action.png')"></van-image>
                 </template>
@@ -18,6 +18,7 @@
                         v-if="data.type === 'doc'"
                         v-for="(item, index) in data.contentObject"
                         :name="item.name"
+                        @click.native="onDocCardClick(item)"
                         :type="item.type"
                         :url="item.url"
                         :key="index"/>
@@ -81,30 +82,44 @@
                 <span class="send-button" :class="{active: content.length > 0}" @click="sendComment">发表</span>
             </div>
         </div>
+        <van-popup v-model="pdfShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
+            <template v-for="i in pdfPages">
+                <pdf :key="index" :page="i" ref="pdf" :src="pdfUrl"></pdf>
+            </template>
+        </van-popup>
+        <van-popup v-model="wordShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
+            <div ref="file"></div>
+        </van-popup>
+
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import {Field, Icon, Image as VanImage, Popover} from 'vant';
+    import {Field, Icon, Image as VanImage, Popover, Popup} from 'vant';
     import comment from './comment'
     import avatar from './avatar'
     import {commentPost, deleteTopic, dianZan} from "@/service/topic/topService";
     import docCard from "@/routes/topic/components/docCard";
     import audioPlayer from "@/routes/dynamic/components/audioPlayer";
+    import pdf from 'vue-pdf'
 
+    let docx = require('docx-preview');
     Vue.use(Field);
     Vue.use(Popover);
     Vue.use(VanImage);
     Vue.use(Icon);
 
+    Vue.use(Popup);
+
     export default {
-        props: ['data'],
+        props: ['data', 'forbidden'],
         components: {
             avatar,
             comment,
             docCard,
-            audioPlayer
+            audioPlayer,
+            pdf
         },
         data() {
             return {
@@ -121,7 +136,11 @@
                 content: '',
                 commentShow: false,
                 currentCommentTo: '',
-                ifZan: String(this.data.up) === '1'
+                ifZan: String(this.data.up) === '1',
+                pdfUrl: '',
+                pdfPages: 1,
+                pdfShow: false,
+                wordShow: false,
             }
         },
         watch: {
@@ -167,21 +186,47 @@
                     this.$toast.success('操作成功')
                 }
             },
-            onCommentClick(name){
+            previewPdf(url) {
+                const loadingTask = pdf.createLoadingTask(url);
+                this.pdfShow = true;
+                //this.$toast('正在解析文件,请稍候...');
+                loadingTask.promise.then(pdf => {
+                    this.pdfUrl = loadingTask;
+                    this.pdfPages = pdf.numPages;
+                });
+            },
+            onCommentClick(name){debugger
+                if(!this.ifForbidden()){
+                    return;
+                }
                 this.currentCommentTo = this.data.userName;
                 this.$refs.commentInput.focus();
                 this.commentShow = true;
+            },
+            ifForbidden(){
+                if(String(this.forbidden) === '1' && sessionStorage.getItem('isBozhu')!== 'true'){//博主 禁严
+                    this.$toast.fail('该专题已设置了全员禁言，您无法评论');
+                    return false;
+                }
+                return true
             },
             onCommentItemClick(data){
                 this.onCommentClick(data.userName);
                 this.parentId = data.id;
             },
-            getLabelString(data){
-                if(!data || !data.length){
-                    return ''
+            onDocCardClick(data){
+                if(data.type.includes('pdf')){
+                    this.previewPdf(data.url)
+                }else{
+                    this.wordShow = true;
+                    axios({
+                        method: 'get',
+                        responseType: 'blob', // 设置响应文件格式
+                        url:  data.url,
+                    }).then(data => {
+                        docx.renderAsync(data, this.$refs.file) // 渲染到页面预览
+                    })
                 }
-                const d = data.map(item => item.label);
-                return '#' + d.join('#')
             },
             async sendComment(){
                 const params = {

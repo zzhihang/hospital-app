@@ -5,7 +5,7 @@
             <div class="badge-box">
                 <van-image v-if="String(model.free) === '0'" height="18" :src="require('../../static/img/topic/pic_biaoqian.png')" />
             </div>
-            <div class="action-edit" @click="onEditDetail">
+            <div class="action-edit" @click="onEditDetail" v-bozhu>
                 <van-icon name="edit" />
                 <span>编辑</span>
             </div>
@@ -41,10 +41,20 @@
                     @load="onLoad"
             >
                 <div class="card-list">
-                    <card v-for="(item, index) in list" :key="index" :data="item" @onZanClick="deleteSuccess" @deleteSucces="deleteSuccess"/>
+                    <card v-for="(item, index) in list"
+                          :key="index"
+                          :data="item"
+                          :forbidden="model.forbidden"
+                          @onZanClick="deleteSuccess"
+                          @deleteSucces="deleteSuccess"
+                    />
                 </div>
             </van-list>
             <my-empty v-if="!list.length"/>
+            <div class="un-subscribe-tip van-hairline--top van-hairline--bottom" v-if="String(model.subscribe) !== '1'">未订阅用户只能查看近三天内容</div>
+            <div class="remark-box" v-if="model.remark">
+                <p>注:{{model.remark}}</p>
+            </div>
         </div>
         <bottom-box></bottom-box>
         <div class="publish-dynamic" @click="onPublishClick">
@@ -128,7 +138,17 @@
             deleteSuccess() {
                 this.getDetail();
             },
+            ifForbidden(){
+                if(this.model.forbidden === 1 && sessionStorage.getItem('isBozhu') !== 'true'){//博主 禁严
+                    this.$toast.fail('该专题已设置了全员禁言，您无法评论');
+                    return false;
+                }
+                return true
+            },
             onPublishClick() {
+                if(!this.ifForbidden()){
+                    return;
+                }
                 this.$router.push({
                     path: '/dynamic',
                     query: {
@@ -199,6 +219,9 @@
     .card-list {
         .card {
             margin-bottom: 5px;
+            &:last-child{
+                margin-bottom: 0;
+            }
         }
     }
 
@@ -239,5 +262,25 @@
         position: absolute;
         top: 5px;
         right: 10px;
+    }
+
+    .un-subscribe-tip{
+        background: #FFFFFF;
+        color: #999999;
+        line-height: 30px;
+        font-size: 12px;
+        text-align: center;
+    }
+    .remark-box{
+        padding: 10px 15px;
+        color: #D94F17;
+        font-size: 12px;
+        line-height: 18px;
+        background: #FFFFFF;
+        p{
+            padding: 15px;
+            background: #FBEDE7;
+            border-radius: 6px;
+        }
     }
 </style>

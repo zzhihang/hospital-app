@@ -45,3 +45,14 @@ export const logout = (data) => {
 export const updateUserInfo = (data) => {
     return axios.post('/api/userinfo/update', data)
 };
+
+/**
+* @Description:  发送验证码
+* @Param: nickname  headimgurl
+* @return:
+* @Author: zhuzhhm@yonyou.com
+* @date: 2022/4/3 0:44
+*/
+export const sendSms = (phone) => {
+    return axios.post('/api/syssms/send', {phone})
+};

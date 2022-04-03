@@ -1,6 +1,6 @@
 <template>
     <div class="login">
-        <van-button class="close-btn" color="rgba(254, 123, 53, 0.1)" round>关闭</van-button>
+        <van-button class="close-btn" color="rgba(254, 123, 53, 0.1)" round @click="closeWindow">关闭</van-button>
         <van-image :src="require('../static/img/login/pic_zhi.png')"/>
         <h1>知识付费平台</h1>
         <van-button
@@ -11,14 +11,36 @@
         <p class="copyright">
             <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意知识付费平台协议隐私政策</van-checkbox>
         </p>
-        <van-popup v-model="show" round get-container="body" position="bottom" :style="{ height: '50%' }" />
+        <van-popup class="login-pop" v-model="show" round get-container="body" position="bottom" :style="{ height: '45%' }" >
+            <div class="title">
+                <div>
+                    <span class="logo">知</span>
+                    <span>知识付费平台 申请</span>
+                </div>
+                <van-icon name="info-o" color="#999999" size="18"/>
+            </div>
+            <div class="content">
+                <h2>获取你的手机号</h2>
+                <p>用于使用第三方账号授权登录的情形</p>
+                <div class="van-hairline--top van-hairline--bottom mt20">
+                    <van-field v-model="phone" placeholder="请输入手机号" />
+                </div>
+            </div>
+            <div class="button-box">
+                <van-button class="reject-button" color="#F2F2F2">拒绝</van-button>
+                <van-button color="#07BF67" @click="sendSms">允许</van-button>
+            </div>
+        </van-popup>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import {Button, Checkbox, Image as VanImage, Popup} from 'vant';
+    import {Button, Checkbox, Field, Icon, Image as VanImage, Popup} from 'vant';
+    import {sendSms} from "@/service/commonService";
 
+    Vue.use(Field);
+    Vue.use(Icon);
     Vue.use(Checkbox);
     Vue.use(VanImage);
     Vue.use(Button);
@@ -29,11 +51,25 @@
             return {
                 checked: false,
                 show: true,
+                phone: '',
             }
         },
         methods: {
             onLoginClick() {
                 this.show = true;
+            },
+            async sendSms(){
+                if(!this.phone){
+                    return this.$toast.fail('请输入手机号');
+                }
+                const result = await sendSms();
+                if(result.status === 200){
+                    this.$toast.success('发送成功')
+                }
+
+            },
+            closeWindow(){
+                window.close();
             }
         },
     }
@@ -85,6 +121,64 @@
         width: 100%;
         .van-checkbox{
             justify-content: center;
+        }
+    }
+
+    .login-pop{
+        padding: 25px;
+    }
+
+    .title{
+        font-weight: bold;
+        @flex-sb-center();
+        .logo{
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            text-align: center;
+            line-height: 26px;
+            margin-right: 7px;
+            border-radius: 50%;
+            font-size: 14px;
+            color: #FFFFFF;
+            background: #FE7B35;
+        }
+        span{
+            font-size: 15px;
+        }
+    }
+
+    .van-popup--bottom{
+        right: 0;
+        width: unset;
+        .van-cell{
+            padding: 18px 0pt;
+        }
+    }
+    .content{
+        margin-top: 30px;
+        h2{
+            font-size: 17px;
+            color: #121212;
+        }
+        p{
+            font-size: 14px;
+            color: #6A6A6A;
+            margin-top: 15px;
+        }
+    }
+    .button-box{
+        margin-top: 50px;
+        text-align: center;
+        .van-button {
+            width: 120px;
+            height: 38px;
+            font-weight: bold;
+        }
+        .reject-button{
+            margin-right: 15px;
+            color: #07BF67 !important;
+
         }
     }
 </style>
