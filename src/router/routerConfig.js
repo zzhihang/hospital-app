@@ -86,6 +86,12 @@ const routes = [
         meta:{
             title: '管理标签'
         }
+    },{
+        path: '/pay',
+        component: r => require.ensure([], () => r(require('@routes/pay/pay'))),
+        meta:{
+            title: '订单详情'
+        }
     },
 
 ];

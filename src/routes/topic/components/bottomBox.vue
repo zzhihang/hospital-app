@@ -1,7 +1,7 @@
 <template>
     <div class="bottom-box">
         <div>
-            <h6>&yen;0</h6>
+            <h6>&yen;{{price}}</h6>
             <p>时效：永久</p>
         </div>
         <van-button color="#FE7B35" radius="">免费订阅</van-button>
@@ -14,7 +14,7 @@
 
     Vue.use(Button);
     export default {
-
+        props: ['price']
     }
 </script>
 

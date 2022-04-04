@@ -56,7 +56,7 @@
                 <p>注:{{model.remark}}</p>
             </div>
         </div>
-        <bottom-box></bottom-box>
+        <bottom-box :price="model.price"/>
         <div class="publish-dynamic" @click="onPublishClick">
             <van-image :src="require('../../static/img/topic/icon_dabudongtai@2x.png')"></van-image>
         </div>

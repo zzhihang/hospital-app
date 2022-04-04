@@ -8,7 +8,7 @@
             <van-icon size="40" v-else :name="require('../../static/img/icon_tixian.png')" />
             <h1>交易明细</h1>
             <h2>{{model.price}}</h2>
-            <p class="status" :class="status">交易取消</p>
+            <p class="status" :class="status">{{statusMessage}}</p>
             <p class="reason" v-if="status === 'fail'">
                 余额不足，交易失败
             </p>
@@ -26,7 +26,7 @@
 <script>
     import Vue from 'vue';
     import {Cell, CellGroup, Icon, Image as VanImage} from 'vant';
-    import {customerOrderDetail, orderDetail} from "@/service/order/orderService";
+    import {customerOrderDetail, orderDetail, orderStatus} from "@/service/order/orderService";
     import connect from "@/store/connect";
     const {mapState, mapMutations} = connect('commonStore');
     Vue.use(Icon);
@@ -36,7 +36,8 @@
     export default {
         data() {
             return {
-                status: 'fail',
+                status: '',
+                statusMessage: '',
                 model: {},
                 image: require('@static/img/my/icon_dingyue.png')
             }
@@ -56,6 +57,11 @@
                 }
                 const {data} = await service(id);
                 this.model = data;
+                const result = await orderStatus(data.orderNo);
+                if(result.status === false){
+                    this.status = 'fail';
+                }
+                this.statusMessage = result.msg;
             }
         },
     }
