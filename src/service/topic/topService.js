@@ -37,7 +37,7 @@ export const testLogin = () => {
 * @Description:
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/3/26 22:22
 */
 export const userLabelList = () => {
@@ -48,7 +48,7 @@ export const userLabelList = () => {
  * @Description:
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/26 22:22
  */
 export const userLabelAdd = (label) => {
@@ -60,7 +60,7 @@ export const userLabelAdd = (label) => {
  * @Description:
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/26 22:22
  */
 export const userLabelDelete = (id) => {
@@ -71,7 +71,7 @@ export const userLabelDelete = (id) => {
  * @Description:
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/26 22:22
  */
 export const zhuantiDetail = (data) => {
@@ -82,7 +82,7 @@ export const zhuantiDetail = (data) => {
  * @Description:
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/26 22:22
  */
 export const zhuantiInfo = (data) => {
@@ -93,7 +93,7 @@ export const zhuantiInfo = (data) => {
 * @Description: 点赞/取消点赞
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/3/27 15:15
 */
 export const dianZan = (itemId) => {
@@ -106,7 +106,7 @@ export const dianZan = (itemId) => {
 * @Description: 回复别人
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/3/30 21:59
 */
 
@@ -119,7 +119,7 @@ export const commentPost = (data) => {
  * @Description: 发布动态 添加 - 修改
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/27 15:15
  */
 export const postDynamic = (data) => {
@@ -130,7 +130,7 @@ export const postDynamic = (data) => {
  * @Description: 发布动态 添加 - 修改
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/27 15:15
  */
 export const createTopic = (data) => {
@@ -141,7 +141,7 @@ export const createTopic = (data) => {
  * @Description: 删除
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/27 15:15
  */
 export const deleteTopic = (id) => {
@@ -152,7 +152,7 @@ export const deleteTopic = (id) => {
  * @Description: 删除
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/27 15:15
  */
 export const dyncmicInfo = (id) => {

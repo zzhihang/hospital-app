@@ -10,6 +10,7 @@
         </div>
         <div class="detail">
             <div>
+                <overflowLineHidden />
                 <p v-html='data.title'></p>
                 <!--<span class="topic">{{getLabelString(data.labelList)}}</span>-->
             </div>
@@ -103,8 +104,10 @@
     import docCard from "@/routes/topic/components/docCard";
     import audioPlayer from "@/routes/dynamic/components/audioPlayer";
     import pdf from 'vue-pdf'
+    import overflowLineHidden from "@/components/common/overflowLineHidden";
 
     let docx = require('docx-preview');
+
     Vue.use(Field);
     Vue.use(Popover);
     Vue.use(VanImage);
@@ -119,7 +122,8 @@
             comment,
             docCard,
             audioPlayer,
-            pdf
+            pdf,
+            overflowLineHidden
         },
         data() {
             return {

@@ -4,7 +4,7 @@ import axios from "axios";
 * @Description: 消息中心
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/2 11:01
 */
 export const sysMessageList = (data) => {

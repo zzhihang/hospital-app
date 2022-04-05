@@ -53,7 +53,8 @@
                     <van-field
                             v-model="formData.price"
                             :disabled="formData.free === '0'"
-                            type="number"
+                            type="digit"
+                            @blur="inputHandler"
                             :rules="[{ required: true, message: '请设置专题费用' }]"
                             placeholder="¥ 50-6000的整数"
                     />
@@ -159,6 +160,16 @@
             id && this.getDetail();
         },
         methods: {
+            inputHandler () {
+                const value = Number(this.formData.price);
+                this.formData.price = Number(value); //将022格式的数字转换成22
+                if(String(this.formData.free) === '1' && value){//收费专题才去控制输入范围
+                    if(value > 6000 || value < 50){
+                        this.formData.price = '';
+                        this.$toast.fail('请输入50-6000的整数')
+                    }
+                }
+            },
             async getDetail(){
                 const {id} = this.$route.query;
                 const {data} = await zhuantiInfo({id});
@@ -195,6 +206,8 @@
                 this.formData.free = e;
                 if (e === '0') {
                     this.formData.price = 0
+                }else{
+                    this.inputHandler();
                 }
             },
         },

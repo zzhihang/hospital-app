@@ -2,19 +2,34 @@
     <div class="bottom-box">
         <div>
             <h6>&yen;{{price}}</h6>
-            <p>时效：永久</p>
+            <p>时效：{{timeLong}}</p>
         </div>
-        <van-button color="#FE7B35" radius="">免费订阅</van-button>
+        <van-button color="#FE7B35" @click="onSubscribe">{{buttonText}}</van-button>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
     import { Button } from 'vant';
+    import {LONG_MAP} from "@/static/js/const";
 
     Vue.use(Button);
+
     export default {
-        props: ['price']
+        props: ['price', 'free', 'long'],
+        computed: {
+            buttonText(){
+                return String(this.free) === '1' ? '立即订阅' : '免费订阅'
+            },
+            timeLong(){
+                return LONG_MAP[this.long]
+            }
+        },
+        methods: {
+            onSubscribe() {
+                this.$emit('onSubscribe')
+            }
+        },
     }
 </script>
 

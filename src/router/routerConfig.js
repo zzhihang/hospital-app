@@ -92,7 +92,19 @@ const routes = [
         meta:{
             title: '订单详情'
         }
-    },
+    },{
+        path: '/pay/success',
+        component: r => require.ensure([], () => r(require('@routes/pay/paySuccess'))),
+        meta:{
+            title: '支付成功'
+        }
+    },{
+        path: '/pay/fail',
+        component: r => require.ensure([], () => r(require('@routes/pay/payFail'))),
+        meta:{
+            title: '支付失败'
+        }
+    }
 
 ];
 

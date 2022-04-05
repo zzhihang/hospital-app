@@ -16,7 +16,7 @@ const uploadInstance = axios.create({
 * @Description: 上传
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/3/27 17:01
 */
 export const upload = (formData) => {
@@ -27,7 +27,7 @@ export const upload = (formData) => {
 * @Description: 退出登录
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/2 18:44
 */
 export const logout = (data) => {
@@ -39,7 +39,7 @@ export const logout = (data) => {
 * @Description: 更新用户信息
 * @Param: nickname  headimgurl
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/3 0:44
 */
 export const updateUserInfo = (data) => {
@@ -50,7 +50,7 @@ export const updateUserInfo = (data) => {
 * @Description:  发送验证码
 * @Param: nickname  headimgurl
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/3 0:44
 */
 export const sendSms = (phone) => {

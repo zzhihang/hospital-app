@@ -1,5 +1,5 @@
 <template>
-    <div class="body">
+    <div class="body" :class="{pb60: !ifSubscribe}">
         <div style="position:relative;">
             <van-image class="top-img" :src="model.imgUrl"/>
             <div class="badge-box">
@@ -51,12 +51,12 @@
                 </div>
             </van-list>
             <my-empty v-if="!list.length"/>
-            <div class="un-subscribe-tip van-hairline--top van-hairline--bottom" v-if="String(model.subscribe) !== '1'">未订阅用户只能查看近三天内容</div>
+            <div class="un-subscribe-tip van-hairline--top van-hairline--bottom" v-if="!ifSubscribe">未订阅用户只能查看近三天内容</div>
             <div class="remark-box" v-if="model.remark">
                 <p>注:{{model.remark}}</p>
             </div>
         </div>
-        <bottom-box :price="model.price"/>
+        <bottom-box :price="model.price" @onSubscribe="onSubscribe" :free="model.free" :long="model.subscribeType"/>
         <div class="publish-dynamic" @click="onPublishClick">
             <van-image :src="require('../../static/img/topic/icon_dabudongtai@2x.png')"></van-image>
         </div>
@@ -72,6 +72,7 @@
     import {zhuantiDetail} from "@/service/topic/topService";
     import {Image as VanImage, List, Icon} from 'vant';
     import myEmpty from "@/components/empty/myEmpty";
+    import {orderCreate} from "@/service/order/orderService";
 
     Vue.use(VanImage);
     Vue.use(List);
@@ -91,7 +92,8 @@
                 loading: false,
                 finished: false,
                 pageIndex: 1,
-                tagModel: {}
+                tagModel: {},
+                ifSubscribe: false
             }
         },
         created() {
@@ -99,6 +101,22 @@
             this.getDetail();
         },
         methods: {
+            async onSubscribe(){
+                const {data} = await orderCreate(this.model.id);
+                if(data.status === 0){
+                    this.$router.push({
+                        path: '/pay',
+                        query: {
+                            id: this.$route.query.id,
+                            orderNo: data.orderNo,
+                            title: this.model.title,
+                            price: this.model.price,
+                            long: this.model.subscribeType,
+                            img: this.model.imgUrl
+                        }
+                    })
+                }
+            },
             onChange(e){
                 this.tagModel = e;
                 this.pageIndex = 1;
@@ -121,6 +139,7 @@
                 }
                 const {data} = await zhuantiDetail(params);
                 this.model = data.zhuanti;
+                this.ifSubscribe = String(this.model.subscribe) === '1';
                 this.list = this.list.concat(data.items.records);
                 this.loading = false;
                 if (data.items.records.length < 10) {
@@ -225,7 +244,7 @@
         }
     }
 
-    .body {
+    .pb60{
         padding-bottom: 60px;
     }
 

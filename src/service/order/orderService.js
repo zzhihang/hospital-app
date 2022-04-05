@@ -2,7 +2,7 @@
  * @Description: 删除
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/3/27 15:15
  */
 import axios from "axios";
@@ -11,7 +11,7 @@ import axios from "axios";
 * @Description:糖主订单列表
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/3 0:38
 */
 export const orderList = () => {
@@ -21,7 +21,7 @@ export const orderList = () => {
 * @Description: 糖主订单详情
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/3 0:38
 */
 export const orderDetail = (id) => {
@@ -32,7 +32,7 @@ export const orderDetail = (id) => {
  * @Description: 订单状态
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/4/3 0:38
  */
 export const orderStatus = (orderNo) => {
@@ -43,7 +43,7 @@ export const orderStatus = (orderNo) => {
  * @Description: 获取微信支付信息
  * @Param:
  * @return:
- * @Author: zhuzhhm@yonyou.com
+ * @Author: zzhihang@hotmail.com
  * @date: 2022/4/3 0:38
  */
 export const getWxPayInfo = (orderNo) => {
@@ -55,7 +55,7 @@ export const getWxPayInfo = (orderNo) => {
 * @Description:支付宝跳转接口
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/4 16:47
 */
 export const aliPay = (orderNo) => {
@@ -66,7 +66,7 @@ export const aliPay = (orderNo) => {
 * @Description: 普通客人订单列表
 * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/3 0:38
 */
 export const customerOrderList = () => {
@@ -78,9 +78,20 @@ export const customerOrderList = () => {
 * @Description: 8 普通客人订单详情
  * @Param:
 * @return:
-* @Author: zhuzhhm@yonyou.com
+* @Author: zzhihang@hotmail.com
 * @date: 2022/4/3 0:39
 */
 export const customerOrderDetail = (id) => {
     return axios.post(`/api/order/info`, {id})
+};
+
+/**
+* @Description: 专题订阅 产生订单
+* @Param:
+* @return:
+* @Author: zzhihang@hotmail.com
+* @date: 2022/4/5 9:31
+*/
+export const orderCreate = (id) => {
+    return axios.post(`/api/order/create`, {businessId: id})
 };

@@ -2,18 +2,18 @@
     <div class="body">
         <div class="order-info">
             <div class="content-card">
-                <van-image src="http://115.28.186.138/pic/202204/76182872939197169.jpg" radius="6"/>
+                <van-image :src="info.img" radius="6"/>
                 <div class="info">
-                    <h1>朱志航的书</h1>
+                    <h1>{{info.title}}</h1>
                     <p>付费专题</p>
                 </div>
             </div>
         </div>
 
         <van-cell-group class="mt5">
-            <van-cell title="金额" value="内容" />
-            <van-cell title="有效期" value="内容"/>
-            <van-cell title="订阅时间" value="内容"/>
+            <van-cell title="金额" :value="info.price" />
+            <van-cell title="有效期" :value="info.timeLong"/>
+            <van-cell title="订阅时间" :value="formatDate"/>
         </van-cell-group>
 
         <div class="pay-box">
@@ -28,6 +28,9 @@
 <script>
     import Vue from 'vue';
     import {Cell, CellGroup, Image as VanImage, Button} from 'vant';
+    import {orderStatus} from "@/service/order/orderService";
+    import {LONG_MAP} from "@/static/js/const";
+    import {formatDate} from "@/static/js/util";
 
     Vue.use(Cell);
     Vue.use(CellGroup);
@@ -35,7 +38,23 @@
     Vue.use(Button);
 
     export default {
-
+        data() {
+            return {
+                info: {},
+                now: formatDate(new Date())
+            }
+        },
+        created(){
+            this.info = this.$route.query;
+            this.info.timeLong = LONG_MAP[this.info.long];
+            this.getOrderStatus();
+        },
+        methods: {
+            async getOrderStatus() {
+                const {orderNo} = this.$route.query;
+                const {data} = await orderStatus(orderNo);
+            }
+        },
     }
 </script>
 
