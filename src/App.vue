@@ -72,3 +72,10 @@
         },
     }
 </script>
+
+<style lang="less" scoped>
+    /deep/.van-tabbar-item__icon img{
+        height: 20px;
+        width: 20px;
+    }
+</style>

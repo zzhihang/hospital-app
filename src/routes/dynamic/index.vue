@@ -14,7 +14,6 @@
             <van-uploader
                     accept=".png, .jpg, .jpeg"
                     v-if="imgList.length"
-                    capture="camera"
                     v-model="imgList"
                     multiple
                     max-count="2"
@@ -60,19 +59,19 @@
                         max-count="9"
                         :disabled="imgList.length === 9 || fileList.length > 0 || recorderList.length > 0"
                 >
-                    <van-icon :name="item.icon"></van-icon>
+                    <van-icon size="24" :name="item.icon"></van-icon>
                 </van-uploader>
                 <van-uploader v-else-if="item.type === 'file'"
                               max-count="9"
                               :disabled="fileList.length === 9 || imgList.length > 0 || recorderList.length > 0"
                               accept=".doc,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                               :after-read="afterReadFile2">
-                    <van-icon :name="item.icon"></van-icon>
+                    <van-icon size="24" :name="item.icon"></van-icon>
                 </van-uploader>
-                <van-icon :class="{disabled: recorderList.length === 1 || imgList.length > 0 || fileList.length > 0}" v-else-if="item.type === 'recorder'"
+                <van-icon size="24" :class="{disabled: recorderList.length === 1 || imgList.length > 0 || fileList.length > 0}" v-else-if="item.type === 'recorder'"
                           :name="item.icon"
                 ></van-icon>
-                <van-icon v-else :name="item.icon"></van-icon>
+                <van-icon size="24" v-else :name="item.icon"></van-icon>
             </div>
         </div>
         <div class="action-bar">
