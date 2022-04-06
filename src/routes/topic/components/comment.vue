@@ -3,7 +3,7 @@
         <avatar size="small" :name="data.userName" :photo="data.headimgurl"></avatar>
         <div class="comment-box">
             <p class="content" @click="onCommentItemClick">{{data.content}}</p>
-            <div class="reply-list">
+            <div class="reply-list" v-if="data.children && data.children.length > 0">
                 <div class="reply-item" v-for="(item, index) in data.children" :key="index">
                     <div class="user-info">
                         <avatar size="small" :name="item.userName" :photo="item.headimgurl"></avatar>

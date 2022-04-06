@@ -13,7 +13,7 @@
         <van-cell-group class="mt5">
             <van-cell title="金额" :value="info.price" />
             <van-cell title="有效期" :value="info.timeLong"/>
-            <van-cell title="订阅时间" :value="formatDate"/>
+            <van-cell title="订阅时间" :value="now"/>
         </van-cell-group>
 
         <div class="pay-box">

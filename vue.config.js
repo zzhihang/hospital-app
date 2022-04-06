@@ -2,7 +2,7 @@
  * @Description vue.config.js 通过merge会覆盖脚手架一些默认配置
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/3/30 11:31
  **/
 const path = require('path')
@@ -12,42 +12,40 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
 
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
+const target = 'http://wx.shouzimu.xyz';
 
 module.exports = {
-    publicPath: '/iweb/',
+    publicPath: '/',
     lintOnSave: false, //禁用eslint
-    outputDir: 'iweb',
+    outputDir: 'dist',
     productionSourceMap: !IS_PROD, //生产环境不需要sourceMap
     devServer: {
         compress: true,
         disableHostCheck: true,
         proxy: {
             '/zhuanti': {
-                target: 'http://115.28.186.138',
+                target: target,
                 changeOrigin: true,
                 ws: true,
                 secure: false
             },
             '/userlabels': {
-                target: 'http://115.28.186.138',
+                target: target,
                 changeOrigin: true,
                 ws: true,
             },
             '/sysmessage': {
-                target: 'http://115.28.186.138',
+                target: target,
                 changeOrigin: true,
                 ws: true,
             },
             '/api': {
-                target: 'http://115.28.186.138',
+                target: target,
                 changeOrigin: true,
                 ws: true,
-                pathRewrite: {
-                    "^/api": "/"
-                }
             },
             '/testLogin': {
-                target: 'http://115.28.186.138',
+                target: target,
                 changeOrigin: true,
                 ws: true,
             },
@@ -71,11 +69,11 @@ module.exports = {
         }
     },
     configureWebpack: config => {
-        config.externals = {
-            vue: "Vue",
-            axios: "axios",
-            "vue-router": "VueRouter"
-        };
+        // config.externals = {
+        //     vue: "Vue",
+        //     axios: "axios",
+        //     "vue-router": "VueRouter"
+        // };
         const plugins = []; //额外插件
         if (IS_PROD) {
             config.optimization = {
@@ -119,15 +117,15 @@ module.exports = {
                 }
             };
         }
-        plugins.push(
-            new CompressionWebpackPlugin({
-                filename: "[path].gz[query]",
-                algorithm: "gzip",
-                test: productionGzipExtensions,
-                threshold: 10240,
-                minRatio: 0.8
-            })
-        );
+        // plugins.push(
+        //     new CompressionWebpackPlugin({
+        //         filename: "[path].gz[query]",
+        //         algorithm: "gzip",
+        //         test: productionGzipExtensions,
+        //         threshold: 10240,
+        //         minRatio: 0.8
+        //     })
+        // );
         config.plugins = [...config.plugins, ...plugins];
     },
     chainWebpack: config => {
@@ -156,11 +154,7 @@ module.exports = {
         const cdn = {
             // 访问https://unpkg.com/element-ui/lib/theme-chalk/index.css获取最新版本
             css: [],
-            js: [
-                "https://files.ibaodian.com/static/official/vue/vue.min.js", // 访问https://unpkg.com/vue/dist/vue.min.js获取最新版本
-                "https://files.ibaodian.com/static/official/vue/vue-router.min.js",
-                "https://files.ibaodian.com/static/official/vue/axios.min.js",
-            ]
+            js: []
         };
 
         //修改vue-cli4中htmlplugin参数

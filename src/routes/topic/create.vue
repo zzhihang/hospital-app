@@ -1,6 +1,6 @@
 <template>
     <div class="body">
-        <van-form @submit="onSubmit">
+        <van-form>
             <div class="upload">
                 <van-uploader :after-read="afterRead" v-model="fileList" max-count="1">
                     <div class="upload-box">

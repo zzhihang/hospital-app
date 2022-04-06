@@ -15,7 +15,7 @@ import axios from "axios";
 * @date: 2022/4/3 0:38
 */
 export const orderList = () => {
-    return axios.post(`/api/order/trancaction/list`)
+    return axios.post(`/order/trancaction/list`)
 };
 /**
 * @Description: 糖主订单详情
@@ -25,7 +25,7 @@ export const orderList = () => {
 * @date: 2022/4/3 0:38
 */
 export const orderDetail = (id) => {
-    return axios.post(`/api/order/trancaction/info`, {id})
+    return axios.post(`/order/trancaction/info`, {id})
 };
 
 /**
@@ -36,7 +36,7 @@ export const orderDetail = (id) => {
  * @date: 2022/4/3 0:38
  */
 export const orderStatus = (orderNo) => {
-    return axios.post(`/api/order/status`, {orderNo})
+    return axios.post(`/order/status`, {orderNo})
 };
 
 /**
@@ -47,7 +47,7 @@ export const orderStatus = (orderNo) => {
  * @date: 2022/4/3 0:38
  */
 export const getWxPayInfo = (orderNo) => {
-    return axios.post(`/api/order/wxpay`, {orderNo})
+    return axios.post(`/order/wxpay`, {orderNo})
 };
 
 
@@ -59,7 +59,7 @@ export const getWxPayInfo = (orderNo) => {
 * @date: 2022/4/4 16:47
 */
 export const aliPay = (orderNo) => {
-    return axios.post(`/api/order/alipay`, {orderNo})
+    return axios.post(`/order/alipay`, {orderNo})
 };
 
 /**
@@ -70,7 +70,7 @@ export const aliPay = (orderNo) => {
 * @date: 2022/4/3 0:38
 */
 export const customerOrderList = () => {
-    return axios.post(`/api/order/list`)
+    return axios.post(`/order/list`)
 };
 
 
@@ -82,7 +82,7 @@ export const customerOrderList = () => {
 * @date: 2022/4/3 0:39
 */
 export const customerOrderDetail = (id) => {
-    return axios.post(`/api/order/info`, {id})
+    return axios.post(`/order/info`, {id})
 };
 
 /**
@@ -93,5 +93,5 @@ export const customerOrderDetail = (id) => {
 * @date: 2022/4/5 9:31
 */
 export const orderCreate = (id) => {
-    return axios.post(`/api/order/create`, {businessId: id})
+    return axios.post(`/order/create`, {businessId: id})
 };

@@ -1,14 +1,13 @@
 <template>
     <div class="content-wrap">
-        <div :class="['content', expande ? 'expande' : 'close']" ref="content">
-            <p>思路：1、判断当前内容是否超过三行。此处可以给每行设置一个行高line-height,渲染完后超过三倍的行高即认为是内容超过了三行。2、展示/收起状态的切换可以通过data中的参数来绑定。3、在底部使用position:absolute来绝对定位展开该在的位置。4、根据业务需求来设定好展开和收起按钮需要呆的地方。</p>
-            <span>...</span>
+        <div :class="['content', expand ? 'expand' : 'close']" ref="content">
+            <p v-html="content"></p>
         </div>
-        <div class="expande-button-wrap" v-if="needShowExpande">
-            <div class="expande-button" @click="expandeClick" v-if="!expande">
+        <div class="expand-button-wrap" v-if="needShowexpand">
+            <div class="expand-button" @click="expandClick" v-if="!expand">
                 <span>查看更多>></span>
             </div>
-            <div class="expande-button" @click="expandeClick" v-else>收起</div>
+            <div class="expand-button" @click="expandClick" v-else>收起</div>
         </div>
     </div>
 </template>
@@ -17,25 +16,26 @@
     import Vue from 'vue';
 
     export default {
+        props: ['content'],
         data() {
             return {
-                expande: true,
-                needShowExpande: false,
+                expand: true,
+                needShowexpand: false,
             }
         },
         methods: {
-            expandeClick() {
-                this.expande = !this.expande
+            expandClick() {
+                this.expand = !this.expand
             },
         },
         mounted() {
             this.$nextTick(() => {
                 let lineHeight = 22
-                if (this.$refs.content.offsetHeight > lineHeight * 3) {
-                    this.expande = false
-                    this.needShowExpande = true
+                    if (this.$refs.content.offsetHeight > lineHeight * 8) {
+                    this.expand = false
+                    this.needShowexpand = true
                 } else {
-                    this.expande = true
+                    this.expand = true
                 }
             })
         },
@@ -56,23 +56,22 @@
         /* text-overflow: ellipsis; */
     }
 
-    .expande {
+    .expand {
         overflow: auto;
         height: auto;
-        padding-bottom: 22px;
     }
 
     .close {
         overflow: hidden;
-        height: 66px;
+        height: 176px;
         padding-bottom: 0;
     }
 
-    .expande-button-wrap {
+    .expand-button-wrap {
         height: 22px;
     }
 
-    .expande-button {
+    .expand-button {
         color: @main-color;
         vertical-align: middle;
         font-size: 14px;

@@ -4,7 +4,7 @@
             <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
         <router-view v-if="!$route.meta.keepAlive"></router-view>
-        <van-tabbar v-if="showTabBar" v-model="active" active-color="#FE7B35">
+        <van-tabbar v-if="ifShowTabBar" v-model="active" active-color="#FE7B35">
             <van-tabbar-item replace to="/topic" icon="home-o">
                 <span>专题</span>
                 <template #icon="props">
@@ -30,7 +30,7 @@
 <script>
     import Vue from 'vue';
     import {Tabbar, TabbarItem} from 'vant';
-    import {testLogin, userinfo} from "@/service/topic/topService";
+    import {userinfo} from "@/service/topic/topService";
     import connect from "@/store/connect";
 
     Vue.use(Tabbar);
@@ -56,7 +56,7 @@
             }
         },
         computed: {
-            ...mapState(['userInfo'])
+            ...mapState(['userInfo', 'ifShowTabBar'])
         },
         methods: {
             ...mapMutations(['setUserInfo', 'setIsBozhu']),
@@ -68,17 +68,7 @@
             }
         },
         created() {
-            testLogin();
             this.getUserInfo();
         },
-        mounted(){
-            // this.$router.beforeEach((to, from, next) => {
-            //     this.showTabBar = !!to.meta.showTabBar;
-            //     next();
-            // });
-            // if(this.$route.fullPath === '/'){
-            //     this.showTabBar = true;
-            // }
-        }
     }
 </script>

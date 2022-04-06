@@ -3,7 +3,7 @@
  * @Description 获取url参数
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/5/13 14:47
  **/
 export const getParams = (key) => {
@@ -26,7 +26,7 @@ export const getParams = (key) => {
  * @Description 星号加密手机号
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/5/13 14:47
  **/
 export const getStarPhone = (phone) => {
@@ -40,7 +40,7 @@ export const getStarPhone = (phone) => {
  * @Description 数字转数字+单位格式 用于超大数字
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/5/13 14:47
  **/
 
@@ -68,7 +68,7 @@ export const numberFormatByTenThousand = function (value) {
  * @Description 深层拷贝 不支持undefined function类型的copy
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/6/16 14:09
  **/
 export const deepClone = (data) => {
@@ -78,7 +78,7 @@ export const deepClone = (data) => {
  * @Description 格式化日期
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/7/30 10:53
  **/
 

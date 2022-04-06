@@ -2,7 +2,7 @@
  * @Description store基础类 所有的store module都继承于此 自动生成get set 后续考虑用注解改造
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/8/12 9:57
  **/
 

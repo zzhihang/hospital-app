@@ -1,9 +1,9 @@
 /**
  * @Description 环境变量文件 考虑判断node_env编译时注入
- * @Param 
- * @return 
- * @Author zhuzh_hb@mingya.com.cn
- * @Date 2021/4/7 14:16 
+ * @Param
+ * @return
+ * @Author zzhihang@hotmail.com
+ * @Date 2021/4/7 14:16
  **/
 
 const TEST_SIGNAL = 'testiweb.ibaodian.com';
@@ -44,7 +44,7 @@ const config = {
 
 export const getEnvConfig = () => {
     const url = window.location.href;
-    
+
     if(url.includes(TEST_SIGNAL) || url.includes(LOCALHOST) || url.includes('10.10.0.50')){
         return config.test
     }

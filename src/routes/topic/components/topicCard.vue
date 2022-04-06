@@ -8,15 +8,22 @@
                 </template>
             </van-popover>
         </div>
+        <div class="dynamic-status" v-if="data.status === 2">
+            <van-notice-bar left-icon="close" background="#FFF7F3" mode="closeable" wrapable>
+                {{data.audit}}
+                <template #right-icon>
+                    <div style="align-self: center" @click="goEdit">
+                        重新编辑>>
+                    </div>
+                </template>
+            </van-notice-bar>
+        </div>
         <div class="detail">
             <div>
-                <overflowLineHidden />
-                <p v-html='data.title'></p>
-                <!--<span class="topic">{{getLabelString(data.labelList)}}</span>-->
+                <overflow-line-hidden :content="data.title"/>
             </div>
-            <div class="doc-list">
+            <div class="doc-list" v-if="data.type === 'doc'">
                 <doc-card
-                        v-if="data.type === 'doc'"
                         v-for="(item, index) in data.contentObject"
                         :name="item.name"
                         @click.native="onDocCardClick(item)"
@@ -35,9 +42,9 @@
                         v-for="(item, index) in data.contentObject"
                         :key="index" />
             </div>
-            <teplate v-for="(item, index) in data.contentObject" :key="index">
-                <audio-player v-if="data.type === 'voice'" :long="item.timeLong" :url="item.url"/>
-            </teplate>
+            <template v-for="(item, index) in data.contentObject">
+                <audio-player v-if="data.type === 'voice'" :long="item.timeLong" :key="index" :url="item.url"/>
+            </template>
         </div>
         <div class="bottom-info">
             <span class="date">{{data.ctime}}</span>
@@ -85,7 +92,7 @@
         </div>
         <van-popup v-model="pdfShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
             <template v-for="i in pdfPages">
-                <pdf :key="index" :page="i" ref="pdf" :src="pdfUrl"></pdf>
+                <pdf :page="i" ref="pdf" :src="pdfUrl"></pdf>
             </template>
         </van-popup>
         <van-popup v-model="wordShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
@@ -97,15 +104,17 @@
 
 <script>
     import Vue from 'vue';
-    import {Field, Icon, Image as VanImage, Popover, Popup} from 'vant';
+    import {Field, Icon, Image as VanImage, NoticeBar, Popover, Popup} from 'vant';
     import comment from './comment'
     import avatar from './avatar'
     import {commentPost, deleteTopic, dianZan} from "@/service/topic/topService";
     import docCard from "@/routes/topic/components/docCard";
     import audioPlayer from "@/routes/dynamic/components/audioPlayer";
     import pdf from 'vue-pdf'
+    import axios from 'axios';
     import overflowLineHidden from "@/components/common/overflowLineHidden";
 
+    Vue.use(NoticeBar);
     let docx = require('docx-preview');
 
     Vue.use(Field);
@@ -116,6 +125,7 @@
     Vue.use(Popup);
 
     export default {
+        name: 'topicCard',
         props: ['data', 'forbidden'],
         components: {
             avatar,
@@ -162,22 +172,25 @@
             }
         },
         methods: {
+            goEdit(){
+                this.$router.push({
+                    path: '/dynamic',
+                    query: {
+                        id: this.data.id,
+                        zhuantiId: this.$route.query.id
+                    }
+                })
+            },
             onSelectPopover(e) {
                 if(e.action === 'edit'){
-                    this.$router.push({
-                        path: '/dynamic',
-                        query: {
-                            id: this.data.id,
-                            zhuantiId: this.$route.query.id
-                        }
-                    })
+                    this.goEdit();
                 }
                 if(e.action === 'del'){
                     this.$confirm({message: '您确定要删除此动态？'}, async () => {
                         const result = await deleteTopic(this.data.id);
                         if(result.status === 200){
                             this.$toast.success('删除成功');
-                            this.$emit('deleteSuccess')
+                            this.$emit('deleteSuccess', this.data.id);
                         }
                     })
                 }
@@ -185,6 +198,11 @@
             async onZanClick(){
                 const result = await dianZan(this.data.id);
                 if(result.status === 200){
+                    if(this.ifZan){
+                        this.data.upCount = this.data.upCount - 1;
+                    }else{
+                        this.data.upCount = this.data.upCount + 1;
+                    }
                     this.$emit('onZanClick');
                     this.ifZan = !this.ifZan;
                     this.$toast.success('操作成功')
@@ -348,5 +366,15 @@
         text-align: center;
         margin-top: 10px;
         font-size: 14px;
+    }
+    .van-notice-bar{
+        font-size: 12px;
+        align-items: unset;
+        /deep/.van-notice-bar__left-icon{
+            min-width: unset;
+            margin-top: 7px;
+            font-size: 12px;
+            margin-right: 2px;
+        }
     }
 </style>

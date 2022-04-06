@@ -4,7 +4,7 @@ import axios from "axios";
  * @Description 博主专题列表
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/5/14 17:05
  **/
 export const zhuantiList = (data) => {
@@ -15,22 +15,22 @@ export const zhuantiList = (data) => {
  * @Description 标签列表
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/5/14 17:05
  **/
 export const userinfo = () => {
-    return axios.get('/api/userinfo')
+    return axios.get('/userinfo')
 };
 
 /**
  * @Description 标签列表
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/5/14 17:05
  **/
 export const testLogin = () => {
-    return axios.get('/api/testLogin?openId=bozhu')
+    return axios.get('/testLogin?openId=bozhu')
 };
 
 /**

@@ -19,5 +19,6 @@ export default new CommonStore({
         "login": '',
         "unReadCount": ''
     },
-    isBozhu: false
+    isBozhu: false,
+    ifShowTabBar: false
 });

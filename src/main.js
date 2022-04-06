@@ -50,6 +50,11 @@ axios.interceptors.response.use(function (response) {
   return Promise.reject(error);
 });
 
+if (process.env.NODE_ENV === 'development') {
+  axios.defaults.baseURL = 'http://localhost:8080/api'
+}else{
+  axios.defaults.baseURL = 'http://wx.shouzimu.xyz/api'
+}
 
 
 router.beforeEach((to, from, next) => {

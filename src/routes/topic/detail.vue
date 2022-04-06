@@ -3,7 +3,7 @@
         <div style="position:relative;">
             <van-image class="top-img" :src="model.imgUrl"/>
             <div class="badge-box">
-                <van-image v-if="String(model.free) === '0'" height="18" :src="require('../../static/img/topic/pic_biaoqian.png')" />
+                <van-image v-if="String(model.free) === '1'" height="18" :src="require('../../static/img/topic/pic_biaoqian.png')" />
             </div>
             <div class="action-edit" @click="onEditDetail" v-bozhu>
                 <van-icon name="edit" />
@@ -41,12 +41,11 @@
                     @load="onLoad"
             >
                 <div class="card-list">
-                    <card v-for="(item, index) in list"
+                    <topic-card v-for="(item, index) in list"
                           :key="index"
                           :data="item"
                           :forbidden="model.forbidden"
-                          @onZanClick="deleteSuccess"
-                          @deleteSucces="deleteSuccess"
+                          @deleteSuccess="deleteSuccess"
                     />
                 </div>
             </van-list>
@@ -66,7 +65,7 @@
 <script>
     import Vue from 'vue';
     import tagList from "../../components/tag/tagList";
-    import card from "./components/card";
+    import topicCard from "./components/topicCard";
     import bottomBox from "./components/bottomBox";
     import {userLabelList} from "../../service/topic/topService";
     import {zhuantiDetail} from "@/service/topic/topService";
@@ -80,7 +79,7 @@
     export default {
         components: {
             tagList,
-            card,
+            topicCard,
             bottomBox,
             myEmpty
         },
@@ -154,8 +153,11 @@
                     }
                 })
             },
-            deleteSuccess() {
-                this.getDetail();
+            deleteSuccess(id) {
+                //this.getDetail();
+                //调用接口后不请求数据，因为带有分页 无法精确到某一页删除 所以这里前端也删除一下数组中的元素
+                const index = this.list.findIndex(item => item.id === id);
+                this.list.splice(index, 1)
             },
             ifForbidden(){
                 if(this.model.forbidden === 1 && sessionStorage.getItem('isBozhu') !== 'true'){//博主 禁严
@@ -260,7 +262,7 @@
 
     .top-img {
         width: 100%;
-        max-height: 250px;
+        height: 250px;
         overflow: hidden;
     }
     .action-edit{
@@ -271,11 +273,11 @@
         color: #333333;
         border-radius: 13px 0 0 13px;
         position: absolute;
-        opacity: 0.7;
-        background: #DCDEDD;
+        background: rgb(220 222 221 / 70%);
         right: 0;
         top: 159px;
         font-size: 14px;
+        z-index: 999;
     }
     .badge-box{
         position: absolute;

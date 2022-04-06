@@ -2,7 +2,7 @@
  * @Description app openmodule的常量值 要不然一直问 太麻烦了
  * @Param
  * @return
- * @Author zhuzh_hb@mingya.com.cn
+ * @Author zzhihang@hotmail.com
  * @Date 2021/7/23 16:12
  **/
 
