@@ -44,7 +44,9 @@
                     <topic-card v-for="(item, index) in list"
                           :key="index"
                           :data="item"
+                          @click.native.stop="onTopicCardClick(item)"
                           :forbidden="model.forbidden"
+                          :subscribe="!!model.subscribe"
                           @deleteSuccess="deleteSuccess"
                     />
                 </div>
@@ -158,6 +160,14 @@
                 //调用接口后不请求数据，因为带有分页 无法精确到某一页删除 所以这里前端也删除一下数组中的元素
                 const index = this.list.findIndex(item => item.id === id);
                 this.list.splice(index, 1)
+            },
+            onTopicCardClick(item){
+                this.$router.push({
+                    path: '/topic/dynamic_detail',
+                    query: {
+                        id: item.id
+                    }
+                })
             },
             ifForbidden(){
                 if(this.model.forbidden === 1 && sessionStorage.getItem('isBozhu') !== 'true'){//博主 禁严

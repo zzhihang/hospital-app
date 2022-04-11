@@ -14,6 +14,7 @@ import confirm from 'components/confirm'
 import store from './store';
 import toast from "@/components/toast";
 import {Toast} from "vant";
+import Vconsole from 'vconsole'
 Vue.prototype.$bridge = Bridge;
 
 Vue.config.productionTip = false;
@@ -23,6 +24,8 @@ Vue.prototype.params = getParams(); //全局注入url params参数
 Vue.prototype.$confirm = confirm;
 
 Vue.prototype.$toast = toast;
+
+new Vconsole();
 
 //axios请求拦截
 axios.interceptors.request.use((request) => {
@@ -42,7 +45,17 @@ axios.interceptors.request.use((request) => {
 
 // 添加响应拦截器
 axios.interceptors.response.use(function (response) {
-  return response.data;
+  const result = response.data;
+  if(result.status === -101){
+    window.location.href = result.data.redirect;
+    return;
+  }
+  if(result.status === -102){
+    toast.fail('请重新登录');
+    router.push('/login');
+    return;
+  }
+  return result;
 }, function (error) {
   // 超出 2xx 范围的状态码都会触发该函数。
   // 对响应错误做点什么
@@ -53,7 +66,7 @@ axios.interceptors.response.use(function (response) {
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = 'http://localhost:8080/api'
 }else{
-  axios.defaults.baseURL = 'http://wx.shouzimu.xyz/api'
+  axios.defaults.baseURL = 'http://knowledge.rrzhongbao.com/api'
 }
 
 

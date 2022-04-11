@@ -158,6 +158,3 @@ export const deleteTopic = (id) => {
 export const dyncmicInfo = (id) => {
     return axios.post(`/zhuanti/item/info`,{id})
 };
-
-
-

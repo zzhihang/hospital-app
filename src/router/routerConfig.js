@@ -16,7 +16,13 @@ const routes = [
         path: '/topic/detail',
         component: r => require.ensure([], () => r(require('@routes/topic/detail'))),
         meta:{
-            title: '我的专题'
+            title: '专题详情'
+        },
+    },{
+        path: '/topic/dynamic_detail',
+        component: r => require.ensure([], () => r(require('@routes/topic/topicCardDetail'))),
+        meta:{
+            title: '专题详情'
         },
     },{
         path: '/topic/create',

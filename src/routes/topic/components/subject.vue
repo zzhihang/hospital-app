@@ -4,7 +4,7 @@
         <div class="inner-content">
             <div class="badge-box">
                 <span class="badge">{{ifSubscribe}}</span>
-                <van-image v-if="String(data.free) === '0'" height="18" class="vip" :src="require('../../../static/img/topic/pic_biaoqian.png')"></van-image>
+                <van-image v-if="String(data.free) === '0'" height="18" width="38" class="vip" :src="require('../../../static/img/topic/pic_biaoqian.png')"></van-image>
             </div>
             <div class="content-box">
                 <avatar></avatar>

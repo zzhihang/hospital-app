@@ -9,9 +9,11 @@
             >
                 <subject class="subject" v-for="(item, index) in list" :key="index" @click.native="goDetail(item.id)"
                          :data="item"></subject>
-                <div class="float-button" v-bozhu>
-                    <van-image width="44" height="44" :src="require('../../static/img/topic/btn_chuangjianzhuti.png')"
-                               @click="createSubject"/>
+                <div class="float-button">
+                    <div v-bozhu>
+                        <van-image width="44" height="44" :src="require('../../static/img/topic/btn_chuangjianzhuti.png')"
+                                   @click="createSubject"/>
+                    </div>
                 </div>
             </van-list>
         </div>

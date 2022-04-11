@@ -1,6 +1,6 @@
 <template>
     <div>
-        <pay-result type="success"/>
+        <pay-result type="success" @onButtonClick="onButtonClick"/>
     </div>
 </template>
 
@@ -13,7 +13,18 @@
     export default {
         components: {
             payResult
-        }
+        },
+        methods: {
+            onButtonClick() {
+                const zhuantiId = this.$route.query.id;
+                this.$router.replace({
+                    path: '/topic/detail',
+                    query: {
+                        id: zhuantiId
+                    }
+                })
+            }
+        },
     }
 </script>
 

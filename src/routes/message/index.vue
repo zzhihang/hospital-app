@@ -1,6 +1,9 @@
 <template>
     <div class="body">
-        <message-card class="mt5" v-for="(item, index) in list" :key="index" :data="item"/>
+        <teplate v-if="list.length > 0">
+            <message-card class="mt5" v-for="(item, index) in list" :key="index" :data="item"/>
+        </teplate>
+        <my-empty v-else description="暂无消息"/>
     </div>
 </template>
 
@@ -8,10 +11,15 @@
     import Vue from 'vue';
     import messageCard from './components/messageCard'
     import {sysMessageList, sysMessageReadall} from "@/service/message/messageService";
+    import {userinfo} from "@/service/topic/topService";
+    import connect from "@/store/connect";
+    import myEmpty from "@/components/empty/myEmpty";
+    const {mapMutations} = connect('commonStore');
 
     export default {
         components: {
-            messageCard
+            messageCard,
+            myEmpty
         },
         data() {
             return {
@@ -24,6 +32,7 @@
             this.readAll();
         },
         methods: {
+            ...mapMutations(['setUserInfo']),
             async getData() {
                 const {data} = await sysMessageList({
                     page: this.page,
@@ -31,8 +40,13 @@
                 });
                 this.list = data.records;
             },
-            readAll(){
-                sysMessageReadall()
+            async readAll(){
+                await sysMessageReadall();
+                this.getUserInfo();
+            },
+            async getUserInfo(){
+                const {data} = await userinfo();
+                this.setUserInfo(data);
             }
         },
     }

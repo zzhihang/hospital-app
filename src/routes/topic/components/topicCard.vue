@@ -49,12 +49,12 @@
         <div class="bottom-info">
             <span class="date">{{data.ctime}}</span>
             <div class="action">
-                <span @click="onCommentClick">
+                <span @click.stop="onCommentClick">
                     <van-icon class="mt4 mr4" :name="commentIcon" size="15"/>
                     <span>{{data.commentCount}}</span>
                 </span>
                 <span class="ml10 mr10" style="color: #F5F5F5;">|</span>
-                <span @click="onZanClick">
+                <span @click.stop="onZanClick">
                     <van-icon class="mr4" :name="ifZan ? dianzanPressIcon : dianzanIcon" size="15"/>
                     <span>{{data.upCount}}</span>
                 </span>
@@ -74,6 +74,14 @@
             <div v-else class="comment-none">暂无评论，快来评论吧</div>
         </div>
         <div class="more" v-if="data.comments.length > 8">查看更多>></div>
+        <van-popup v-model="pdfShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
+            <template v-for="i in pdfPages">
+                <pdf :page="i" ref="pdf" :src="pdfUrl"></pdf>
+            </template>
+        </van-popup>
+        <van-popup v-model="wordShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
+            <div ref="file"></div>
+        </van-popup>
         <div class="comment-input" v-show="commentShow">
             <h2><span>评论</span>{{this.currentCommentTo}}</h2>
             <div class="input-area">
@@ -90,15 +98,6 @@
                 <span class="send-button" :class="{active: content.length > 0}" @click="sendComment">发表</span>
             </div>
         </div>
-        <van-popup v-model="pdfShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
-            <template v-for="i in pdfPages">
-                <pdf :page="i" ref="pdf" :src="pdfUrl"></pdf>
-            </template>
-        </van-popup>
-        <van-popup v-model="wordShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
-            <div ref="file"></div>
-        </van-popup>
-
     </div>
 </template>
 
@@ -126,7 +125,7 @@
 
     export default {
         name: 'topicCard',
-        props: ['data', 'forbidden'],
+        props: ['data', 'forbidden', 'subscribe'],
         components: {
             avatar,
             comment,
@@ -196,6 +195,9 @@
                 }
             },
             async onZanClick(){
+                if(!this.subscribe){
+                    return this.$toast.fail('请先订阅')
+                }
                 const result = await dianZan(this.data.id);
                 if(result.status === 200){
                     if(this.ifZan){
@@ -217,7 +219,10 @@
                     this.pdfPages = pdf.numPages;
                 });
             },
-            onCommentClick(name){debugger
+            onCommentClick(name){
+                // if(!this.subscribe){
+                //     return this.$toast.fail('请先订阅')
+                // }
                 if(!this.ifForbidden()){
                     return;
                 }

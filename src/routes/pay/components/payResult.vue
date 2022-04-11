@@ -5,7 +5,7 @@
                 :description="text"
         />
         <p class="reason" v-if="type === 'fail'">余额不足，支付失败</p>
-        <van-button class="result-button" type="primary">{{buttonText}}</van-button>
+        <van-button class="result-button" type="primary" @click="onClick">{{buttonText}}</van-button>
     </div>
 </template>
 
@@ -39,7 +39,12 @@
                 },
                 immediate: true
             }
-        }
+        },
+        methods: {
+            onClick() {
+                this.$emit('onButtonClick')
+            }
+        },
     }
 </script>
 

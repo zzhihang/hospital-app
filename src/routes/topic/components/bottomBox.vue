@@ -19,7 +19,7 @@
         props: ['price', 'free', 'long'],
         computed: {
             buttonText(){
-                return String(this.free) === '1' ? '立即订阅' : '免费订阅'
+                return String(this.free) === '0' ? '立即订阅' : '免费订阅'
             },
             timeLong(){
                 return LONG_MAP[this.long]

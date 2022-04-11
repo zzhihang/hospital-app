@@ -46,8 +46,19 @@ export const orderStatus = (orderNo) => {
  * @Author: zzhihang@hotmail.com
  * @date: 2022/4/3 0:38
  */
-export const getWxPayInfo = (orderNo) => {
+export const wxPay = (orderNo) => {
     return axios.post(`/order/wxpay`, {orderNo})
+};
+
+/**
+ * @Description: 微信验签
+ * @Param:
+ * @return:
+ * @Author: zzhihang@hotmail.com
+ * @date: 2022/4/3 0:38
+ */
+export const wxYanQian = (url) => {
+    return axios.post(`/order/jssignature`, {url})
 };
 
 

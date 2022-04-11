@@ -1,6 +1,6 @@
 <template>
     <div>
-        <pay-result type="fail"/>
+        <pay-result type="fail" @onButtonClick="onButtonClick"/>
     </div>
 </template>
 
@@ -14,7 +14,12 @@
     export default {
         components: {
             payResult
-        }
+        },
+        methods: {
+            onButtonClick() {
+                this.$router.go(-1);
+            }
+        },
     }
 </script>
 

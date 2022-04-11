@@ -205,9 +205,11 @@
                     params.contentObject = this.dynamic;
                 }
                 const result = await postDynamic(params);
-                if(result.status){
+                if(result.success){
                     this.$toast.success('发布成功');
                     this.$router.go(-1);
+                }else{
+                    this.$toast.fail(result.msg)
                 }
             },
             cancelClick() {
