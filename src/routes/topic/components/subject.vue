@@ -49,6 +49,7 @@
         border-radius: 9px;
         overflow: hidden;
         display: flex;
+        background: linear-gradient(0deg, rgb(75 71 71 / 30%), rgb(240 233 233 / 20%));
         flex-direction: column;
         .inner-content{
             position: absolute;

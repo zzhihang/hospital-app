@@ -1,5 +1,5 @@
 <template>
-    <div class="body" :class="{pb60: !ifSubscribe}">
+    <div class="body" :class="{pb60: !ifSubscribe, pb100: commentShow}">
         <div style="position:relative;">
             <van-image class="top-img" :src="model.imgUrl"/>
             <div class="badge-box">
@@ -44,10 +44,10 @@
                     <topic-card v-for="(item, index) in list"
                           :key="index"
                           :data="item"
-                          @click.native.stop="onTopicCardClick(item)"
                           :forbidden="model.forbidden"
                           :subscribe="!!model.subscribe"
                           @deleteSuccess="deleteSuccess"
+                          @onCommentShowClick="onCommentShowClick"
                     />
                 </div>
             </van-list>
@@ -57,9 +57,25 @@
                 <p>注:{{model.remark}}</p>
             </div>
         </div>
-        <bottom-box :price="model.price" @onSubscribe="onSubscribe" :free="model.free" :long="model.subscribeType"/>
+        <bottom-box v-if="!ifSubscribe" :price="model.price" @onSubscribe="onSubscribe" :free="model.free" :long="model.subscribeType"/>
         <div class="publish-dynamic" @click="onPublishClick">
             <van-image :src="require('../../static/img/topic/icon_dabudongtai@2x.png')"></van-image>
+        </div>
+        <div class="comment-input" v-show="commentShow">
+            <h2><span>评论</span>{{this.currentCommentTo}}</h2>
+            <div class="input-area">
+                <van-field
+                        ref="commentInput"
+                        v-model="content"
+                        rows="2"
+                        autosize
+                        type="textarea"
+                        maxlength="100"
+                        placeholder="请输入您要评论的内容"
+                        show-word-limit
+                />
+                <span class="send-button" :class="{active: content.length > 0}" @click="sendComment">发表</span>
+            </div>
         </div>
     </div>
 </template>
@@ -70,7 +86,7 @@
     import topicCard from "./components/topicCard";
     import bottomBox from "./components/bottomBox";
     import {userLabelList} from "../../service/topic/topService";
-    import {zhuantiDetail} from "@/service/topic/topService";
+    import {commentPost, zhuantiDetail} from "@/service/topic/topService";
     import {Image as VanImage, List, Icon} from 'vant';
     import myEmpty from "@/components/empty/myEmpty";
     import {orderCreate} from "@/service/order/orderService";
@@ -94,7 +110,10 @@
                 finished: false,
                 pageIndex: 1,
                 tagModel: {},
-                ifSubscribe: false
+                currentCommentTo: '',
+                ifSubscribe: false,
+                commentShow: false,
+                content: '',
             }
         },
         created() {
@@ -102,9 +121,32 @@
             this.getDetail();
         },
         methods: {
+            onCommentShowClick(data){
+                this.commentData = data;
+                this.$refs.commentInput.focus();
+                this.commentShow = true;
+            },
+            async sendComment(){
+                const params = {
+                    itemId: this.commentData.id,
+                    content: this.content
+                };
+                if(this.commentData.parentId){
+                    params.parentId = this.commentData.parentId;
+                }
+                const result = await commentPost(params);
+                if(result.status === 200){
+                    this.$toast.success('评论成功');
+                    this.getDetail();
+                }
+            },
             async onSubscribe(){
                 const {data} = await orderCreate(this.model.id);
-                if(data.status === 0){
+                if(data.subscribe && String(this.model.free) === '1'){
+                    this.ifSubscribe = true;
+                    return;
+                }
+                if(data.status === 200){
                     this.$router.push({
                         path: '/pay',
                         query: {
@@ -160,14 +202,6 @@
                 //调用接口后不请求数据，因为带有分页 无法精确到某一页删除 所以这里前端也删除一下数组中的元素
                 const index = this.list.findIndex(item => item.id === id);
                 this.list.splice(index, 1)
-            },
-            onTopicCardClick(item){
-                this.$router.push({
-                    path: '/topic/dynamic_detail',
-                    query: {
-                        id: item.id
-                    }
-                })
             },
             ifForbidden(){
                 if(this.model.forbidden === 1 && sessionStorage.getItem('isBozhu') !== 'true'){//博主 禁严
@@ -260,6 +294,10 @@
         padding-bottom: 60px;
     }
 
+    .pb100{
+        padding-bottom: 100px;
+    }
+
     .publish-dynamic {
         position: fixed;
         right: 10px;
@@ -312,6 +350,41 @@
             padding: 15px;
             background: #FBEDE7;
             border-radius: 6px;
+        }
+    }
+
+    .comment-input{
+        background: #FFFFFF;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        padding: 15px 15px 20px;
+        h2{
+            font-size: 14px;
+            color: #333333;
+            span{
+                font-weight: normal;
+                color: #666666;
+            }
+        }
+        .van-field{
+            background: #F5F5F5;
+            flex: 1;
+        }
+        .input-area{
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+        }
+        .send-button{
+            flex-shrink: 0;
+            color: #BBBBBB;
+            font-size: 16px;
+            margin-left: 13px;
+            &.active{
+                color: @main-color;
+            }
         }
     }
 </style>

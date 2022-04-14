@@ -110,6 +110,12 @@ const routes = [
         meta:{
             title: '支付失败'
         }
+    },{
+        path: '/policy',
+        component: r => require.ensure([], () => r(require('@routes/policy/index'))),
+        meta:{
+            title: '知识付费平台协议隐私政策'
+        }
     }
 
 ];

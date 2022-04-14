@@ -24,6 +24,9 @@
         },
         methods: {
             async save() {
+                if(!this.value.trim().length){
+                    return this.$toast.fail('请填写昵称')
+                }
                 const result= await updateUserInfo({nickname: this.value});
                 if(result.status === 200){
                     this.$toast.success('修改成功');

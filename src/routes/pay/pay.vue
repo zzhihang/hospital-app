@@ -113,8 +113,9 @@
                 }
             },
             queryOrderStatus(){
-                setInterval(() => {
-                    this.getOrderStatus()
+                this.timer = setInterval(() => {
+                    this.getOrderStatus();
+                    clearInterval(this.timer)
                 },500)
             }
         },

@@ -24,7 +24,7 @@
                                     ref="countDown"
                                     class="send-sms"
                                     :time="time"
-                                    format="ss"
+                                    format="ss秒后再次发送"
                                     :auto-start="false"
                                     @finish="onCountDownFinish"
                             />
@@ -32,6 +32,9 @@
                     </van-field>
                 </div>
             </div>
+            <p class="copyright">
+                <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span @click="onCopyClick">知识付费平台协议隐私政策</span></van-checkbox>
+            </p>
             <van-button type="primary" @click="login">立即绑定</van-button>
         </div>
     </div>
@@ -56,7 +59,7 @@
             return {
                 checked: false,
                 show: true,
-                phone: '15210821694',
+                phone: '',
                 code: '',
                 time: 60 * 1000,
                 counting: false
@@ -85,6 +88,9 @@
                 this.counting = false;
                 this.$refs.countDown.reset();
             },
+            onCopyClick(){
+                this.$router.push({path: '/policy'})
+            },
             async login(){
                 if(!this.phone){
                     return this.$toast.fail('请输入手机号');
@@ -94,6 +100,9 @@
                 }
                 if(!this.code){
                     return this.$toast.fail('请输入验证码');
+                }
+                if(!this.checked){
+                    return this.$toast.fail('请阅读并同意隐私政策');
                 }
                 const {phone, code} = this;
                 const result = await login({phone, code});
@@ -150,5 +159,22 @@
     }
     .send-sms{
         color: #FE7B35;
+    }
+    .copyright{
+        font-size: 12px;
+        color: #666666;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 31px;
+        text-align: center;
+        width: 100%;
+        .van-checkbox{
+            justify-content: center;
+        }
+        span{
+            text-decoration: underline;
+            color: @main-color;
+        }
     }
 </style>

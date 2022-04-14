@@ -53,5 +53,7 @@
 </script>
 
 <style lang="less" scoped>
-
+.body{
+    padding-bottom: 60px;
+}
 </style>

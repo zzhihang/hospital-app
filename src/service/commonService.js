@@ -58,7 +58,7 @@ export const sendSms = (phone) => {
 };
 
 /**
- * @Description:  发送验证码
+ * @Description:  登录
  * @Param: nickname  headimgurl
  * @return:
  * @Author: zzhihang@hotmail.com
@@ -66,4 +66,15 @@ export const sendSms = (phone) => {
  */
 export const login = ({phone, code}) => {
     return axios.post('/login', {phone, code})
+};
+
+/**
+ * @Description:  服务协议
+ * @Param: nickname  headimgurl
+ * @return:
+ * @Author: zzhihang@hotmail.com
+ * @date: 2022/4/3 0:44
+ */
+export const serviceAgreement = () => {
+    return axios.post('/dict/serviceagreement')
 };

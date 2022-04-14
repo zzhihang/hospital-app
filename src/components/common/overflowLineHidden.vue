@@ -4,7 +4,7 @@
             <p v-html="content"></p>
         </div>
         <div class="expand-button-wrap" v-if="needShowexpand">
-            <div class="expand-button" @click="expandClick" v-if="!expand">
+            <div class="expand-button" @click="onMoreClick" v-if="!expand">
                 <span>查看更多>></span>
             </div>
             <div class="expand-button" @click="expandClick" v-else>收起</div>
@@ -27,6 +27,9 @@
             expandClick() {
                 this.expand = !this.expand
             },
+            onMoreClick(){
+                this.$emit('onMoreClick')
+            }
         },
         mounted() {
             this.$nextTick(() => {

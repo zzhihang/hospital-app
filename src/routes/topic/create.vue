@@ -1,6 +1,6 @@
 <template>
     <div class="body">
-        <van-form>
+        <van-form ref="form" @submit="onSubmit">
             <div class="upload">
                 <van-uploader :after-read="afterRead" v-model="fileList" max-count="1">
                     <div class="upload-box">
@@ -12,6 +12,7 @@
                 <div class="van-hairline--bottom">
                     <h1 class="field-title van-field-title">专题名称</h1>
                     <van-field
+                            required
                             :rules="[{ required: true, message: '请填写专题名称' }]"
                             v-model="formData.title"
                             placeholder="请设置专题名称"
@@ -94,7 +95,7 @@
             </van-cell-group>
         </van-form>
         <div class="button-box">
-            <van-button class="submit-button" type="primary" @click="submit">完成</van-button>
+            <van-button class="submit-button" type="primary" @click="onSubmit">完成</van-button>
         </div>
     </div>
 </template>
@@ -190,17 +191,22 @@
                 this.formData.subscribeType = e.value;
                 this.formData.subscribeTypeText = e.text;
             },
-            async submit() {
+            async onSubmit() {
                 if(!this.fileList.length){
                     return this.$toast.fail('请上传图片')
                 }
-                const result = await createTopic(this.formData);
-                if (result.status === 200) {
-                    this.$toast.success('操作成功');
-                    this.$router.go(-1);
-                }else{
-                    this.$toast.fail(result.msg);
-                }
+                await this.$refs.form.validate().then(async () => {
+                    const result = await createTopic(this.formData);
+                    if (result.status === 200) {
+                        this.$toast.success('操作成功');
+                        this.$router.go(-1);
+                    }else{
+                        this.$toast.fail(result.msg);
+                    }
+                }).catch(() => {
+                    this.$toast.fail('请填写必填项')
+                })
+
             },
             onFreeChange(e) {
                 this.formData.free = e;

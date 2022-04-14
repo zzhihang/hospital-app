@@ -20,7 +20,7 @@
         </div>
         <div class="detail">
             <div>
-                <overflow-line-hidden :content="data.title"/>
+                <overflow-line-hidden @onMoreClick="onMoreClick" :content="data.title"/>
             </div>
             <div class="doc-list" v-if="data.type === 'doc'">
                 <doc-card
@@ -73,7 +73,7 @@
             </template>
             <div v-else class="comment-none">暂无评论，快来评论吧</div>
         </div>
-        <div class="more" v-if="data.comments.length > 8">查看更多>></div>
+        <div @click="onMoreClick" class="more" v-if="data.comments.length > 8">查看更多>></div>
         <van-popup v-model="pdfShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
             <template v-for="i in pdfPages">
                 <pdf :page="i" ref="pdf" :src="pdfUrl"></pdf>
@@ -82,22 +82,6 @@
         <van-popup v-model="wordShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
             <div ref="file"></div>
         </van-popup>
-        <div class="comment-input" v-show="commentShow">
-            <h2><span>评论</span>{{this.currentCommentTo}}</h2>
-            <div class="input-area">
-                <van-field
-                        ref="commentInput"
-                        v-model="content"
-                        rows="2"
-                        autosize
-                        type="textarea"
-                        maxlength="100"
-                        placeholder="请输入您要评论的内容"
-                        show-word-limit
-                />
-                <span class="send-button" :class="{active: content.length > 0}" @click="sendComment">发表</span>
-            </div>
-        </div>
     </div>
 </template>
 
@@ -146,15 +130,23 @@
                     { text: '删除', action: 'del', icon: require('@static/img/topic/icon_shanchu.png')},
                 ],
                 type: 'doc',
-                content: '',
-                commentShow: false,
-                currentCommentTo: '',
                 ifZan: String(this.data.up) === '1',
                 pdfUrl: '',
                 pdfPages: 1,
                 pdfShow: false,
                 wordShow: false,
             }
+        },
+        mounted() {
+            this.$nextTick(() => {
+                const body = document.querySelector("body");
+                const input = document.querySelector(".comment-input");
+                if (body.append) {
+                    body.append(input);
+                } else {
+                    body.appendChild(input);
+                }
+            });
         },
         watch: {
             labelList: {
@@ -171,6 +163,14 @@
             }
         },
         methods: {
+            onMoreClick(){
+                this.$router.push({
+                    path: '/topic/dynamic_detail',
+                    query: {
+                        id: this.data.id
+                    }
+                })
+            },
             goEdit(){
                 this.$router.push({
                     path: '/dynamic',
@@ -219,16 +219,14 @@
                     this.pdfPages = pdf.numPages;
                 });
             },
-            onCommentClick(name){
-                // if(!this.subscribe){
-                //     return this.$toast.fail('请先订阅')
-                // }
+            onCommentClick(){
+                if(!this.subscribe){
+                    return this.$toast.fail('请先订阅')
+                }
                 if(!this.ifForbidden()){
                     return;
                 }
-                this.currentCommentTo = this.data.userName;
-                this.$refs.commentInput.focus();
-                this.commentShow = true;
+                this.$emit('onCommentShowClick', this.data)
             },
             ifForbidden(){
                 if(String(this.forbidden) === '1' && sessionStorage.getItem('isBozhu')!== 'true'){//博主 禁严
@@ -238,8 +236,8 @@
                 return true
             },
             onCommentItemClick(data){
+                this.data.parentId = data.id
                 this.onCommentClick(data.userName);
-                this.parentId = data.id;
             },
             onDocCardClick(data){
                 if(data.type.includes('pdf')){
@@ -255,19 +253,6 @@
                     })
                 }
             },
-            async sendComment(){
-                const params = {
-                    itemId: this.data.id,
-                    content: this.content
-                };
-                if(this.parentId){
-                    params.parentId = this.parentId;
-                }
-                const result = await commentPost(params);
-                if(result.status === 200){
-                    this.$toast.success('评论成功');
-                }
-            }
         },
     }
 </script>
@@ -332,40 +317,7 @@
             width:20px;
         }
     }
-    .comment-input{
-        background: #FFFFFF;
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        padding: 15px 15px 20px;
-        h2{
-            font-size: 14px;
-            color: #333333;
-            span{
-                font-weight: normal;
-                color: #666666;
-            }
-        }
-        .van-field{
-            background: #F5F5F5;
-            flex: 1;
-        }
-        .input-area{
-            margin-top: 12px;
-            display: flex;
-            align-items: center;
-        }
-        .send-button{
-            flex-shrink: 0;
-            color: #BBBBBB;
-            font-size: 16px;
-            margin-left: 13px;
-            &.active{
-                color: @main-color;
-            }
-        }
-    }
+
     .comment-none{
         color: #999999;
         text-align: center;

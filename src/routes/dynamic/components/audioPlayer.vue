@@ -3,7 +3,7 @@
         <van-image :src="require('../../../static/img/dynamic/icon_shengbo.png')"/>
         <span>{{long}}S</span>
         <audio style="display:none;" :src="url" ref="player" controls="controls"></audio>
-        <van-icon @click.stop="onDeleteClick" class="delete-icon" size="14" name="close" />
+        <van-icon @click.stop="onDeleteClick" v-if="allowClose" class="delete-icon" size="14" name="close" />
     </div>
 </template>
 
@@ -15,7 +15,14 @@
     Vue.use(Icon);
 
     export default {
-        props: ['long', 'url'],
+        props: {
+            long: {},
+            url: {},
+            allowClose: {
+                type: Boolean,
+                default: false
+            }
+        },
         methods: {
             play() {
                 this.$refs.player.play();
@@ -39,6 +46,8 @@
         padding-left: 18px;
         line-height: 35px;
         position: relative;
+        display: flex;
+        align-items: center;
         .van-image{
             width: 20px;
             height: 15px;

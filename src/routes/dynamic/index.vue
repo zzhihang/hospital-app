@@ -41,6 +41,8 @@
                         v-if="recorderList.length"
                         v-for="(item, index) in recorderList"
                         :long="item.timeLong"
+                        :url="item.url"
+                        :allow-close="true"
                         @onDeleteClick="onDeleteClick"
                         :key="index"
                 />
@@ -159,11 +161,11 @@
                 this.dynamic = data.title;
                 this.labelList = data.labelList;
                 if(data.type === 'pic'){
-                    this.imgList = data.content;
+                    this.imgList = data.contentObject;
                 }else if(data.type === 'doc'){
-                    this.fileList = data.content;
+                    this.fileList = data.contentObject;
                 }else if(data.type === 'voice'){
-                    this.recorderList = data.content;
+                    this.recorderList = data.contentObject;
                 }
             },
             recorderSuccess(e){
