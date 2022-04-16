@@ -11,10 +11,13 @@ import './static/css/icon.less'
 import Bridge from "@static/js/bridge.js"
 import {getParams} from "@static/js/util";
 import confirm from 'components/confirm'
+import loading from 'components/loading/loading.js'
 import store from './store';
 import toast from "@/components/toast";
 import {Toast} from "vant";
 import Vconsole from 'vconsole'
+Vue.use(loading)
+
 Vue.prototype.$bridge = Bridge;
 
 Vue.config.productionTip = false;

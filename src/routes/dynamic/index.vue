@@ -57,7 +57,6 @@
                         v-if="item.type === 'image'"
                         accept=".png, .jpg, .jpeg"
                         :after-read="afterRead2"
-                        capture="camera"
                         max-count="9"
                         :disabled="imgList.length === 9 || fileList.length > 0 || recorderList.length > 0"
                 >
@@ -179,6 +178,7 @@
               this.$router.go(-1)
             },
             async publish(){
+                this.$loading.show();
                 const params = {
                     zhuantiId: this.$route.query.zhuantiId
                 };
@@ -207,6 +207,7 @@
                     params.contentObject = this.dynamic;
                 }
                 const result = await postDynamic(params);
+                this.$loading.hide();
                 if(result.success){
                     this.$toast.success('发布成功');
                     this.$router.go(-1);

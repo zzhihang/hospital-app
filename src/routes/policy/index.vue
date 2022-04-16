@@ -6,7 +6,7 @@
 
 <script>
     import Vue from 'vue';
-    import {serviceAgreement} from "@/service/commonService";
+    import {serviceAgreement} from "@/service/dict/dictService";
 
     export default {
         data() {

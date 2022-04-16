@@ -116,12 +116,19 @@
                 content: '',
             }
         },
+        beforeRouteLeave(to, from, next){
+            this.commentShow = false;
+            next();
+        },
         created() {
             this.getLabels();
             this.getDetail();
         },
         methods: {
             onCommentShowClick(data){
+                if(!this.ifForbidden()){
+                    return;
+                }
                 this.commentData = data;
                 this.$refs.commentInput.focus();
                 this.commentShow = true;
@@ -136,6 +143,7 @@
                 }
                 const result = await commentPost(params);
                 if(result.status === 200){
+                    this.commentShow = false;
                     this.$toast.success('评论成功');
                     this.getDetail();
                 }
@@ -144,9 +152,7 @@
                 const {data} = await orderCreate(this.model.id);
                 if(data.subscribe && String(this.model.free) === '1'){
                     this.ifSubscribe = true;
-                    return;
-                }
-                if(data.status === 200){
+                }else{
                     this.$router.push({
                         path: '/pay',
                         query: {

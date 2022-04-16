@@ -40,6 +40,7 @@
                         radius="6"
                         :src="item.url"
                         v-for="(item, index) in data.contentObject"
+                        @click="onImagePreview(data.contentObject, index)"
                         :key="index" />
             </div>
             <template v-for="(item, index) in data.contentObject">
@@ -96,6 +97,7 @@
     import pdf from 'vue-pdf'
     import axios from 'axios';
     import overflowLineHidden from "@/components/common/overflowLineHidden";
+    import { ImagePreview } from 'vant';
 
     Vue.use(NoticeBar);
     let docx = require('docx-preview');
@@ -163,6 +165,13 @@
             }
         },
         methods: {
+            onImagePreview(images, startPosition){
+                const list = images.map(item => item.url);
+                ImagePreview({
+                    images: list,
+                    startPosition
+                })
+            },
             onMoreClick(){
                 this.$router.push({
                     path: '/topic/dynamic_detail',

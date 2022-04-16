@@ -32,6 +32,7 @@
     import {Tabbar, TabbarItem} from 'vant';
     import {userinfo} from "@/service/topic/topService";
     import connect from "@/store/connect";
+    import watermark from '@/static/js/third/watermark'
 
     Vue.use(Tabbar);
     Vue.use(TabbarItem);
@@ -64,12 +65,27 @@
                 const {data} = await userinfo();
                 this.setUserInfo(data);
                 this.setIsBozhu(data.userType === 1);
+                setTimeout(() => {
+                    watermark.set(data.nickname);
+                },500);
                 window.sessionStorage.setItem('isBozhu', data.userType === 1);
             }
         },
         created() {
             this.getUserInfo();
         },
+        watch:{
+            $route(to,from){
+                const fullPath = to.fullPath;
+                if(fullPath === '/my'){
+                    this.active = 2;
+                }else if(fullPath === '/message'){
+                    this.active = 1
+                }else{
+                    this.active = 0
+                }
+            }
+        }
     }
 </script>
 

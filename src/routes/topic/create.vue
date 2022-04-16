@@ -23,6 +23,7 @@
                         label-class="van-field-title"
                         v-model="formData.introduction"
                         rows="1"
+                        required
                         autosize
                         :rules="[{ required: true, message: '请填写专题简介' }]"
                         label="专题简介"
@@ -36,15 +37,15 @@
             <van-cell-group>
                 <div>
                     <h1 class="field-title van-field-title">专题费用</h1>
-                    <van-cell>
+                    <van-cell required>
                         <van-radio-group
                                 v-model="formData.free"
                                 direction="horizontal"
                                 @change="onFreeChange"
                                 :rules="[{ required: true, message: '请选择' }]"
                         >
-                            <van-radio name="1">付费专题</van-radio>
-                            <van-radio name="0">免费专题</van-radio>
+                            <van-radio name="0">付费专题</van-radio>
+                            <van-radio name="1">免费专题</van-radio>
                         </van-radio-group>
                     </van-cell>
                     <h6 class="sub-title">
@@ -53,11 +54,12 @@
                     </h6>
                     <van-field
                             v-model="formData.price"
-                            :disabled="formData.free === '0'"
+                            :disabled="formData.free === '1'"
+                            required
                             type="digit"
                             @blur="inputHandler"
                             :rules="[{ required: true, message: '请设置专题费用' }]"
-                            placeholder="¥ 50-6000的整数"
+                            :placeholder="placeHolder"
                     />
                 </div>
                 <div class="van-hairline--bottom"></div>
@@ -66,6 +68,7 @@
                         readonly
                         label-class="van-field-title"
                         clickable
+                        required
                         name="picker"
                         v-model="formData.subscribeTypeText"
                         right-icon="arrow"
@@ -87,9 +90,9 @@
             </van-cell-group>
 
             <van-cell-group>
-                <van-field name="switch" label="全员禁言" input-align="right">
+                <van-field required name="switch" label="全员禁言" input-align="right">
                     <template #input>
-                        <van-switch v-model="formData.forbidden" size="20" :active-value="1" :inactive-value="0"/>
+                        <van-switch disabled v-model="formData.forbidden" size="20" :active-value="1" :inactive-value="0"/>
                     </template>
                 </van-field>
             </van-cell-group>
@@ -118,6 +121,7 @@
     } from 'vant';
     import {createTopic, zhuantiInfo} from "@/service/topic/topService";
     import {upload} from "@/service/commonService";
+    import {dictPrice} from "../../service/dict/dictService";
 
     Vue.use(Form);
     Vue.use(VanImage)
@@ -144,6 +148,8 @@
                     {text: '按季度计算', value: 'quarter'},
                     {text: '按年度计算', value: 'year'}
                 ],
+                priceMin: 0,
+                priceMax: 0,
                 formData: {
                     title: '',
                     introduction: '',
@@ -152,11 +158,12 @@
                     subscribeTypeText: '',
                     free: '',
                     price: '',
-                    forbidden: 0,
+                    forbidden: 1,
                 }
             }
         },
         created(){
+            this.getDictPrice();
             const {id} = this.$route.query;
             id && this.getDetail();
         },
@@ -164,12 +171,17 @@
             inputHandler () {
                 const value = Number(this.formData.price);
                 this.formData.price = Number(value); //将022格式的数字转换成22
-                if(String(this.formData.free) === '1' && value){//收费专题才去控制输入范围
-                    if(value > 6000 || value < 50){
+                if(String(this.formData.free) === '0' && value){//收费专题才去控制输入范围
+                    if(value > this.priceMax || value < this.priceMin){
                         this.formData.price = '';
-                        this.$toast.fail('请输入50-6000的整数')
+                        this.$toast.fail(`请输入${this.priceMin}-${this.priceMax}的整数`);
                     }
                 }
+            },
+            async getDictPrice(){
+                const {data} = await dictPrice();
+                this.priceMin = data.priceMin;
+                this.priceMax = data.priceMax;
             },
             async getDetail(){
                 const {id} = this.$route.query;
@@ -195,6 +207,9 @@
                 if(!this.fileList.length){
                     return this.$toast.fail('请上传图片')
                 }
+                if(String(this.formData.free) === '0' && (Number(this.formData.price)> this.priceMax || Number(this.formData.price) < this.priceMin)){
+                    return this.$toast.fail(`专题费用请输入${this.priceMin}-${this.priceMax}的整数`);
+                }
                 await this.$refs.form.validate().then(async () => {
                     const result = await createTopic(this.formData);
                     if (result.status === 200) {
@@ -210,7 +225,7 @@
             },
             onFreeChange(e) {
                 this.formData.free = e;
-                if (e === '0') {
+                if (e === '1') {
                     this.formData.price = 0
                 }else{
                     this.inputHandler();
@@ -224,6 +239,11 @@
                 }
             }
         },
+        computed: {
+            placeHolder(){
+                return `¥ ${this.priceMin}-${this.priceMax}的整数`
+            }
+        }
     }
 </script>
 

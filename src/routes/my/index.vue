@@ -50,6 +50,7 @@
                 icon: '',
                 icon_bianji: require('@static/img/my/icon_bianji.png'),
                 text: '',
+                userType: '',
             }
         },
         created() {
@@ -86,7 +87,7 @@
             ...mapState(['userInfo', 'isBozhu'])
         },
         watch: {
-            userType: {
+            isBozhu: {
                 handler() {
                     if (this.isBozhu) {
                         this.icon = require('@static/img/my/icon_qianbao.png');
@@ -94,6 +95,7 @@
                     } else {
                         this.icon = require('@static/img/my/icon_dingdan.png');
                         this.text = '订单明细';
+                        this.userType = 'visitor'
                     }
                 },
                 immediate: true
@@ -141,7 +143,7 @@
         padding: 30px 15px;
 
         .wallet {
-            &.vistor {
+            &.visitor {
                 background: url("../../static/img/my/bg_dingdanmingxi.png") no-repeat;
                 background-size: cover;
             }

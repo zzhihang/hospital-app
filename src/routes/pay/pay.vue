@@ -53,12 +53,17 @@
         methods: {
             async getOrderStatus() {
                 const {orderNo, id} = this.$route.query;
-                const {data} = await orderStatus(orderNo);
-                if(data.redirect){
-                    window.location.href = data.redirectUrl;
-                }
-                if(data.status === 1){
-                    this.$router.push({path: '/pay/success', query: {orderNo, id}})
+                const result = await orderStatus(orderNo);
+                const {data} = result;
+                if(result.success){
+                    if(data.redirect){
+                        window.location.href = data.redirectUrl;
+                    }
+                    if(data.status === 1){
+                        this.$router.push({path: '/pay/success', query: {orderNo, id}})
+                    }
+                }else{
+                    this.$toast.fail(result.msg)
                 }
             },
             async onZhifubaoPay(){

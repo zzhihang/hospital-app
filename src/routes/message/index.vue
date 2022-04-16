@@ -1,8 +1,8 @@
 <template>
     <div class="body">
-        <teplate v-if="list.length > 0">
+        <template v-if="list.length > 0">
             <message-card class="mt5" v-for="(item, index) in list" :key="index" :data="item"/>
-        </teplate>
+        </template>
         <my-empty v-else description="暂无消息"/>
     </div>
 </template>
