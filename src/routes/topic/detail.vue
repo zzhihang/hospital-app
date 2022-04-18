@@ -43,6 +43,7 @@
                 <div class="card-list">
                     <topic-card v-for="(item, index) in list"
                           :key="index"
+                           @onMoreClick="onMoreClick"
                           :data="item"
                           :forbidden="model.forbidden"
                           :subscribe="!!model.subscribe"
@@ -77,6 +78,12 @@
                 <span class="send-button" :class="{active: content.length > 0}" @click="sendComment">发表</span>
             </div>
         </div>
+        <topic-card-detail
+                :show.sync="detailShow"
+                :data="detailData"
+                :forbidden="model.forbidden"
+                @onModalClose="commentShow = false"
+                @onInputClick="onCommentShowClick"/>
     </div>
 </template>
 
@@ -90,6 +97,7 @@
     import {Image as VanImage, List, Icon} from 'vant';
     import myEmpty from "@/components/empty/myEmpty";
     import {orderCreate} from "@/service/order/orderService";
+    import topicCardDetail from "@/routes/topic/topicCardDetail";
 
     Vue.use(VanImage);
     Vue.use(List);
@@ -99,11 +107,16 @@
             tagList,
             topicCard,
             bottomBox,
-            myEmpty
+            myEmpty,
+            topicCardDetail
         },
         data() {
             return {
                 model: {},
+                detailData: {
+                    comments: [],
+                    labelList: []
+                },
                 list: [],
                 labelList: [],
                 loading: false,
@@ -113,6 +126,7 @@
                 currentCommentTo: '',
                 ifSubscribe: false,
                 commentShow: false,
+                detailShow: false,
                 content: '',
             }
         },
@@ -125,6 +139,10 @@
             this.getDetail();
         },
         methods: {
+            onMoreClick(data){
+                this.detailShow = true;
+                this.detailData = data
+            },
             onCommentShowClick(data){
                 if(!this.ifForbidden()){
                     return;
@@ -366,6 +384,7 @@
         left: 0;
         right: 0;
         padding: 15px 15px 20px;
+        z-index: 99999;
         h2{
             font-size: 14px;
             color: #333333;

@@ -8,7 +8,7 @@
             </div>
             <div class="content-box">
                 <avatar></avatar>
-                <h1>{{data.title}}</h1>
+                <h1 class="ellipsis2">{{data.title}}</h1>
                 <div class="count">
                     <ul>
                         <li>动态数量<span>{{data.itemCount}}</span></li>

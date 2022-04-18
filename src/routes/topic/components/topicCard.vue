@@ -2,7 +2,7 @@
     <div class="card">
         <div class="avatar-action">
             <avatar :name="data.userName" :photo="data.headimgurl"></avatar>
-            <van-popover v-bozhu @select="onSelectPopover" v-model="showPopover" placement="bottom-end" trigger="click" :actions="actions">
+            <van-popover v-if="showAction" v-bozhu @select="onSelectPopover" v-model="showPopover" placement="bottom-end" trigger="click" :actions="actions">
                 <template #reference>
                     <van-image :src="require('../../../static/img/topic/icon_action.png')"></van-image>
                 </template>
@@ -35,8 +35,6 @@
                 <van-image
                         class="mr5"
                         round
-                        width="110"
-                        height="110"
                         radius="6"
                         :src="item.url"
                         v-for="(item, index) in data.contentObject"
@@ -49,7 +47,7 @@
         </div>
         <div class="bottom-info">
             <span class="date">{{data.ctime}}</span>
-            <div class="action">
+            <div class="action" v-if="showAction">
                 <span @click.stop="onCommentClick">
                     <van-icon class="mt4 mr4" :name="commentIcon" size="15"/>
                     <span>{{data.commentCount}}</span>
@@ -63,16 +61,30 @@
         </div>
         <div class="comment-list">
             <h6 class="font16 mt22">评论</h6>
-            <template v-if="data.comments.length > 0">
-                <comment
-                        class="mt20"
-                        :data="item"
-                        v-for="(item, index) in data.comments"
-                        :key="index"
-                        @onCommentItemClick="onCommentItemClick"
-                />
+            <template v-if="showAction">
+                <template v-if="data.comments.length > 0">
+                    <template v-for="(item, index) in data.comments">
+                        <comment
+                                class="mt20"
+                                :data="item"
+                                v-if="index < 8"
+                                :key="index"
+                                @onCommentItemClick="onCommentItemClick"
+                        />
+                    </template>
+                </template>
+                <div v-else class="comment-none">暂无评论，快来评论吧</div>
             </template>
-            <div v-else class="comment-none">暂无评论，快来评论吧</div>
+            <div v-else>
+                <template v-for="(item, index) in data.comments">
+                    <comment
+                            class="mt20"
+                            :data="item"
+                            :key="index"
+                            @onCommentItemClick="onCommentItemClick"
+                    />
+                </template>
+            </div>
         </div>
         <div @click="onMoreClick" class="more" v-if="data.comments.length > 8">查看更多>></div>
         <van-popup v-model="pdfShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
@@ -88,37 +100,43 @@
 
 <script>
     import Vue from 'vue';
-    import {Field, Icon, Image as VanImage, NoticeBar, Popover, Popup} from 'vant';
+    import {Field, Icon, Image as VanImage, ImagePreview, NoticeBar, Popover, Popup} from 'vant';
     import comment from './comment'
     import avatar from './avatar'
-    import {commentPost, deleteTopic, dianZan} from "@/service/topic/topService";
+    import {deleteTopic, dianZan} from "@/service/topic/topService";
     import docCard from "@/routes/topic/components/docCard";
     import audioPlayer from "@/routes/dynamic/components/audioPlayer";
     import pdf from 'vue-pdf'
     import axios from 'axios';
     import overflowLineHidden from "@/components/common/overflowLineHidden";
-    import { ImagePreview } from 'vant';
 
     Vue.use(NoticeBar);
     let docx = require('docx-preview');
 
+    Vue.use(Popup);
     Vue.use(Field);
     Vue.use(Popover);
     Vue.use(VanImage);
     Vue.use(Icon);
 
-    Vue.use(Popup);
-
     export default {
         name: 'topicCard',
-        props: ['data', 'forbidden', 'subscribe'],
+        props: {
+            data: {},
+            forbidden: {},
+            subscribe: {},
+            showAction: {
+                type: Boolean,
+                default: true
+            }
+        },
         components: {
             avatar,
             comment,
             docCard,
             audioPlayer,
             pdf,
-            overflowLineHidden
+            overflowLineHidden,
         },
         data() {
             return {
@@ -173,12 +191,16 @@
                 })
             },
             onMoreClick(){
-                this.$router.push({
-                    path: '/topic/dynamic_detail',
-                    query: {
-                        id: this.data.id
-                    }
-                })
+                if(!this.subscribe){
+                    return this.$toast.fail('请先订阅')
+                }
+                this.$emit('onMoreClick', this.data)
+                // this.$router.push({
+                //     path: '/topic/dynamic_detail',
+                //     query: {
+                //         id: this.data.id
+                //     }
+                // })
             },
             goEdit(){
                 this.$router.push({
@@ -288,6 +310,11 @@
         display: flex;
         flex-wrap: nowrap;
         overflow-x: scroll;
+        .van-image{
+            width: 110px;
+            height: 110px;
+            flex-shrink: 0;
+        }
         .doc-card{
             flex-shrink: 0;
             margin-right: 10px;

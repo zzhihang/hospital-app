@@ -128,6 +128,7 @@
         background: url("../static/img/login/bg.png") no-repeat;
         padding: 20px 15px;
         background-size: cover;
+        box-sizing: border-box;
     }
     .login-content{
         border-radius: 9px;

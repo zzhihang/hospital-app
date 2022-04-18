@@ -3,7 +3,8 @@ const routes = [
         path: '/login',
         component: r => require.ensure([], () => r(require('@routes/login'))),
         meta:{
-            title: '登录'
+            title: '登录',
+            //keepAlive: true // 需要被缓存
         }
     }, {
         path: '/topic',
