@@ -71,11 +71,11 @@
                 window.sessionStorage.setItem('isBozhu', data.userType === 1);
             }
         },
-        created() {
-            this.getUserInfo();
-        },
         watch:{
             $route(to,from){
+                if(to.fullPath !== '/auth'){
+                    this.getUserInfo();
+                }
                 const fullPath = to.fullPath;
                 if(fullPath === '/my'){
                     this.active = 2;

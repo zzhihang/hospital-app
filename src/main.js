@@ -5,7 +5,6 @@ import "amfe-flexible";
 import axios from 'axios'
 import qs from 'qs';
 import './static/css/reset.css'
-import './static/css/cover.less'
 import './static/css/common.less'
 import './static/css/icon.less'
 import Bridge from "@static/js/bridge.js"

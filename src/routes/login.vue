@@ -33,7 +33,7 @@
                 </div>
             </div>
             <p class="copyright">
-                <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span @click="onCopyClick">知识付费平台协议隐私政策</span></van-checkbox>
+                <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span @click="$router.push({path: '/agreement'})">知识付费平台协议、</span><span @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
             </p>
             <van-button type="primary" @click="login">立即绑定</van-button>
         </div>

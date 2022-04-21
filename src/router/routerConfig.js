@@ -6,6 +6,13 @@ const routes = [
             title: '登录',
             //keepAlive: true // 需要被缓存
         }
+    },{
+        path: '/auth',
+        component: r => require.ensure([], () => r(require('@routes/auth'))),
+        meta:{
+            title: '登录',
+            //keepAlive: true // 需要被缓存
+        }
     }, {
         path: '/topic',
         component: r => require.ensure([], () => r(require('@routes/topic'))),
@@ -112,10 +119,16 @@ const routes = [
             title: '支付失败'
         }
     },{
-        path: '/policy',
-        component: r => require.ensure([], () => r(require('@routes/policy/index'))),
+        path: '/agreement',
+        component: r => require.ensure([], () => r(require('@routes/policy/agreement'))),
         meta:{
-            title: '知识付费平台协议隐私政策'
+            title: '知识付费平台协议政策'
+        }
+    },{
+        path: '/privacy',
+        component: r => require.ensure([], () => r(require('@routes/policy/privacy'))),
+        meta:{
+            title: '知识付费平台隐私政策'
         }
     }
 

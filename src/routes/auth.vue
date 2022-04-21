@@ -1,7 +1,7 @@
 <template>
     <div class="login">
-        <van-button class="close-btn" color="rgba(254, 123, 53, 0.1)" round @click="closeWindow">关闭</van-button>
-        <van-image :src="require('../static/img/login/pic_zhi.png')"/>
+        <!--<van-button class="close-btn" color="rgba(254, 123, 53, 0.1)" round @click="closeWindow">关闭</van-button>-->
+        <van-image :src="require('../static/img/logo.png')"/>
         <h1>知识付费平台</h1>
         <van-button
                 class="login-button"
@@ -9,7 +9,7 @@
                 @click="onLoginClick"
                 :icon="require('../static/img/login/icon_weixindenglu.png')">微信授权登录</van-button>
         <p class="copyright">
-            <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意知识付费平台协议隐私政策</van-checkbox>
+            <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span @click="$router.push({path: '/agreement'})">知识付费平台协议、</span><span @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
         </p>
         <van-popup class="login-pop" v-model="show" round get-container="body" position="bottom" :style="{ height: '45%' }" >
             <div class="title">
@@ -38,6 +38,7 @@
     import Vue from 'vue';
     import {Button, Checkbox, Field, Icon, Image as VanImage, Popup} from 'vant';
     import {sendSms} from "@/service/commonService";
+    import {getParams} from "@/static/js/util";
 
     Vue.use(Field);
     Vue.use(Icon);
@@ -50,13 +51,17 @@
         data() {
             return {
                 checked: false,
-                show: true,
+                show: false,
                 phone: '',
             }
         },
         methods: {
             onLoginClick() {
-                this.show = true;
+                if(!this.checked){
+                    return this.$toast.fail('请阅读并同意隐私政策');
+                }
+                const {kcode} = getParams();
+                window.location.href = '/api/redirect?kcode=' + kcode
             },
             async sendSms(){
                 if(!this.phone){
@@ -179,6 +184,23 @@
             margin-right: 15px;
             color: #07BF67 !important;
 
+        }
+    }
+    .copyright{
+        font-size: 12px;
+        color: #666666;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 31px;
+        text-align: center;
+        width: 100%;
+        .van-checkbox{
+            justify-content: center;
+        }
+        span{
+            text-decoration: underline;
+            color: @main-color;
         }
     }
 </style>

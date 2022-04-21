@@ -148,6 +148,7 @@
                     {text: '按季度计算', value: 'quarter'},
                     {text: '按年度计算', value: 'year'}
                 ],
+                noLimit: false,
                 priceMin: 0,
                 priceMax: 0,
                 formData: {
@@ -171,7 +172,7 @@
             inputHandler () {
                 const value = Number(this.formData.price);
                 this.formData.price = Number(value); //将022格式的数字转换成22
-                if(String(this.formData.free) === '0' && value){//收费专题才去控制输入范围
+                if(String(this.formData.free) === '0' && value && !this.noLimit){//收费专题才去控制输入范围
                     if(value > this.priceMax || value < this.priceMin){
                         this.formData.price = '';
                         this.$toast.fail(`请输入${this.priceMin}-${this.priceMax}的整数`);
@@ -180,6 +181,7 @@
             },
             async getDictPrice(){
                 const {data} = await dictPrice();
+                this.noLimit = data.noLimit;
                 this.priceMin = data.priceMin;
                 this.priceMax = data.priceMax;
             },
@@ -219,7 +221,7 @@
                         this.$toast.fail(result.msg);
                     }
                 }).catch(() => {
-                    this.$toast.fail('请填写必填项')
+                    this.$toast.fail(result.msg )
                 })
 
             },
@@ -241,7 +243,10 @@
         },
         computed: {
             placeHolder(){
-                return `¥ ${this.priceMin}-${this.priceMax}的整数`
+                if(!this.noLimit){
+                    return `¥ ${this.priceMin}-${this.priceMax}的整数`
+                }
+                return '¥ 请输入大于0的整数'
             }
         }
     }

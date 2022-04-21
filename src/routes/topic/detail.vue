@@ -3,7 +3,7 @@
         <div style="position:relative;">
             <van-image class="top-img" :src="model.imgUrl"/>
             <div class="badge-box">
-                <van-image v-if="String(model.free) === '1'" height="18" :src="require('../../static/img/topic/pic_biaoqian.png')" />
+                <van-image v-if="String(model.free) === '0'" height="18" width="38" :src="require('../../static/img/topic/pic_biaoqian.png')" />
             </div>
             <div class="action-edit" @click="onEditDetail" v-bozhu>
                 <van-icon name="edit" />
@@ -12,7 +12,7 @@
         </div>
         <div class="box-father">
             <div class="main-box">
-                <h6 class="ellipsis2">{{model.title}}</h6>
+                <h6>{{model.title}}</h6>
                 <p class="intro">{{model.introduction}}</p>
                 <div class="van-hairline--top"></div>
                 <ul>
@@ -162,6 +162,9 @@
                 const result = await commentPost(params);
                 if(result.status === 200){
                     this.commentShow = false;
+                    this.content = '';
+                    this.pageIndex = 1;
+                    this.list = [];
                     this.$toast.success('评论成功');
                     this.getDetail();
                 }

@@ -16,7 +16,7 @@
                     v-if="imgList.length"
                     v-model="imgList"
                     multiple
-                    max-count="2"
+                    max-count="9"
                     :after-read="afterRead"
                     upload-icon="plus"
             />

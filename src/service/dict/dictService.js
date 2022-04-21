@@ -21,3 +21,14 @@ export const serviceAgreement = () => {
 export const dictPrice = () => {
     return axios.post('/dict/price')
 };
+
+/**
+* @Description: 隐私政策
+* @Param:
+* @return:
+* @Author: zzhihang@hotmail.com
+* @date: 2022/4/16 13:47
+*/
+export const dictPrivacy = () => {
+    return axios.post('/dict/privacy')
+};

@@ -243,12 +243,18 @@
             },
             previewPdf(url) {
                 const loadingTask = pdf.createLoadingTask(url);
-                this.pdfShow = true;
-                //this.$toast('正在解析文件,请稍候...');
+                this.$toast('正在解析文件,请稍候...');
+                this.$loading.show();
                 loadingTask.promise.then(pdf => {
+                    this.$loading.hide();
+                    this.pdfShow = true;
                     this.pdfUrl = loadingTask;
                     this.pdfPages = pdf.numPages;
-                });
+                }).catch(() => {
+                    this.$toast.fail('解析失败,请稍后重试');
+                    this.$loading.hide();
+                    this.pdfShow = false;
+                })
             },
             onCommentClick(){
                 if(!this.subscribe){
@@ -274,13 +280,20 @@
                 if(data.type.includes('pdf')){
                     this.previewPdf(data.url)
                 }else{
-                    this.wordShow = true;
+                    this.$toast('正在解析文件,请稍候...');
+                    this.$loading.show();
                     axios({
                         method: 'get',
                         responseType: 'blob', // 设置响应文件格式
                         url:  data.url,
                     }).then(data => {
+                        this.$loading.hide();
+                        this.wordShow = true;
                         docx.renderAsync(data, this.$refs.file) // 渲染到页面预览
+                    }).catch(() => {
+                        this.$toast.fail('解析失败,请稍后重试');
+                        this.$loading.hide();
+                        this.wordShow = false;
                     })
                 }
             },
