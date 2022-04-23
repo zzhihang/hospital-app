@@ -93,6 +93,7 @@
                     this.getList();
                     this.value = '';
                     this.$toast.success('添加成功');
+                    this.$router.go(-1)
                 }
             }
         },

@@ -20,7 +20,10 @@
         },
         computed: {
             dataList(){
-                return [{label: '全部'}].concat(this.data);
+                if(this.data.length){
+                    return [{label: '全部'}].concat(this.data);
+                }
+                return [];
             }
         },
         methods: {

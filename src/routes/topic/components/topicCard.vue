@@ -87,12 +87,12 @@
             </div>
         </div>
         <div @click="onMoreClick" class="more" v-if="data.comments.length > 8">查看更多>></div>
-        <van-popup v-model="pdfShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
+        <van-popup class="file-modal" v-model="pdfShow" position="bottom" :style="{ height: '100%' }" get-container="body" closeable>
             <template v-for="i in pdfPages">
                 <pdf :page="i" ref="pdf" :src="pdfUrl"></pdf>
             </template>
         </van-popup>
-        <van-popup v-model="wordShow" position="bottom" :style="{ height: '80%' }" get-container="body" closeable>
+        <van-popup class="file-modal" v-model="wordShow" position="bottom" :style="{ height: '100%' }" get-container="body" closeable>
             <div ref="file"></div>
         </van-popup>
     </div>
@@ -109,7 +109,7 @@
     import pdf from 'vue-pdf'
     import axios from 'axios';
     import overflowLineHidden from "@/components/common/overflowLineHidden";
-
+    window.JSZip = require("jszip");
     Vue.use(NoticeBar);
     let docx = require('docx-preview');
 
@@ -289,7 +289,9 @@
                     }).then(data => {
                         this.$loading.hide();
                         this.wordShow = true;
-                        docx.renderAsync(data, this.$refs.file) // 渲染到页面预览
+                        setTimeout(() => {
+                            docx.renderAsync(data, this.$refs.file) // 渲染到页面预览
+                        }, 300)
                     }).catch(() => {
                         this.$toast.fail('解析失败,请稍后重试');
                         this.$loading.hide();
@@ -382,5 +384,14 @@
             font-size: 12px;
             margin-right: 2px;
         }
+    }
+    .file-modal{
+        /deep/.van-popup__close-icon{
+            position: fixed;
+        }
+    }
+
+    /deep/.docx-wrapper{
+        display: block !important;
     }
 </style>

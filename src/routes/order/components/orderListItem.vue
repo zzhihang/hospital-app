@@ -1,7 +1,7 @@
 <template>
     <div class="order-list-item">
         <div class="order-list-item-left">
-            <van-image :src="data.price < 0 ? image2 : image"/>
+            <van-image :src="icon"/>
             <div>
                 <h6 class="title ellipsis2">{{data.title}}</h6>
                 <p>{{data.ctime}}</p>
@@ -18,13 +18,28 @@
     Vue.use(VanImage);
 
     export default {
-        props: ['data'],
+        props: ['data', 'isBozhu'],
         data() {
             return {
-                image: require('@static/img/my/icon_dingyue.png'),
-                image2: require('@static/img/my/icon_tixian.png'),
+                icon: ''
             }
         },
+        watch: {
+            isBozhu: {
+                handler() {
+                    if (this.isBozhu) {
+                        if(this.data.price < 0){
+                            this.icon = require('@static/img/my/icon_tixian.png');
+                        }else{
+                            this.icon = require('@static/img/my/icon_dingyue.png');
+                        }
+                    } else {
+                        this.icon = require('@static/img/my/icon_dingyue.png');
+                    }
+                },
+                immediate: true
+            }
+        }
     }
 </script>
 
@@ -49,6 +64,7 @@
         .num {
             color: @main-color;
             font-weight: bold;
+            font-size: 20px;
             &.tixian{
                 color: #339D83;
             }

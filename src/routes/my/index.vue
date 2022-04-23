@@ -24,7 +24,7 @@
                     <span class="font18" style="color: #333333;">{{text}}</span>
                 </div>
                 <div class="num">
-                    <span>{{userInfo.money}}</span>
+                    <span v-bozhu>{{userInfo.money}}</span>
                     <van-icon size="14" name="arrow" color="#666666"/>
                 </div>
             </div>
@@ -78,9 +78,15 @@
                 })
             },
             onWalletClick(){
-                this.$router.push({
-                    path: '/my/wallet'
-                })
+                if(this.isBozhu){
+                    this.$router.push({
+                        path: '/my/wallet'
+                    })
+                }else{
+                    this.$router.push({
+                        path: '/order'
+                    })
+                }
             }
         },
         computed: {

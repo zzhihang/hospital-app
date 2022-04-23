@@ -3,11 +3,13 @@
         <van-image :src="data.imgUrl"></van-image>
         <div class="inner-content">
             <div class="badge-box">
-                <span class="badge">{{ifSubscribe}}</span>
-                <van-image v-if="String(data.free) === '0'" height="18" width="38" class="vip" :src="require('../../../static/img/topic/pic_biaoqian.png')"></van-image>
+                <span class="badge" v-if="!isBozhu">{{ifSubscribe}}</span>
+                <div style="flex: 1;text-align: right">
+                    <van-image class="vip mr10" v-if="String(data.free) === '0'" height="18" width="38" :src="require('../../../static/img/topic/pic_biaoqian.png')"></van-image>
+                </div>
             </div>
             <div class="content-box">
-                <avatar></avatar>
+                <avatar :name="data.userName" :photo="data.headimgurl"></avatar>
                 <h1 class="ellipsis2">{{data.title}}</h1>
                 <div class="count">
                     <ul>
@@ -31,6 +33,11 @@
 
     export default {
         props: ['data'],
+        data() {
+            return {
+                isBozhu: sessionStorage.getItem('isBozhu') == 'true'
+            }
+        },
         components: {
             avatar
         },

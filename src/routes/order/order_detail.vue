@@ -4,8 +4,7 @@
                 class="bg-image"
                 :src="require('../../static/img/my/bg_d.jpg')" />
         <div class="content">
-            <van-icon size="40" v-if="model.price > 0" :name="require('../../static/img/icon_dingyue.png')" />
-            <van-icon size="40" v-else :name="require('../../static/img/icon_tixian.png')" />
+            <van-icon size="40" :name="icon" />
             <h1>交易明细</h1>
             <h2>{{model.price}}</h2>
             <p class="status" :class="status">{{statusMessage}}</p>
@@ -39,21 +38,21 @@
                 status: '',
                 statusMessage: '',
                 model: {},
-                image: require('@static/img/my/icon_dingyue.png')
+                icon: ''
             }
         },
         created(){
             this.getDetail();
         },
         computed: {
-            ...mapState(['isBoZhu'])
+            ...mapState(['isBozhu'])
         },
         methods: {
             async getDetail() {
                 const {id} = this.$route.query;
-                let service = orderDetail;
-                if(this.isBoZhu){
-                    service = customerOrderDetail
+                let service = customerOrderDetail;
+                if(this.isBozhu){
+                    service = orderDetail
                 }
                 const {data} = await service(id);
                 this.model = data;
@@ -64,6 +63,22 @@
                 this.statusMessage = result.msg;
             }
         },
+        watch: {
+            isBozhu: {
+                handler() {
+                    if (this.isBozhu) {
+                        if(this.model.price < 0){
+                            this.icon = require('@static/img/my/icon_tixian.png');
+                        }else{
+                            this.icon = require('@static/img/my/icon_dingyue.png');
+                        }
+                    } else {
+                        this.icon = require('@static/img/my/icon_dingyue.png');
+                    }
+                },
+                immediate: true
+            }
+        }
     }
 </script>
 

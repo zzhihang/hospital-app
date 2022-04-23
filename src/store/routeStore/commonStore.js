@@ -20,5 +20,6 @@ export default new CommonStore({
         "unReadCount": ''
     },
     isBozhu: false,
-    ifShowTabBar: false
+    ifShowTabBar: false,
+    commentShow: false
 });

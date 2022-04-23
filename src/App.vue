@@ -60,7 +60,7 @@
             ...mapState(['userInfo', 'ifShowTabBar'])
         },
         methods: {
-            ...mapMutations(['setUserInfo', 'setIsBozhu']),
+            ...mapMutations(['setUserInfo', 'setIsBozhu', 'setCommentShow']),
             async getUserInfo(){
                 const {data} = await userinfo();
                 this.setUserInfo(data);
@@ -73,6 +73,9 @@
         },
         watch:{
             $route(to,from){
+                if(to.path !== '/topic/detail'){
+                    this.setCommentShow(false);
+                }
                 if(to.fullPath !== '/auth'){
                     this.getUserInfo();
                 }

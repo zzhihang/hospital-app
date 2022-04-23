@@ -1,7 +1,7 @@
 <template>
     <div class="body">
         <template v-if="list.length > 0">
-            <order-list-item @click.native="onItemClick(item)" class="mt5" v-for="(item, index) in list" :data="item" :key="index"/>
+            <order-list-item :isBozhu="isBozhu" @click.native="onItemClick(item)" class="mt5" v-for="(item, index) in list" :data="item" :key="index"/>
         </template>
         <my-empty v-else description="暂无数据"/>
     </div>
@@ -28,13 +28,18 @@
             this.getOrderList();
         },
         computed: {
-            ...mapState(['isBoZhu'])
+            ...mapState(['isBozhu'])
+        },
+        mounted(){
+            if(this.isBozhu){
+                document.title = '订单明细'
+            }
         },
         methods: {
             async getOrderList() {
-                let service = orderList;
+                let service = customerOrderList;
                 if(this.isBozhu){
-                   service = customerOrderList;
+                   service = orderList;
                 }
                 const {data} = await service();
                 this.list = data.records;

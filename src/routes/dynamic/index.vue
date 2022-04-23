@@ -31,8 +31,8 @@
             >
                     <template #preview-cover="file">
                     <div class="file-cover-box">
-                        <van-image :src="getFile(file)"/>
-                        <span class="file-name">{{file && file.name}}</span>
+                        <van-image :src="getFileInfo(file).logo"/>
+                        <span class="file-name">{{getFileInfo(file).name}}</span>
                     </div>
                 </template>
             </van-uploader>
@@ -245,13 +245,22 @@
                 const {data} = await this.upload(file.file);
                 this.fileList.push({url: data.data.url, name: file.file.name, type: file.file.type}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
             },
-            getFile(file){
-                const type = file.type;
-                if(type.includes('pdf')){
-                    return require('@static/img/dynamic/pic_pdf.png')
-                }else{
-                    return require('@static/img/dynamic/pic_word.png')
+            getFileInfo(file){
+                file = file.file || file;
+                const result = {
+                    logo: '',
+                    name: file.name
+                };
+                let type = file.type;
+                if(file.file){
+                    type = file.file.type; //两种上传规则
                 }
+                if(type.includes('pdf')){
+                    result.logo = require('@static/img/dynamic/pic_pdf.png');
+                }else{
+                    result.logo = require('@static/img/dynamic/pic_word.png');
+                }
+                return result;
             }
         },
     }

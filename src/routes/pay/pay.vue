@@ -60,7 +60,7 @@
                         window.location.href = data.redirectUrl;
                     }
                     if(data.status === 1){
-                        this.$router.push({path: '/pay/success', query: {orderNo, id}})
+                        this.$router.replace({path: '/pay/success', query: {orderNo, id}})
                     }
                 }else{
                     this.$toast.fail(result.msg)
@@ -80,6 +80,7 @@
                 if(result.success){
                     const {orderNo} = this.$route.query;
                     const result2 = await wxPay(orderNo);
+                    const _this = this;
                     if(result2.success){
                         const params = result2.data;
                         function onBridgeReady(){
@@ -94,8 +95,8 @@
                                 },
                                 function(res){
                                     if(res.err_msg == "get_brand_wcpay_request:ok" ){
-                                        this.$toast.success('支付成功')
-                                        this.queryOrderStatus();
+                                        _this.$toast.success('支付成功')
+                                        _this.queryOrderStatus();
                                     }
                                 });
                         }

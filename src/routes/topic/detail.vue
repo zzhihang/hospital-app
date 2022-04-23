@@ -14,7 +14,6 @@
             <div class="main-box">
                 <h6>{{model.title}}</h6>
                 <p class="intro">{{model.introduction}}</p>
-                <div class="van-hairline--top"></div>
                 <ul>
                     <li>
                         <h5>{{model.subscribeCount}}</h5>
@@ -30,7 +29,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="tab-list">
+            <div class="tab-list" v-if="labelList.length">
                 <tagList :data="labelList" @onChange="onChange"/>
             </div>
             <div class="van-hairline--bottom"></div>
@@ -82,7 +81,9 @@
                 :show.sync="detailShow"
                 :data="detailData"
                 :forbidden="model.forbidden"
-                @onModalClose="commentShow = false"
+                :subscribe="!!model.subscribe"
+                @onModalClose="setCommentShow(false)"
+                @onCommentShowClick="onCommentShowClick"
                 @onInputClick="onCommentShowClick"/>
     </div>
 </template>
@@ -92,13 +93,13 @@
     import tagList from "../../components/tag/tagList";
     import topicCard from "./components/topicCard";
     import bottomBox from "./components/bottomBox";
-    import {userLabelList} from "../../service/topic/topService";
     import {commentPost, zhuantiDetail} from "@/service/topic/topService";
     import {Image as VanImage, List, Icon} from 'vant';
     import myEmpty from "@/components/empty/myEmpty";
     import {orderCreate} from "@/service/order/orderService";
     import topicCardDetail from "@/routes/topic/topicCardDetail";
-
+    import connect from "@/store/connect";
+    const {mapMutations, mapState} = connect('commonStore');
     Vue.use(VanImage);
     Vue.use(List);
     Vue.use(Icon);
@@ -125,20 +126,22 @@
                 tagModel: {},
                 currentCommentTo: '',
                 ifSubscribe: false,
-                commentShow: false,
                 detailShow: false,
                 content: '',
             }
         },
         beforeRouteLeave(to, from, next){
-            this.commentShow = false;
+            this.setCommentShow(false);
             next();
         },
+        computed: {
+          ...mapState(['commentShow'])
+        },
         created() {
-            this.getLabels();
             this.getDetail();
         },
         methods: {
+            ...mapMutations(['setCommentShow']),
             onMoreClick(data){
                 this.detailShow = true;
                 this.detailData = data
@@ -149,7 +152,7 @@
                 }
                 this.commentData = data;
                 this.$refs.commentInput.focus();
-                this.commentShow = true;
+                this.setCommentShow(true)
             },
             async sendComment(){
                 const params = {
@@ -162,17 +165,22 @@
                 const result = await commentPost(params);
                 if(result.status === 200){
                     this.commentShow = false;
+                    this.setCommentShow(false);
+                    this.detailShow = false;
                     this.content = '';
                     this.pageIndex = 1;
                     this.list = [];
                     this.$toast.success('评论成功');
                     this.getDetail();
+                }else{
+                    this.$toast.fail(result.msg);
                 }
             },
             async onSubscribe(){
                 const {data} = await orderCreate(this.model.id);
                 if(data.subscribe && String(this.model.free) === '1'){
                     this.ifSubscribe = true;
+                    this.model.subscribe = true;
                 }else{
                     this.$router.push({
                         path: '/pay',
@@ -193,10 +201,6 @@
                 this.list = [];
                 this.getDetail();
             },
-            async getLabels() {
-                const {data} = await userLabelList();
-                this.labelList = data;
-            },
             async getDetail() {
                 const {id} = this.$route.query;
                 const params = {
@@ -209,6 +213,7 @@
                 }
                 const {data} = await zhuantiDetail(params);
                 this.model = data.zhuanti;
+                this.labelList = data.zhuanti.labelList || [];
                 this.ifSubscribe = String(this.model.subscribe) === '1';
                 this.list = this.list.concat(data.items.records);
                 this.loading = false;
@@ -388,6 +393,7 @@
         right: 0;
         padding: 15px 15px 20px;
         z-index: 99999;
+        box-shadow: 0px -1px 12px 0px rgba(153, 153, 153, 0.18);
         h2{
             font-size: 14px;
             color: #333333;

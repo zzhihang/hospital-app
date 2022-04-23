@@ -1,6 +1,6 @@
 <template>
     <van-popup v-model="show" position="bottom" round :style="{ height: '95%' }" @close="onClose" get-container="body" closeable>
-        <topicCard :data="data" :show-action="false"/>
+        <topicCard v-on="$listeners" v-bind="$attrs" :data="data" :subscribe="subscribe" :show-action="false"/>
         <div class="bottom-action">
             <div class="bottom-input" @click="onInputClick"><van-icon class="mr4" name="edit" />请输入您要评论的内容</div>
             <span class="zan-box" @click.stop="onZanClick">
@@ -24,7 +24,8 @@
         props: {
             show: {},
             data: {},
-            forbidden: {}
+            forbidden: {},
+            subscribe: {}
         },
         components: {
             topicCard

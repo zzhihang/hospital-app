@@ -171,7 +171,9 @@
         methods: {
             inputHandler () {
                 const value = Number(this.formData.price);
-                this.formData.price = Number(value); //将022格式的数字转换成22
+                if(value){
+                    this.formData.price = Number(value); //将022格式的数字转换成22
+                }
                 if(String(this.formData.free) === '0' && value && !this.noLimit){//收费专题才去控制输入范围
                     if(value > this.priceMax || value < this.priceMin){
                         this.formData.price = '';
