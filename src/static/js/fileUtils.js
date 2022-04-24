@@ -1,22 +1,15 @@
-const mammoth = require("mammoth");
-
-export const wordPreview = (url) => {
-    var xhr = new XMLHttpRequest();
-    xhr.open("GET", url);
-    xhr.responseType = "arraybuffer";
-
-    xhr.onload = function(e) {
-        var arrayBuffer = xhr.response; //arrayBuffer
-
-        mammoth
-            .convertToHtml({ arrayBuffer: arrayBuffer })
-            .then(displayResult)
-            .done();
-
-        function displayResult(result) {
-            console.log(result);
-        }
-    };
-
-    xhr.send();
-};
+import Compressor from 'compressorjs';
+export const compressFile = (file) => {
+    return new Promise((resolve, reject) => {
+        new Compressor(file, {
+            quality: 0.5, //压缩质量
+            checkOrientation: false, //图片翻转，默认为false
+            success(result) {
+                resolve(result);
+            },
+            error(e) {
+                reject()
+            }
+        })
+    })
+}

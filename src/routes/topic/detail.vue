@@ -54,7 +54,7 @@
             <my-empty v-if="!list.length"/>
             <div class="un-subscribe-tip van-hairline--top van-hairline--bottom" v-if="!ifSubscribe">未订阅用户只能查看近三天内容</div>
             <div class="remark-box" v-if="model.remark">
-                <p>注:{{model.remark}}</p>
+                <p>{{model.remark}}</p>
             </div>
         </div>
         <bottom-box v-if="!ifSubscribe" :price="model.price" @onSubscribe="onSubscribe" :free="model.free" :long="model.subscribeType"/>
@@ -132,7 +132,9 @@
         },
         beforeRouteLeave(to, from, next){
             this.setCommentShow(false);
-            next();
+            this.$nextTick(() => {
+                next();
+            });
         },
         computed: {
           ...mapState(['commentShow'])
@@ -187,10 +189,6 @@
                         query: {
                             id: this.$route.query.id,
                             orderNo: data.orderNo,
-                            title: this.model.title,
-                            price: this.model.price,
-                            long: this.model.subscribeType,
-                            img: this.model.imgUrl
                         }
                     })
                 }

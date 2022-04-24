@@ -92,7 +92,8 @@ const routes = [
         path: '/dynamic',
         component: r => require.ensure([], () => r(require('@routes/dynamic'))),
         meta:{
-            title: '发布动态'
+            title: '发布动态',
+            keepAlive: true
         }
     },{
         path: '/label_list',

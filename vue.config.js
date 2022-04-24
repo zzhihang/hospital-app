@@ -12,7 +12,7 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
 
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
-const target = 'http://knowledge.rrzhongbao.com';
+const target = 'https://knowledge.shouzimu.xyz';
 
 module.exports = {
     publicPath: '/',
@@ -132,11 +132,11 @@ module.exports = {
         if (IS_PROD) {
             config.optimization.delete("splitChunks");
             config.optimization.minimize(true)
-            config.plugin("webpack-report").use(BundleAnalyzerPlugin, [
-                {
-                    analyzerMode: "static"
-                }
-            ]);
+            // config.plugin("webpack-report").use(BundleAnalyzerPlugin, [
+            //     {
+            //         analyzerMode: "static"
+            //     }
+            // ]);
             //关闭预加载关闭prefetch
             //vuecli4 默认开启prefetch(预先加载模块)，提前获取用户未来可能会访问的内容在首屏会把这十几个路由文件都下载下来
             config.plugins.delete('prefetch')

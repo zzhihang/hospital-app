@@ -68,7 +68,7 @@ axios.interceptors.response.use(function (response) {
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = 'http://localhost:8080/api'
 }else{
-  axios.defaults.baseURL = 'http://knowledge.rrzhongbao.com/api'
+  axios.defaults.baseURL = 'https://knowledge.shouzimu.xyz/api'
 }
 
 

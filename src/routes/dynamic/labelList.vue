@@ -44,6 +44,9 @@
                 value: '',
             }
         },
+        activated(){
+            this.getList();
+        },
         created(){
           this.getList();
           if(this.$route.query.manage){

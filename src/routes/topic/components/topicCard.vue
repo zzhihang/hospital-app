@@ -42,7 +42,7 @@
                         :key="index" />
             </div>
             <template v-for="(item, index) in data.contentObject">
-                <audio-player v-if="data.type === 'voice'" :long="item.timeLong" :key="index" :url="item.url"/>
+                <audio-player class="mt4" v-if="data.type === 'voice'" :long="item.timeLong" :key="index" :url="item.url"/>
             </template>
         </div>
         <div class="bottom-info">
@@ -393,5 +393,19 @@
 
     /deep/.docx-wrapper{
         display: block !important;
+        padding: 0;
+        margin: 0;
+        section{
+            width: 100%;
+        }
+        .docx table{
+            width: 100% !important;
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+        }
+        & > section.docx{
+            width: 100% !important;
+            padding: 10px !important;
+        }
     }
 </style>

@@ -5,16 +5,17 @@
                 rows="15"
                 autosize
                 :border="false"
-                :disabled="recorderList.length > 0"
                 type="textarea"
                 placeholder="点击此处说点什么..."
         >
         </van-field>
         <div class="pl10" style="background: #FFFFFF;overflow-x: scroll;">
             <van-uploader
-                    accept=".png, .jpg, .jpeg"
+                    accept="image/*"
                     v-if="imgList.length"
                     v-model="imgList"
+                    :max-size="maxSize"
+                    @oversize="onOversize"
                     multiple
                     max-count="9"
                     :after-read="afterRead"
@@ -25,6 +26,8 @@
                     max-count="9"
                     accept=".doc,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                     v-if="fileList.length"
+                    :max-size="maxSize"
+                    @oversize="onOversize"
                     :after-read="afterReadFile"
                     v-model="fileList"
                     upload-icon="plus"
@@ -55,7 +58,9 @@
             <div class="tool-bar-item" v-for="(item, index) in toolbar" :key="index" @click="item.click">
                 <van-uploader
                         v-if="item.type === 'image'"
-                        accept=".png, .jpg, .jpeg"
+                        accept="image/*"
+                        :max-size="maxSize"
+                        @oversize="onOversize"
                         :after-read="afterRead2"
                         max-count="9"
                         :disabled="imgList.length === 9 || fileList.length > 0 || recorderList.length > 0"
@@ -64,6 +69,8 @@
                 </van-uploader>
                 <van-uploader v-else-if="item.type === 'file'"
                               max-count="9"
+                              :max-size="maxSize"
+                              @oversize="onOversize"
                               :disabled="fileList.length === 9 || imgList.length > 0 || recorderList.length > 0"
                               accept=".doc,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                               :after-read="afterReadFile2">
@@ -79,6 +86,8 @@
             <van-button class="cancel-button" type="default" @click="cancel">取消</van-button>
             <van-button class="submit-button" type="primary"
                         :disabled="recorderList.length === 0 && imgList.length === 0 && fileList.length === 0 && !dynamic"
+                        :loading="buttonLoading"
+                        loading-text="正在发布..."
                         @click="publish">发表</van-button>
         </div>
         <recorder :show.sync="luyinPanelShow" @recorderSuccess="recorderSuccess"></recorder>
@@ -97,6 +106,7 @@
     import {upload} from "@/service/commonService";
     import audioPlayer from "@/routes/dynamic/components/audioPlayer";
     import {dyncmicInfo, postDynamic} from "@/service/topic/topService";
+    import {compressFile} from "@/static/js/fileUtils";
 
     Vue.use(VanImage);
     Vue.use(Uploader);
@@ -140,6 +150,7 @@
                         this.biaoqianPanelShow = true;
                     }
                 }],
+                maxSize: 1024 * 1024 *30,
                 luyinPanelShow: false,
                 biaoqianPanelShow: false,
                 imgList: [],
@@ -147,6 +158,7 @@
                 recorderList: [],
                 labelList: [],
                 dynamic: '',
+                buttonLoading: false
             }
         },
         created(){
@@ -155,6 +167,16 @@
             }
         },
         methods: {
+            setPageInit(){
+                this.imgList = [];
+                this.fileList = [];
+                this.recorderList = [];
+                this.labelList = [];
+                this.dynamic = [];
+            },
+            onOversize(){
+                this.$toast.fail('文件大小不能超过30M')
+            },
             async getDetail(){
                 const {data} = await dyncmicInfo(this.$route.query.id);
                 this.dynamic = data.title;
@@ -169,7 +191,6 @@
             },
             recorderSuccess(e){
                 this.recorderList.push(e);
-                this.dynamic = ''; //语音和文字不允许同时发布；
             },
             onDeleteClick(){
                 this.recorderList = [];
@@ -179,6 +200,7 @@
             },
             async publish(){
                 this.$loading.show();
+                this.buttonLoading = true;
                 const params = {
                     zhuantiId: this.$route.query.zhuantiId
                 };
@@ -208,7 +230,9 @@
                 }
                 const result = await postDynamic(params);
                 this.$loading.hide();
+                this.buttonLoading = false;
                 if(result.success){
+                    this.setPageInit();
                     this.$toast.success('发布成功');
                     this.$router.go(-1);
                 }else{
@@ -232,18 +256,47 @@
                 return upload(formData);
             },
             async afterRead(file){
-                await this.upload(file.file)
+                const result = await compressFile(file.file);
+                this.$loading.show();
+                const {data} = await this.upload(result);
+                if(data.success){
+                    this.imgList.splice(this.imgList.length - 1, 1, {url: data.data.url});
+                }else{
+                    this.$toast.fail(data.msg);
+                }
+                this.$loading.hide();
+
             },
             async afterRead2(file){
-                const {data} = await this.upload(file.file);
-                this.imgList.push({url: data.data.url}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
+                const result = await compressFile(file.file);
+                this.$loading.show();
+                const {data} = await this.upload(result);
+                if(data.success){
+                    this.imgList.push({url: data.data.url}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
+                }else{
+                    this.$toast.fail(data.msg);
+                }
+                this.$loading.hide();
             },
             async afterReadFile(file){
-                 await this.upload(file.file);
+                this.$loading.show();
+                const {data} = await this.upload(file.file);
+                if(data.success){
+                    this.fileList.splice(this.fileList.length - 1, 1, {url: data.data.url, name: file.file.name, type: file.file.type});
+                }else{
+                    this.$toast.fail(data.msg);
+                }
+                this.$loading.hide();
             },
             async afterReadFile2(file){
+                this.$loading.show();
                 const {data} = await this.upload(file.file);
-                this.fileList.push({url: data.data.url, name: file.file.name, type: file.file.type}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
+                if(data.success){
+                    this.fileList.push({url: data.data.url, name: file.file.name, type: file.file.type}) //上传axios是重新生成的实例 没有走统一拦截器 所以要取两层
+                }else{
+                    this.$toast.fail(data.msg);
+                }
+                this.$loading.hide();
             },
             getFileInfo(file){
                 file = file.file || file;
@@ -310,7 +363,7 @@
     .file-uploader{
         /deep/.van-uploader__file{
             flex-direction: row;
-            width: 162px;
+            min-width: 170px;
             height: 53px;
             padding: 0 30px 0 10px;
         }

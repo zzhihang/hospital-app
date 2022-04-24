@@ -73,13 +73,12 @@
         },
         watch:{
             $route(to,from){
-                if(to.path !== '/topic/detail'){
-                    this.setCommentShow(false);
+                const fullPath = to.path;
+                if(fullPath !== '/auth'){
+                    if(!window.sessionStorage.getItem('isBozhu')){
+                        this.getUserInfo();
+                    }
                 }
-                if(to.fullPath !== '/auth'){
-                    this.getUserInfo();
-                }
-                const fullPath = to.fullPath;
                 if(fullPath === '/my'){
                     this.active = 2;
                 }else if(fullPath === '/message'){

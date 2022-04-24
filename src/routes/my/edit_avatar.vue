@@ -6,7 +6,7 @@
         <van-uploader
                 :after-read="afterRead"
                 :max-count="1"
-                accept=".png, .jpg, .jpeg"
+                accept="image/*"
         >
             <div class="change">更换</div>
         </van-uploader>

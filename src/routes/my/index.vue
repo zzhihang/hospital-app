@@ -7,7 +7,7 @@
                     :src="userInfo.headimgurl"
             />
             <h1>{{userInfo.nickname}}</h1>
-            <p>ID:{{userInfo.id}}</p>
+            <p>ID:{{userInfo.userId}}</p>
             <div class="edit" @click="goEdit">
                 <van-image
                         width="12"
@@ -73,7 +73,9 @@
                 }, async () => {
                     const result = await logout();
                     if(result.status === 200){
+                        sessionStorage.removeItem('isBozhu')
                         this.$toast.success('退出成功');
+                        this.$router.replace({path: '/login'})
                     }
                 })
             },

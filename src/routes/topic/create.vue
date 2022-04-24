@@ -2,7 +2,10 @@
     <div class="body">
         <van-form ref="form" @submit="onSubmit">
             <div class="upload">
-                <van-uploader :after-read="afterRead" v-model="fileList" max-count="1">
+                <van-uploader
+                        :after-read="afterRead"
+                        v-model="fileList"
+                        max-count="1">
                     <div class="upload-box">
                         <van-image :src="require('../../static/img/topic/icon_zhaoxiangji.png')"/>
                     </div>
@@ -56,7 +59,7 @@
                             v-model="formData.price"
                             :disabled="formData.free === '1'"
                             required
-                            type="digit"
+                            type="number"
                             @blur="inputHandler"
                             :rules="[{ required: true, message: '请设置专题费用' }]"
                             :placeholder="placeHolder"
@@ -122,6 +125,7 @@
     import {createTopic, zhuantiInfo} from "@/service/topic/topService";
     import {upload} from "@/service/commonService";
     import {dictPrice} from "../../service/dict/dictService";
+    import {compressFile} from "@/static/js/fileUtils";
 
     Vue.use(Form);
     Vue.use(VanImage)
@@ -197,8 +201,9 @@
                 this.fileList.push({url: model.imgUrl});
             },
             async afterRead(file) {
+                const result = await compressFile(file.file);
                 const formData = new FormData();
-                formData.append('file', file.file);
+                formData.append('file', result);
                 const {data} = await upload(formData);
                 this.formData.imgUrl = data.data.url;
             },

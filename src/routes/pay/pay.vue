@@ -2,7 +2,7 @@
     <div class="body">
         <div class="order-info">
             <div class="content-card">
-                <van-image :src="info.img" radius="6"/>
+                <van-image :src="info.imgUrl" radius="6"/>
                 <div class="info">
                     <h1>{{info.title}}</h1>
                     <p>付费专题</p>
@@ -12,8 +12,8 @@
 
         <van-cell-group class="mt5">
             <van-cell title="金额" :value="info.price" />
-            <van-cell title="有效期" :value="info.timeLong"/>
-            <van-cell title="订阅时间" :value="now"/>
+            <van-cell title="有效期" :value="info.expire"/>
+            <van-cell title="订阅时间" :value="info.ctime"/>
         </van-cell-group>
 
         <div class="pay-box">
@@ -30,7 +30,6 @@
     import {Cell, CellGroup, Image as VanImage, Button} from 'vant';
     import {aliPay, orderStatus, wxPay, wxYanQian} from "@/service/order/orderService";
     import {LONG_MAP} from "@/static/js/const";
-    import {formatDate} from "@/static/js/util";
     import wx from 'weixin-js-sdk'
 
     Vue.use(Cell);
@@ -42,7 +41,6 @@
         data() {
             return {
                 info: {},
-                now: formatDate(new Date())
             }
         },
         created(){
@@ -55,6 +53,7 @@
                 const {orderNo, id} = this.$route.query;
                 const result = await orderStatus(orderNo);
                 const {data} = result;
+                this.info = data;
                 if(result.success){
                     if(data.redirect){
                         window.location.href = data.redirectUrl;

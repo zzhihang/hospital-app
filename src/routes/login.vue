@@ -57,7 +57,7 @@
     export default {
         data() {
             return {
-                checked: false,
+                checked: true,
                 show: true,
                 phone: '',
                 code: '',
