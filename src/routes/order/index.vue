@@ -31,7 +31,7 @@
             ...mapState(['isBozhu'])
         },
         mounted(){
-            if(this.isBozhu){
+            if(!this.isBozhu){
                 document.title = '订单明细'
             }
         },

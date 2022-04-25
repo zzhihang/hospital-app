@@ -128,7 +128,7 @@
     import {compressFile} from "@/static/js/fileUtils";
 
     Vue.use(Form);
-    Vue.use(VanImage)
+    Vue.use(VanImage);
     Vue.use(Button);
     Vue.use(Cell);
     Vue.use(CellGroup);

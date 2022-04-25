@@ -59,15 +59,17 @@
         computed: {
             ...mapState(['userInfo', 'ifShowTabBar'])
         },
+        mounted(){
+            setTimeout(() => {
+                watermark.set(this.userInfo.nickname);
+            },500);
+        },
         methods: {
             ...mapMutations(['setUserInfo', 'setIsBozhu', 'setCommentShow']),
             async getUserInfo(){
                 const {data} = await userinfo();
                 this.setUserInfo(data);
                 this.setIsBozhu(data.userType === 1);
-                setTimeout(() => {
-                    watermark.set(data.nickname);
-                },500);
                 window.sessionStorage.setItem('isBozhu', data.userType === 1);
             }
         },
@@ -95,5 +97,14 @@
     /deep/.van-tabbar-item__icon img{
         height: 20px;
         width: 20px;
+    }
+    * {
+        moz-user-select: -moz-none;
+        -moz-user-select: none;
+        -o-user-select: none;
+        -khtml-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 </style>

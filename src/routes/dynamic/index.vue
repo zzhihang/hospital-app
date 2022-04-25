@@ -161,6 +161,17 @@
                 buttonLoading: false
             }
         },
+        beforeRouteLeave(to, from, next){
+            if(to.path !== '/label_list'){
+                this.setPageInit();
+            }
+            next();
+        },
+        activated(){
+            if(this.$route.query.id){
+                this.getDetail()
+            }
+        },
         created(){
             if(this.$route.query.id){
                 this.getDetail()
@@ -232,7 +243,6 @@
                 this.$loading.hide();
                 this.buttonLoading = false;
                 if(result.success){
-                    this.setPageInit();
                     this.$toast.success('发布成功');
                     this.$router.go(-1);
                 }else{

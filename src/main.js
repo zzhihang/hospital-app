@@ -29,6 +29,9 @@ Vue.prototype.$toast = toast;
 
 new Vconsole();
 
+//禁止选择网页中的文字
+document.onselectstart = function () { return false; }
+
 //axios请求拦截
 axios.interceptors.request.use((request) => {
   let REQUEST_DATA = request.data

@@ -1,5 +1,5 @@
 <template>
-    <div class="body" :class="{pb60: !ifSubscribe, pb100: commentShow}">
+    <div class="body" :class="{pb60: !ifSubscribe, pb100: commentShow}" @click="onBodyClick">
         <div style="position:relative;">
             <van-image class="top-img" :src="model.imgUrl"/>
             <div class="badge-box">
@@ -166,7 +166,6 @@
                 }
                 const result = await commentPost(params);
                 if(result.status === 200){
-                    this.commentShow = false;
                     this.setCommentShow(false);
                     this.detailShow = false;
                     this.content = '';
@@ -254,6 +253,9 @@
             onLoad() {
                 this.pageIndex = this.pageIndex + 1;
                 this.getDetail();
+            },
+            onBodyClick(){
+                this.setCommentShow(false)
             }
         },
     }
