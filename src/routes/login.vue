@@ -57,7 +57,7 @@
     export default {
         data() {
             return {
-                checked: true,
+                checked: false,
                 show: true,
                 phone: '',
                 code: '',
@@ -87,9 +87,6 @@
             onCountDownFinish(){
                 this.counting = false;
                 this.$refs.countDown.reset();
-            },
-            onCopyClick(){
-                this.$router.push({path: '/policy'})
             },
             async login(){
                 if(!this.phone){
@@ -164,15 +161,8 @@
     .copyright{
         font-size: 12px;
         color: #666666;
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 31px;
-        text-align: center;
         width: 100%;
-        .van-checkbox{
-            justify-content: center;
-        }
+        margin-top: 10px;
         span{
             text-decoration: underline;
             color: @main-color;

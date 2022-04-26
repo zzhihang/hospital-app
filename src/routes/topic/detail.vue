@@ -1,7 +1,9 @@
 <template>
     <div class="body" :class="{pb60: !ifSubscribe, pb100: commentShow}" @click="onBodyClick">
         <div style="position:relative;">
-            <van-image class="top-img" :src="model.imgUrl"/>
+           <div class="top-img-box">
+               <van-image class="top-img" :src="model.imgUrl"/>
+           </div>
             <div class="badge-box">
                 <van-image v-if="String(model.free) === '0'" height="18" width="38" :src="require('../../static/img/topic/pic_biaoqian.png')" />
             </div>
@@ -58,7 +60,7 @@
             </div>
         </div>
         <bottom-box v-if="!ifSubscribe" :price="model.price" @onSubscribe="onSubscribe" :free="model.free" :long="model.subscribeType"/>
-        <div class="publish-dynamic" @click="onPublishClick">
+        <div class="publish-dynamic" v-if="ifSubscribe" @click="onPublishClick">
             <van-image :src="require('../../static/img/topic/icon_dabudongtai@2x.png')"></van-image>
         </div>
         <div class="comment-input" v-show="commentShow">
@@ -340,10 +342,13 @@
         }
     }
 
+    .top-img-box{
+        max-height: 300px;
+        overflow: hidden;
+    }
+
     .top-img {
         width: 100%;
-        height: 250px;
-        overflow: hidden;
     }
     .action-edit{
         width: 72px;

@@ -67,7 +67,7 @@
             },
             async onZhifubaoPay(){
                 const {orderNo} = this.$route.query;
-                const result = await aliPay(orderNo)
+                const result = await aliPay(orderNo);
                 if(result.status === 200){
                     window.location.href = result.data.redirect
                 }else{

@@ -3,40 +3,22 @@
         <!--<van-button class="close-btn" color="rgba(254, 123, 53, 0.1)" round @click="closeWindow">关闭</van-button>-->
         <van-image :src="require('../static/img/logo.png')"/>
         <h1>知识付费平台</h1>
-        <van-button
-                class="login-button"
-                type="primary"
-                @click="onLoginClick"
-                :icon="require('../static/img/login/icon_weixindenglu.png')">微信授权登录</van-button>
-        <p class="copyright">
-            <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span @click="$router.push({path: '/agreement'})">知识付费平台协议、</span><span @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
-        </p>
-        <van-popup class="login-pop" v-model="show" round get-container="body" position="bottom" :style="{ height: '45%' }" >
-            <div class="title">
-                <div>
-                    <span class="logo">知</span>
-                    <span>知识付费平台 申请</span>
-                </div>
-                <van-icon name="info-o" color="#999999" size="18"/>
-            </div>
-            <div class="content">
-                <h2>获取你的手机号</h2>
-                <p>用于使用第三方账号授权登录的情形</p>
-                <div class="van-hairline--top van-hairline--bottom mt20">
-                    <van-field v-model="phone" placeholder="请输入手机号" />
-                </div>
-            </div>
-            <div class="button-box">
-                <van-button class="reject-button" color="#F2F2F2">拒绝</van-button>
-                <van-button color="#07BF67" @click="sendSms">允许</van-button>
-            </div>
-        </van-popup>
+       <div class="login-button-box">
+           <p class="copyright">
+               <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span @click="$router.push({path: '/agreement'})">知识付费平台协议、</span><span @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
+           </p>
+           <van-button
+                   class="login-button"
+                   type="primary"
+                   @click="onLoginClick"
+                   :icon="require('../static/img/login/icon_weixindenglu.png')">微信授权登录</van-button>
+       </div>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import {Button, Checkbox, Field, Icon, Image as VanImage, Popup} from 'vant';
+    import {Button, Checkbox, Field, Icon, Image as VanImage} from 'vant';
     import {sendSms} from "@/service/commonService";
     import {getParams} from "@/static/js/util";
 
@@ -45,12 +27,11 @@
     Vue.use(Checkbox);
     Vue.use(VanImage);
     Vue.use(Button);
-    Vue.use(Popup);
 
     export default {
         data() {
             return {
-                checked: true,
+                checked: false,
                 show: false,
                 phone: '',
             }
@@ -109,7 +90,7 @@
         }
         .login-button{
             width: 300px;
-            margin-top: 105px;
+            margin-top: 10px;
             font-size: 18px;
             .van-icon{
                 margin-top: 4px;
@@ -117,15 +98,15 @@
             }
         }
     }
+
     .copyright{
         font-size: 12px;
         color: #666666;
-        position: absolute;
-        bottom: 31px;
-        text-align: center;
         width: 100%;
-        .van-checkbox{
-            justify-content: center;
+        padding-left: 40px;
+        span{
+            text-decoration: underline;
+            color: @main-color;
         }
     }
 
@@ -186,21 +167,8 @@
 
         }
     }
-    .copyright{
-        font-size: 12px;
-        color: #666666;
-        position: absolute;
-        left: 0;
-        right: 0;
-        bottom: 31px;
-        text-align: center;
-        width: 100%;
-        .van-checkbox{
-            justify-content: center;
-        }
-        span{
-            text-decoration: underline;
-            color: @main-color;
-        }
+
+    .login-button-box{
+        margin-top: 95px;
     }
 </style>

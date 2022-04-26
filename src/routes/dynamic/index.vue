@@ -24,7 +24,7 @@
             <van-uploader
                     class="file-uploader"
                     max-count="9"
-                    accept=".doc,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                    accept="application/pdf,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                     v-if="fileList.length"
                     :max-size="maxSize"
                     @oversize="onOversize"
@@ -72,7 +72,7 @@
                               :max-size="maxSize"
                               @oversize="onOversize"
                               :disabled="fileList.length === 9 || imgList.length > 0 || recorderList.length > 0"
-                              accept=".doc,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                              accept="application/pdf,.pdf,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                               :after-read="afterReadFile2">
                     <van-icon size="24" :name="item.icon"></van-icon>
                 </van-uploader>

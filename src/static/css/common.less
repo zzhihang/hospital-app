@@ -138,3 +138,14 @@ a{
 /deep/.van-overlay{
   z-index: 99999;
 }
+* {
+  moz-user-select: -moz-none;
+  -moz-user-select: none;
+  -o-user-select: none;
+  -khtml-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+input,select,textarea { -webkit-user-select:auto; /*webkit浏览器*/ user-select: auto; /*用户是否可以选中文本*/
+}
