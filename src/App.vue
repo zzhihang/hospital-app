@@ -76,7 +76,7 @@
         watch:{
             $route(to,from){
                 const fullPath = to.path;
-                if(fullPath !== '/auth'){
+                if(fullPath !== '/auth' && fullPath !== '/pay'){
                     if(!window.sessionStorage.getItem('isBozhu')){
                         this.getUserInfo();
                     }

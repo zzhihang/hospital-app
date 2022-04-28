@@ -14,7 +14,7 @@ import loading from 'components/loading/loading.js'
 import store from './store';
 import toast from "@/components/toast";
 import {Toast} from "vant";
-import Vconsole from 'vconsole'
+// import Vconsole from 'vconsole'
 Vue.use(loading)
 
 Vue.prototype.$bridge = Bridge;
@@ -27,7 +27,7 @@ Vue.prototype.$confirm = confirm;
 
 Vue.prototype.$toast = toast;
 
-new Vconsole();
+// new Vconsole();
 
 //禁止选择网页中的文字
 document.onselectstart = function () { return false; }

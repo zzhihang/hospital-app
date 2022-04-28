@@ -18,7 +18,7 @@
 
         <div class="pay-box">
             <div class="button-box">
-                <van-button @click="onWxPay" color="#04CA62" plain :icon="require('../../static/img/pay/icon_weixinzhifu.png')">微信支付</van-button>
+                <van-button v-if="isWeixin" @click="onWxPay" color="#04CA62" plain :icon="require('../../static/img/pay/icon_weixinzhifu.png')">微信支付</van-button>
                 <van-button @click="onZhifubaoPay" plain class="mt20" :icon="require('../../static/img/pay/icon_zhifubaozhifu.png')" type="info">支付宝支付</van-button>
             </div>
         </div>
@@ -31,6 +31,7 @@
     import {aliPay, orderStatus, wxPay, wxYanQian} from "@/service/order/orderService";
     import {LONG_MAP} from "@/static/js/const";
     import wx from 'weixin-js-sdk'
+    import {isWeixin} from "@/static/js/util";
 
     Vue.use(Cell);
     Vue.use(CellGroup);
@@ -41,11 +42,15 @@
         data() {
             return {
                 info: {},
+                isWeixin: isWeixin()
             }
         },
         created(){
             this.info = this.$route.query;
             this.info.timeLong = LONG_MAP[this.info.long];
+            if(!isWeixin()){ //如果不是微信环境的话，进来就调支付宝
+                this.aliPay();
+            }
             this.getOrderStatus();
         },
         methods: {
@@ -66,6 +71,13 @@
                 }
             },
             async onZhifubaoPay(){
+                if(this.isWeixin){
+                    this.$toast('请点击右上角在浏览器中打开');
+                }else{
+                    this.aliPay()
+                }
+            },
+            async aliPay(){
                 const {orderNo} = this.$route.query;
                 const result = await aliPay(orderNo);
                 if(result.status === 200){

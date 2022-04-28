@@ -21,7 +21,7 @@
     import {Button, Checkbox, Field, Icon, Image as VanImage} from 'vant';
     import {sendSms} from "@/service/commonService";
     import {getParams} from "@/static/js/util";
-    import {serviceAgreement} from "@/service/dict/dictService";
+    import {dictPrivacy, serviceAgreement} from "@/service/dict/dictService";
 
     Vue.use(Field);
     Vue.use(Icon);

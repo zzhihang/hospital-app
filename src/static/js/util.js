@@ -103,3 +103,8 @@ export const formatDate = (date, fmt='yyyy-MM-dd') => {
     return fmt
 }
 
+export const isWeixin = () => {
+    var ua = navigator.userAgent.toLowerCase();
+    return ua.indexOf('micromessenger') !== -1;
+}
+
