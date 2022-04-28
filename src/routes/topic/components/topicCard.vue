@@ -12,7 +12,7 @@
             <van-notice-bar left-icon="close" background="#FFF7F3" mode="closeable" wrapable>
                 {{data.audit}}
                 <template #right-icon>
-                    <div style="align-self: center" @click="goEdit">
+                    <div @click="goEdit">
                         重新编辑>>
                     </div>
                 </template>

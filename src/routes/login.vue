@@ -32,8 +32,8 @@
                     </van-field>
                 </div>
             </div>
-            <p class="copyright">
-                <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span @click="$router.push({path: '/agreement'})">知识付费平台协议、</span><span @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
+            <p class="copyright" v-if="agreementEnable || privacyEnable">
+                <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span v-if="agreementEnable" @click="$router.push({path: '/agreement'})">知识付费平台协议</span>&nbsp;<span v-if="privacyEnable" @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
             </p>
             <van-button type="primary" @click="login">立即绑定</van-button>
         </div>
@@ -45,6 +45,7 @@
     import {Button, Checkbox, CountDown, Field, Icon, Image as VanImage, Popup} from 'vant';
     import {login, sendSms} from "@/service/commonService";
     import connect from "@/store/connect";
+    import {dictPrivacy, serviceAgreement} from "@/service/dict/dictService";
 
     Vue.use(CountDown);
     Vue.use(Field);
@@ -62,8 +63,18 @@
                 phone: '',
                 code: '',
                 time: 60 * 1000,
-                counting: false
+                counting: false,
+                agreementEnable: false,
+                privacyEnable: false
             }
+        },
+        created(){
+            Promise.all([serviceAgreement(), dictPrivacy()]).then(result => {
+                const [r1, r2] = result;
+                this.agreementEnable = String(r1.enable) === '1';
+                this.privacyEnable = String(r2.enable) === '1';
+                this.checked = !(this.agreementEnable || this.privacyEnable)
+            });
         },
         methods: {
             ...mapMutations(['setUserInfo', 'setIsBozhu']),

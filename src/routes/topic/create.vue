@@ -57,11 +57,12 @@
                     </h6>
                     <van-field
                             v-model="formData.price"
-                            :disabled="formData.free === '1'"
-                            required
+                            :disabled="formData.free === '1' || !ifEnablePriceDict"
+                            :required="ifEnablePriceDict"
+
                             type="number"
                             @blur="inputHandler"
-                            :rules="[{ required: true, message: '请设置专题费用' }]"
+                            :rules="[{ required: ifEnablePriceDict, message: '请设置专题费用' }]"
                             :placeholder="placeHolder"
                     />
                 </div>
@@ -152,6 +153,7 @@
                     {text: '按季度计算', value: 'quarter'},
                     {text: '按年度计算', value: 'year'}
                 ],
+                ifEnablePriceDict: false,
                 noLimit: false,
                 priceMin: 0,
                 priceMax: 0,
@@ -186,7 +188,9 @@
                 }
             },
             async getDictPrice(){
-                const {data} = await dictPrice();
+                const result = await dictPrice();
+                const {data} = result;
+                this.ifEnablePriceDict = String(result.enable) !== '1';
                 this.noLimit = data.noLimit;
                 this.priceMin = data.priceMin;
                 this.priceMax = data.priceMax;
@@ -216,7 +220,7 @@
                 if(!this.fileList.length){
                     return this.$toast.fail('请上传图片')
                 }
-                if(String(this.formData.free) === '0' && (Number(this.formData.price)> this.priceMax || Number(this.formData.price) < this.priceMin)){
+                if(this.ifEnablePriceDict && String(this.formData.free) === '0' && (Number(this.formData.price)> this.priceMax || Number(this.formData.price) < this.priceMin)){
                     return this.$toast.fail(`专题费用请输入${this.priceMin}-${this.priceMax}的整数`);
                 }
                 await this.$refs.form.validate().then(async () => {

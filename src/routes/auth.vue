@@ -4,8 +4,8 @@
         <van-image :src="require('../static/img/logo.png')"/>
         <h1>知识付费平台</h1>
        <div class="login-button-box">
-           <p class="copyright">
-               <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span @click="$router.push({path: '/agreement'})">知识付费平台协议、</span><span @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
+           <p class="copyright" v-if="agreementEnable || privacyEnable">
+               <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span v-if="agreementEnable" @click="$router.push({path: '/agreement'})">知识付费平台协议</span>&nbsp;<span v-if="privacyEnable" @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
            </p>
            <van-button
                    class="login-button"
@@ -21,6 +21,7 @@
     import {Button, Checkbox, Field, Icon, Image as VanImage} from 'vant';
     import {sendSms} from "@/service/commonService";
     import {getParams} from "@/static/js/util";
+    import {serviceAgreement} from "@/service/dict/dictService";
 
     Vue.use(Field);
     Vue.use(Icon);
@@ -34,7 +35,17 @@
                 checked: false,
                 show: false,
                 phone: '',
+                agreementEnable: false,
+                privacyEnable: false
             }
+        },
+        created(){
+            Promise.all([serviceAgreement(), dictPrivacy()]).then(result => {
+                const [r1, r2] = result;
+                this.agreementEnable = String(r1.enable) === '1';
+                this.privacyEnable = String(r2.enable) === '1';
+                this.checked = !(this.agreementEnable || this.privacyEnable)
+            });
         },
         methods: {
             onLoginClick() {
@@ -54,9 +65,6 @@
                 }
 
             },
-            closeWindow(){
-                window.close();
-            }
         },
     }
 </script>
