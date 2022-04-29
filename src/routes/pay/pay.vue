@@ -22,15 +22,20 @@
                 <van-button @click="onZhifubaoPay" plain class="mt20" :icon="require('../../static/img/pay/icon_zhifubaozhifu.png')" type="info">支付宝支付</van-button>
             </div>
         </div>
+        <van-overlay :show="show" @click="show = false">
+            <div class="wrapper" @click.stop style="text-align: right">
+                <van-image width="250" :src="require('../../static/img/pay/pic_yindao.png')"/>
+            </div>
+        </van-overlay>
+
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import {Cell, CellGroup, Image as VanImage, Button} from 'vant';
+    import {Button, Cell, CellGroup, Image as VanImage, Overlay} from 'vant';
     import {aliPay, orderStatus, wxPay, wxYanQian} from "@/service/order/orderService";
     import {LONG_MAP} from "@/static/js/const";
-    import wx from 'weixin-js-sdk'
     import {isWeixin} from "@/static/js/util";
 
     Vue.use(Cell);
@@ -38,11 +43,13 @@
     Vue.use(VanImage);
     Vue.use(Button);
 
+    Vue.use(Overlay);
     export default {
         data() {
             return {
                 info: {},
-                isWeixin: isWeixin()
+                isWeixin: isWeixin(),
+                show: false
             }
         },
         created(){
@@ -73,6 +80,7 @@
             async onZhifubaoPay(){
                 if(this.isWeixin){
                     this.$toast('请点击右上角在浏览器中打开');
+                    this.show = true;
                 }else{
                     this.aliPay()
                 }

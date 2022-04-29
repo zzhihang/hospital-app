@@ -69,15 +69,25 @@
             async getUserInfo(){
                 const {data} = await userinfo();
                 this.setUserInfo(data);
-                this.setIsBozhu(data.userType === 1);
-                window.sessionStorage.setItem('isBozhu', data.userType === 1);
+                this.setIsBozhu(String(data.userType) === '1');
+                window.sessionStorage.setItem('isBozhu', String(data.userType) === '1');
+                Vue.directive("bozhu", { //博主按钮权限管理 v-bozhu
+                    inserted (el, binding) {
+                        debugger
+                        let permission = sessionStorage.getItem('isBozhu')
+                        if (permission !== 'true') {
+                            el.parentNode && el.parentNode.removeChild(el);
+                        }
+                    }
+                });
             }
         },
         watch:{
             $route(to,from){
                 const fullPath = to.path;
-                if(fullPath !== '/auth' && fullPath !== '/pay'){
-                    if(!window.sessionStorage.getItem('isBozhu')){
+                const list = ['/auth', '/pay', '/pay/success', '/pay/fail'];
+                if(!list.includes(fullPath)){
+                    if(!window.sessionStorage.getItem('isBozhu') || fullPath === '/topic'){//首页这里请求一次 防止博主身份未出来
                         this.getUserInfo();
                     }
                 }

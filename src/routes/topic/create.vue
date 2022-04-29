@@ -190,7 +190,7 @@
             async getDictPrice(){
                 const result = await dictPrice();
                 const {data} = result;
-                this.ifEnablePriceDict = String(result.enable) !== '1';
+                this.ifEnablePriceDict = String(result.enable) === '1';
                 this.noLimit = data.noLimit;
                 this.priceMin = data.priceMin;
                 this.priceMax = data.priceMax;
