@@ -12,7 +12,7 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
 
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
-const target = 'https://knowledge.shouzimu.xyz';
+const target = 'http://hiswx.shouzimu.xyz';
 
 module.exports = {
     publicPath: '/',
@@ -22,23 +22,8 @@ module.exports = {
     devServer: {
         compress: true,
         disableHostCheck: true,
+        port: 8083,
         proxy: {
-            '/zhuanti': {
-                target: target,
-                changeOrigin: true,
-                ws: true,
-                secure: false
-            },
-            '/userlabels': {
-                target: target,
-                changeOrigin: true,
-                ws: true,
-            },
-            '/sysmessage': {
-                target: target,
-                changeOrigin: true,
-                ws: true,
-            },
             '/api': {
                 target: target,
                 changeOrigin: true,

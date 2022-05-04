@@ -4,23 +4,29 @@
             <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
         <router-view v-if="!$route.meta.keepAlive"></router-view>
-        <van-tabbar v-if="ifShowTabBar" v-model="active" active-color="#FE7B35">
-            <van-tabbar-item replace to="/topic" icon="home-o">
+        <van-tabbar v-if="ifShowTabBar" v-model="active" active-color="#367DF7">
+            <van-tabbar-item replace to="/app">
                 <span>专题</span>
                 <template #icon="props">
-                    <img :src="props.active ? activeIcon[0] : defaultIcon[0]"/>
+                    <my-icon name="btn_shouye_default" />
                 </template>
             </van-tabbar-item>
             <van-tabbar-item icon="search" to="/message" :badge="userInfo.unReadCount > 0 ? userInfo.unReadCount : ''">
                 <span>消息</span>
                 <template #icon="props">
-                    <img :src="props.active ? activeIcon[1] : defaultIcon[1]"/>
+                    <my-icon name="btn_xiaoxi_default" />
+                </template>
+            </van-tabbar-item>
+            <van-tabbar-item icon="friends-o" to="/my">
+                <span>关注</span>
+                <template #icon="props">
+                    <my-icon name="icon_guanzhu_default" />
                 </template>
             </van-tabbar-item>
             <van-tabbar-item icon="friends-o" to="/my">
                 <span>我的</span>
                 <template #icon="props">
-                    <img :src="props.active ? activeIcon[2]: defaultIcon[2]"/>
+                    <my-icon name="btn_wode_default" />
                 </template>
             </van-tabbar-item>
         </van-tabbar>
@@ -30,9 +36,8 @@
 <script>
     import Vue from 'vue';
     import {Tabbar, TabbarItem} from 'vant';
-    import {userinfo} from "@/service/topic/topService";
     import connect from "@/store/connect";
-    import watermark from '@/static/js/third/watermark'
+    import MyIcon from "@/components/common/MyIcon";
 
     Vue.use(Tabbar);
     Vue.use(TabbarItem);
@@ -40,17 +45,20 @@
     const {mapState, mapMutations} = connect('commonStore');
     export default {
         name: 'App',
+        components: {
+            MyIcon
+        },
         data() {
             return {
                 defaultIcon: [
-                    require('@static/img/app/btn_zhuanti_default.png'),
-                    require('@static/img/app/btn_xiaoxi_default.png'),
-                    require('@static/img/app/btn_wode_default.png'),
+                    // require('@static/img/app/btn_zhuanti_default.png'),
+                    // require('@static/img/app/btn_xiaoxi_default.png'),
+                    // require('@static/img/app/btn_wode_default.png'),
                 ],
                 activeIcon: [
-                    require('@static/img/app/btn_zhuanti_pressed.png'),
-                    require('@static/img/app/btn_xiaoxi_pressed.png'),
-                    require('@static/img/app/btn_wode_pressed.png'),
+                    // require('@static/img/app/btn_zhuanti_pressed.png'),
+                    // require('@static/img/app/btn_xiaoxi_pressed.png'),
+                    // require('@static/img/app/btn_wode_pressed.png'),
                 ],
                 showTabBar: false,
                 active: 0
@@ -60,9 +68,6 @@
             ...mapState(['userInfo', 'ifShowTabBar'])
         },
         mounted(){
-            setTimeout(() => {
-                watermark.set(this.userInfo.nickname);
-            },500);
         },
         methods: {
             ...mapMutations(['setUserInfo', 'setIsBozhu', 'setCommentShow']),
@@ -83,22 +88,22 @@
             }
         },
         watch:{
-            $route(to,from){
-                const fullPath = to.path;
-                const list = ['/auth', '/pay', '/pay/success', '/pay/fail'];
-                if(!list.includes(fullPath)){
-                    if(!window.sessionStorage.getItem('isBozhu') || fullPath === '/topic'){//首页这里请求一次 防止博主身份未出来
-                        this.getUserInfo();
-                    }
-                }
-                if(fullPath === '/my'){
-                    this.active = 2;
-                }else if(fullPath === '/message'){
-                    this.active = 1
-                }else{
-                    this.active = 0
-                }
-            }
+            // $route(to,from){
+            //     const fullPath = to.path;
+            //     const list = ['/auth', '/pay', '/pay/success', '/pay/fail'];
+            //     if(!list.includes(fullPath)){
+            //         if(!window.sessionStorage.getItem('isBozhu') || fullPath === '/topic'){//首页这里请求一次 防止博主身份未出来
+            //             this.getUserInfo();
+            //         }
+            //     }
+            //     if(fullPath === '/my'){
+            //         this.active = 2;
+            //     }else if(fullPath === '/message'){
+            //         this.active = 1
+            //     }else{
+            //         this.active = 0
+            //     }
+            // }
         }
     }
 </script>

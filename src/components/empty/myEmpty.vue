@@ -1,7 +1,7 @@
 <template>
     <van-empty
-            :image="require('../../static/img/empty.png')"
-            :description="description"
+        :image="require('../../static/img/empty.png')"
+        :description="description"
     />
 </template>
 
@@ -14,7 +14,7 @@
         props: {
             description: {
                 type: String,
-                default: '暂无动态'
+                default: '暂无数据'
             }
         }
     }

@@ -1,4 +1,3 @@
-
 /**
  * @Description 获取url参数
  * @Param
@@ -16,7 +15,7 @@ export const getParams = (key) => {
             params[array[i].split("=")[0]] = unescape(array[i].split("=")[1]);
         }
     }
-    if(key){
+    if (key) {
         return params[key]
     }
     return params;
@@ -30,7 +29,7 @@ export const getParams = (key) => {
  * @Date 2021/5/13 14:47
  **/
 export const getStarPhone = (phone) => {
-    if(typeof phone === 'number'){
+    if (typeof phone === 'number') {
         phone = String(phone);
     }
     return phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')
@@ -45,7 +44,7 @@ export const getStarPhone = (phone) => {
  **/
 
 export const numberFormatByTenThousand = function (value) {
-    if(!value){
+    if (!value) {
         return 0
     }
     value = Number(value);
@@ -53,10 +52,10 @@ export const numberFormatByTenThousand = function (value) {
     let k = 10000,
         sizes = ['', '万', '亿', '万亿'],
         i;
-    if(value < k){
-        param.value =value
-        param.unit =''
-    }else{
+    if (value < k) {
+        param.value = value
+        param.unit = ''
+    } else {
         i = Math.floor(Math.log(value) / Math.log(k));
         param.value = ((value / Math.pow(k, i))).toFixed(1);
         param.unit = sizes[i];
@@ -82,7 +81,7 @@ export const deepClone = (data) => {
  * @Date 2021/7/30 10:53
  **/
 
-export const formatDate = (date, fmt='yyyy-MM-dd') => {
+export const formatDate = (date, fmt = 'yyyy-MM-dd') => {
     if (typeof date == 'string') {
         return date;
     }
@@ -106,5 +105,34 @@ export const formatDate = (date, fmt='yyyy-MM-dd') => {
 export const isWeixin = () => {
     var ua = navigator.userAgent.toLowerCase();
     return ua.indexOf('micromessenger') !== -1;
+}
+
+export const getAgeById = (identityCard) => {
+    var len = (identityCard + "").length;
+    if (len === 0) {
+        return 0;
+    } else {
+        if ((len != 15) && (len != 18))//身份证号码只能为15位或18位其它不合法
+        {
+            return 0;
+        }
+    }
+    var strBirthday = "";
+    if (len == 18)//处理18位的身份证号码从号码中得到生日和性别代码
+    {
+        strBirthday = identityCard.substr(6, 4) + "/" + identityCard.substr(10, 2) + "/" + identityCard.substr(12, 2);
+    }
+    if (len == 15) {
+        strBirthday = "19" + identityCard.substr(6, 2) + "/" + identityCard.substr(8, 2) + "/" + identityCard.substr(10, 2);
+    }
+    //时间字符串里，必须是“/”
+    var birthDate = new Date(strBirthday);
+    var nowDateTime = new Date();
+    var age = nowDateTime.getFullYear() - birthDate.getFullYear();
+    //再考虑月、天的因素;.getMonth()获取的是从0开始的，这里进行比较，不需要加1
+    if (nowDateTime.getMonth() < birthDate.getMonth() || (nowDateTime.getMonth() == birthDate.getMonth() && nowDateTime.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
 }
 

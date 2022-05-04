@@ -7,17 +7,16 @@ import qs from 'qs';
 import './static/css/reset.css'
 import './static/css/common.less'
 import './static/css/icon.less'
-import Bridge from "@static/js/bridge.js"
 import {getParams} from "@static/js/util";
 import confirm from 'components/confirm'
 import loading from 'components/loading/loading.js'
 import store from './store';
 import toast from "@/components/toast";
 import {Toast} from "vant";
+import './static/js/lazy'
+import './static/iconfont/iconfont.css'
 // import Vconsole from 'vconsole'
 Vue.use(loading)
-
-Vue.prototype.$bridge = Bridge;
 
 Vue.config.productionTip = false;
 
@@ -28,9 +27,6 @@ Vue.prototype.$confirm = confirm;
 Vue.prototype.$toast = toast;
 
 // new Vconsole();
-
-//禁止选择网页中的文字
-document.onselectstart = function () { return false; }
 
 //axios请求拦截
 axios.interceptors.request.use((request) => {
@@ -69,7 +65,7 @@ axios.interceptors.response.use(function (response) {
 });
 
 if (process.env.NODE_ENV === 'development') {
-  axios.defaults.baseURL = 'http://localhost:8080/api'
+  axios.defaults.baseURL = 'http://localhost:8083/api'
 }else{
   axios.defaults.baseURL = 'https://knowledge.shouzimu.xyz/api'
 }

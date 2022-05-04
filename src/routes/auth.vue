@@ -1,7 +1,6 @@
 <template>
     <div class="login">
         <!--<van-button class="close-btn" color="rgba(254, 123, 53, 0.1)" round @click="closeWindow">关闭</van-button>-->
-        <van-image :src="require('../static/img/logo.png')"/>
         <h1>知识付费平台</h1>
        <div class="login-button-box">
            <p class="copyright" v-if="agreementEnable || privacyEnable">
@@ -10,8 +9,7 @@
            <van-button
                    class="login-button"
                    type="primary"
-                   @click="onLoginClick"
-                   :icon="require('../static/img/login/icon_weixindenglu.png')">微信授权登录</van-button>
+                   @click="onLoginClick">微信授权登录</van-button>
        </div>
     </div>
 </template>
@@ -73,7 +71,6 @@
     .login {
         position: relative;
         height: 100%;
-        background: url("../static/img/login/bg.png") no-repeat;
         background-size: cover;
         text-align: center;
 

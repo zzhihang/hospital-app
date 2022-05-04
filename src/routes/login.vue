@@ -3,7 +3,7 @@
         <div class="login-content">
             <div class="login-item">
                 <div class="login-title">
-                    <van-icon :name="require('../static/img/login/icon_shoujihao.png')" size="16"/>
+                    <van-icon name="" size="16"/>
                     <span>手机号</span>
                 </div>
                 <div class="login-input">
@@ -12,7 +12,7 @@
             </div>
             <div class="login-item">
                 <div class="login-title">
-                    <van-icon :name="require('../static/img/login/icon_yanzhengma.png')" size="16"/>
+                    <van-icon name="" size="16"/>
                     <span>验证码</span>
                 </div>
                 <div class="login-input">
@@ -133,7 +133,6 @@
 <style lang="less" scoped>
     .login{
         height: 100%;
-        background: url("../static/img/login/bg.png") no-repeat;
         padding: 20px 15px;
         background-size: cover;
         box-sizing: border-box;

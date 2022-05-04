@@ -16,7 +16,7 @@ const router = new VueRouter({
     mode: 'history',
     linkActiveClass: 'active',
 });
-const showList = ['/topic', '/my', '/message'];
+const showList = ['/app', '/my', '/message'];
 router.beforeEach((to, from, next) => {
     if(showList.includes(to.fullPath)){
         store.state.commonStore.ifShowTabBar = true;
