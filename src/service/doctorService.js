@@ -19,5 +19,8 @@ export const doctorUnFollow = (doctorId) => {
 export const doctorFollow = (doctorId) => {
     return axios.post(`/wx/doctorfollow/new`,{doctorId})
 };
+export const doctorFollowList = () => {
+    return axios.post(`/wx/doctorfollow/list`)
+};
 
 

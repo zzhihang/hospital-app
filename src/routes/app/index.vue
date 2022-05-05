@@ -1,18 +1,18 @@
 <template>
     <div>
         <div class="search-box">
-            <search/>
+            <search @search="onSearch"/>
             <div class="search-by">
                 <div class="search-by-item">
                     <van-image :src="require('../../static/img/index/icon_yiyuan.png')"/>
-                    <div class="">
+                    <div @click="$router.push({name: 'entry_hospital'})">
                         <h1>按医院找</h1>
                         <p>{{countMap.hospital}}家医院</p>
                     </div>
                 </div>
                 <div class="search-by-item ml10">
                     <van-image :src="require('../../static/img/index/icon_jibing.png')"/>
-                    <div class="">
+                    <div @click="$router.push({name: 'entry_disease'})">
                         <h1>按疾病找</h1>
                         <p>{{countMap.disease}}种疾病</p>
                     </div>
@@ -87,8 +87,11 @@
             })
         },
         methods: {
-            onSearch(e) {
-                debugger
+            onSearch(value) {
+                if(!value.trim().length){
+                    return this.$toast.fail('请输入搜索关键词')
+                }
+                this.$router.push({name: 'search', query: {value: value}})
             }
         },
     }

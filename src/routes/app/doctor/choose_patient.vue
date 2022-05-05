@@ -14,10 +14,7 @@
                 </van-radio>
             </div>
         </div>
-        <van-empty v-else :image="require('../../../static/img/pic_wujiuzhenren.png')" description="还没有就诊人，赶快添加吧！"/>
-        <div class="">
-
-        </div>
+        <my-empty v-else description="还没有就诊人，赶快添加吧！"></my-empty>
         <div class="bottom-button-box">
             <van-button type="primary" @click="onNextClick">确定</van-button>
         </div>
@@ -29,10 +26,13 @@
     import {userPatientList} from "@/service/userService";
     import {getAgeById} from "@/static/js/util";
     import connect from "@/store/connect";
+    import myEmpty from "@/components/empty/myEmpty";
     const {mapMutations} = connect('commonStore');
 
     export default {
-        components: {},
+        components: {
+            myEmpty
+        },
         data() {
             return {
                 patientId: '',

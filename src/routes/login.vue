@@ -3,7 +3,7 @@
         <div class="login-content">
             <div class="login-item">
                 <div class="login-title">
-                    <van-icon name="" size="16"/>
+                    <van-icon :name="require('../static/img/icon/icon_shouji.png')" size="16"/>
                     <span>手机号</span>
                 </div>
                 <div class="login-input">
@@ -12,13 +12,19 @@
             </div>
             <div class="login-item">
                 <div class="login-title">
-                    <van-icon name="" size="16"/>
+                    <van-icon :name="require('../static/img/icon/icon_yanzhengma.png')" size="16"/>
                     <span>验证码</span>
                 </div>
                 <div class="login-input">
                     <van-field placeholder="请输入验证码" v-model="code">
                         <template #button>
-                            <span class="send-sms" v-show="!counting" @click="sendSms">获取验证码</span>
+                            <van-button
+                                    class="send-sms"
+                                    color="#D6E3F8"
+                                    size="mini"
+                                    type="primary"
+                                    v-show="!counting"
+                                    @click="sendSms">获取验证码</van-button>
                             <van-count-down
                                     v-show="counting"
                                     ref="countDown"
@@ -32,27 +38,22 @@
                     </van-field>
                 </div>
             </div>
-            <p class="copyright" v-if="agreementEnable || privacyEnable">
-                <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span v-if="agreementEnable" @click="$router.push({path: '/agreement'})">知识付费平台协议</span>&nbsp;<span v-if="privacyEnable" @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
-            </p>
-            <van-button type="primary" @click="login">立即绑定</van-button>
+            <van-button class="login-button" type="primary" @click="login">立即绑定</van-button>
         </div>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import {Button, Checkbox, CountDown, Field, Icon, Image as VanImage, Popup} from 'vant';
+    import {Checkbox, CountDown, Field, Icon, Image as VanImage, Popup} from 'vant';
     import {login, sendSms} from "@/service/commonService";
     import connect from "@/store/connect";
-    import {dictPrivacy, serviceAgreement} from "@/service/dict/dictService";
 
     Vue.use(CountDown);
     Vue.use(Field);
     Vue.use(Icon);
     Vue.use(Checkbox);
     Vue.use(VanImage);
-    Vue.use(Button);
     Vue.use(Popup);
     const {mapState, mapMutations} = connect('commonStore');
     export default {
@@ -67,14 +68,6 @@
                 agreementEnable: false,
                 privacyEnable: false
             }
-        },
-        created(){
-            Promise.all([serviceAgreement(), dictPrivacy()]).then(result => {
-                const [r1, r2] = result;
-                this.agreementEnable = String(r1.enable) === '1';
-                this.privacyEnable = String(r2.enable) === '1';
-                this.checked = !(this.agreementEnable || this.privacyEnable)
-            });
         },
         methods: {
             ...mapMutations(['setUserInfo', 'setIsBozhu']),
@@ -109,18 +102,14 @@
                 if(!this.code){
                     return this.$toast.fail('请输入验证码');
                 }
-                if(!this.checked){
-                    return this.$toast.fail('请阅读并同意隐私政策');
-                }
                 const {phone, code} = this;
                 const result = await login({phone, code});
                 if(result.status === 200){
                     const data = result.data;
                     this.setUserInfo(data);
-                    this.setIsBozhu(data.userType === 1);
                     window.sessionStorage.setItem('isBozhu', data.userType === 1);
                     this.$router.push({
-                        path: '/topic'
+                        path: '/app'
                     });
                 }else{
                     this.$toast.fail(result.msg);
@@ -136,12 +125,12 @@
         padding: 20px 15px;
         background-size: cover;
         box-sizing: border-box;
+        background: url("../static/img/bg.png");
+        background-size: cover;
     }
     .login-content{
         border-radius: 9px;
-        background: #EFF5F3;
-        padding: 30px 15px;
-        border: 1px solid #ECE7E1;
+        padding: 30px 0;
         .login-title{
             font-size: 16px;
             font-weight: bold;
@@ -152,21 +141,23 @@
         .van-field{
             border: 0.026667rem solid rgb(88 98 119 / 30%);
             border-radius: 12px;
-            background: #EFF5F3;
+            background: transparent;
             margin-top: 15px;
         }
         .login-item{
             margin-top: 15px;
         }
     }
-    .van-button{
+    .login-button{
         margin-top: 30px;
         width: 100%;
         font-size: 18px;
         height: 44px;
     }
     .send-sms{
-        color: #FE7B35;
+        color: #367DF7 !important;
+        font-size: 13px;
+        padding: 4px 10px;
     }
     .copyright{
         font-size: 12px;

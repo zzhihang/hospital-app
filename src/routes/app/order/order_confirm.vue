@@ -65,7 +65,7 @@
             ...mapState(['orderDoctor', 'orderPatient', 'orderService'])
         },
         created(){
-            if(this.$route.query.id){
+            if(this.$route.query.id){//有id的话代表来自我的订单页面，即订单已经是生成状态
                 this.id = this.$route.query.id;
                 this.getOrderInfo()
             }else{

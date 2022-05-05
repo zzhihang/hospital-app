@@ -20,9 +20,31 @@ const routes = [
         }
     },{
         path: '/search',
+        name: 'search',
         component: r => require.ensure([], () => r(require('@routes/app/search'))),
         meta:{
             title: '搜索',
+        }
+    },{
+        path: '/search/disease',
+        name: 'entry_disease',
+        component: r => require.ensure([], () => r(require('@routes/app/search/entry_disease'))),
+        meta:{
+            title: '按疾病找',
+        }
+    },{
+        path: '/search/disease',
+        name: 'entry_disease',
+        component: r => require.ensure([], () => r(require('@routes/app/search/entry_disease'))),
+        meta:{
+            title: '按疾病找',
+        }
+    },{
+        path: '/search/hospital',
+        name: 'entry_hospital',
+        component: r => require.ensure([], () => r(require('@routes/app/search/entry_hospital'))),
+        meta:{
+            title: '按医院找',
         }
     },{
         path: '/doctor',
@@ -84,6 +106,13 @@ const routes = [
         component: r => require.ensure([], () => r(require('@routes/app/order/my_order'))),
         meta:{
             title: '我的订单',
+        }
+    },{
+        path: '/focus',
+        name: 'focus',
+        component: r => require.ensure([], () => r(require('@routes/app/focus/focus_list'))),
+        meta:{
+            title: '关注列表',
         }
     }
 

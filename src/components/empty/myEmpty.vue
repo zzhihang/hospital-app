@@ -1,7 +1,7 @@
 <template>
     <van-empty
-        :image="require('../../static/img/empty.png')"
-        :description="description"
+        :image="require('../../static/img/pic_wujiuzhenren.png')"
+    :description="description"
     />
 </template>
 
@@ -21,5 +21,8 @@
 </script>
 
 <style lang="less" scoped>
-
+    /deep/.van-empty__image{
+        width: 280px;
+        height: unset;
+    }
 </style>

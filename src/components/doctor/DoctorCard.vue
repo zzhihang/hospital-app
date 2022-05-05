@@ -94,6 +94,7 @@
             height: 59px;
             width: 59px;
             flex-shrink: 0;
+            margin-right: 10px;
         }
         .van-button{
             font-size: 12px;

@@ -1,14 +1,12 @@
 <template>
     <div class="login">
-        <!--<van-button class="close-btn" color="rgba(254, 123, 53, 0.1)" round @click="closeWindow">关闭</van-button>-->
-        <h1>知识付费平台</h1>
+       <van-image :src="require('../static/img/logo.png')"/>
+        <h1>普林互联网医院就诊端</h1>
        <div class="login-button-box">
-           <p class="copyright" v-if="agreementEnable || privacyEnable">
-               <van-checkbox v-model="checked" checked-color="#FE7B35" shape="square" icon-size="12px">已阅读并同意<span v-if="agreementEnable" @click="$router.push({path: '/agreement'})">知识付费平台协议</span>&nbsp;<span v-if="privacyEnable" @click="$router.push({path: '/privacy'})">隐私政策</span></van-checkbox>
-           </p>
            <van-button
                    class="login-button"
                    type="primary"
+                   :icon="require('../static/img/icon/icon_weixin.png')"
                    @click="onLoginClick">微信授权登录</van-button>
        </div>
     </div>
@@ -17,9 +15,7 @@
 <script>
     import Vue from 'vue';
     import {Button, Checkbox, Field, Icon, Image as VanImage} from 'vant';
-    import {sendSms} from "@/service/commonService";
     import {getParams} from "@/static/js/util";
-    import {dictPrivacy, serviceAgreement} from "@/service/dict/dictService";
 
     Vue.use(Field);
     Vue.use(Icon);
@@ -30,38 +26,13 @@
     export default {
         data() {
             return {
-                checked: false,
-                show: false,
                 phone: '',
-                agreementEnable: false,
-                privacyEnable: false
             }
-        },
-        created(){
-            Promise.all([serviceAgreement(), dictPrivacy()]).then(result => {
-                const [r1, r2] = result;
-                this.agreementEnable = String(r1.enable) === '1';
-                this.privacyEnable = String(r2.enable) === '1';
-                this.checked = !(this.agreementEnable || this.privacyEnable)
-            });
         },
         methods: {
             onLoginClick() {
-                if(!this.checked){
-                    return this.$toast.fail('请阅读并同意隐私政策');
-                }
                 const {kcode} = getParams();
-                window.location.href = '/api/redirect?kcode=' + kcode
-            },
-            async sendSms(){
-                if(!this.phone){
-                    return this.$toast.fail('请输入手机号');
-                }
-                const result = await sendSms();
-                if(result.status === 200){
-                    this.$toast.success('发送成功')
-                }
-
+                window.location.href = '/user/redirect?kcode=' + kcode
             },
         },
     }

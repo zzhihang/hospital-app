@@ -2,7 +2,7 @@
     <div class="info-card">
         <van-image :src="avatar" round/>
         <div style="overflow:hidden;flex: 1;">
-            <doctor-title name="朱志航" title="主人"></doctor-title>
+            <doctor-title name="朱志航" color="white" title="主人"></doctor-title>
             <p class="intro">牛逼科</p>
             <div class="focus">
                 <div class="mr12" @click="() => $emit('click1')">
@@ -17,7 +17,7 @@
                 </div>
             </div>
         </div>
-        <van-button color="#E7F0FE">
+        <van-button color="#E7F0FE" @click="() => $emit('logout')">
             退出登录
         </van-button>
     </div>

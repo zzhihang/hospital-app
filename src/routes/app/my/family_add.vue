@@ -1,5 +1,5 @@
 <template>
-    <van-form @submit="onSubmit">
+    <van-form @submit="onSubmit" :readonly="formReadonly">
         <van-field
                 v-model="formData.name"
                 label="就诊人姓名"
@@ -14,7 +14,7 @@
                 required
         >
             <template #input>
-                <van-radio-group v-model="formData.sex" direction="horizontal">
+                <van-radio-group v-model="formData.sex" direction="horizontal" :disabled="formReadonly">
                     <van-radio name="男">男</van-radio>
                     <van-radio name="女">女</van-radio>
                 </van-radio-group>
@@ -35,7 +35,7 @@
                 readonly
                 clickable
                 name="datetimePicker"
-                @click="showPicker = true"
+                @click="formReadonly ? '' :showPicker = true"
                 placeholder="请选择出生日期"
                 :rules="[{ required: true, message: '请输入' }]"></van-field>
         <van-popup v-model="showPicker" position="bottom">
@@ -56,7 +56,7 @@
                 :value="value"
                 label="所在地区"
                 placeholder="请选择所在省份地区"
-                @click="showArea = true"></van-field>
+                @click="formReadonly ? '' :showArea = true"></van-field>
         <van-popup v-model="showArea" position="bottom">
             <van-area
                     :area-list="areaList"
@@ -71,7 +71,7 @@
                 readonly
                 clickable
                 placeholder="请选择与本人关系"
-                @click="showPicker2 = true"
+                @click="formReadonly ? '' :showPicker2 = true"
                 :rules="[{ required: true, message: '请输入' }]"></van-field>
         <van-popup v-model="showPicker2 " position="bottom">
             <van-picker
@@ -88,16 +88,20 @@
                 required
                 placeholder="请输入联系方式"
                 :rules="[{ required: true, message: '请输入' }]"></van-field>
-        <div style="margin: 16px;">
+        <div class="bottom-button-box" style="display: flex;" v-if="formReadonly">
+            <van-button type="primary" plain @click="deleteClick" class="mr10" style="width: 30%;flex-shrink: 0">删除</van-button>
+            <van-button type="primary" @click="onEditClick">修改</van-button>
+        </div>
+        <div style="margin: 16px;" v-else>
             <van-button block type="info" native-type="submit">保存</van-button>
-            <van-button v-if="id" block color="#EBECEF" class="cancel mt10" @click="$router.go(-1)">取消</van-button>
+            <van-button v-if="id" block native-type="button" color="#EBECEF" class="cancel mt10" @click="$router.go(-1)">取消</van-button>
         </div>
     </van-form>
 </template>
 
 <script>
     import { areaList } from '@vant/area-data';
-    import {userPatientInfo, userPatientSave} from "@/service/userService";
+    import {userPatientDelete, userPatientInfo, userPatientSave} from "@/service/userService";
     import {formatDate} from "@/static/js/util";
     export default {
         data() {
@@ -108,6 +112,7 @@
                 showPicker2: false,
                 minDate: new Date('1949/10/01'),
                 maxDate: new Date(),
+                formReadonly: false,
                 id: '',
                 formData: {
                     name: '',
@@ -128,6 +133,9 @@
               this.getInfo(this.$route.query.id);
               document.title = '修改就诊人信息'
           }
+          if(this.$route.query.readonly){
+              this.formReadonly = true;
+          }
         },
         methods: {
             async getInfo(id){
@@ -139,6 +147,19 @@
                 }else{
                     this.$toast.fail(result.msg);
                 }
+            },
+            deleteClick(){
+                this.$confirm({message: '是否确定删除就诊人？'}, async () => {
+                    const result = await userPatientDelete(this.id);
+                    if(result.success){
+                        this.$toast.success('操作成功');
+                    }else{
+                        this.$toast.fail(result.msg);
+                    }
+                })
+            },
+            onEditClick(){
+                this.formReadonly = false;
             },
             async onSubmit() {
                 if(this.id){

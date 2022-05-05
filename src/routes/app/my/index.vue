@@ -2,8 +2,12 @@
     <div>
         <div class="bg"></div>
         <div class="back">
-            <info-card @click2="$router.push({name: 'family'})"/>
-            <order-card class="mt10"/>
+            <info-card
+                    @click1="$router.push({name: 'focus'})"
+                    @click2="$router.push({name: 'family'})"
+                    @logout="logout"
+            />
+            <order-card class="mt10" :data-source="orderData"/>
         </div>
     </div>
 </template>
@@ -12,11 +16,48 @@
     import Vue from 'vue';
     import InfoCard from "@/components/common/InfoCard";
     import OrderCard from "@/components/OrderCard/OrderCard";
+    import {userCount, userPatientLogout} from "@/service/userService";
 
     export default {
         components: {
             InfoCard,
             OrderCard
+        },
+        data() {
+            return {
+                orderData: [{
+                    text: '待接收',
+                    value: 0
+                },{
+                    text: '待支付',
+                    value: 0
+                },{
+                    text: '进行中',
+                    value: 0
+                },{
+                    text: '被驳回',
+                    value: 0
+                }]
+            }
+        },
+        created(){
+            userCount().then(({data}) => {
+                this.orderData[0].value = data.daijieshou;
+                this.orderData[1].value = data.daizhifu;
+                this.orderData[2].value = data.jinxingzhong;
+                this.orderData[3].value = data.beibohui;
+            })
+        },
+        methods: {
+            logout() {
+                userPatientLogout(result => {
+                    if(result.success){
+                        this.$toast.success('退出成功');
+                    }else{
+                        this.$toast.fail(result.msg);
+                    }
+                })
+            }
         },
     }
 </script>

@@ -20,6 +20,7 @@ import {
     Search,
     Sidebar,
     SidebarItem,
+    Sticky,
     Tab,
     Tabs,
     Tag
@@ -49,3 +50,4 @@ Vue.use(Calendar);
 Vue.use(Tab);
 Vue.use(Tabs);
 Vue.use(List);
+Vue.use(Sticky);

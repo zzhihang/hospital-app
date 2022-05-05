@@ -29,12 +29,30 @@ module.exports = {
                 changeOrigin: true,
                 ws: true,
             },
-            '/testLogin': {
-                target: target,
-                changeOrigin: true,
-                ws: true,
-            },
         }
+    },
+    pages:{
+        app: {
+            // page 的入口
+            entry: "src/main.js",
+            // 模板来源
+            template: "public/index.html",
+            // 在 dist/index.html 的输出
+            filename: "index.html",
+            // 当使用 title 选项时，
+            // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
+            title: "患者端",
+        },
+        doctor: {
+            // page 的入口
+            entry: "src/main_doctor.js",
+            // 模板来源
+            template: "public/index.html",
+            // 在 dist/index.html 的输出
+            filename: "doctor.html",
+            // template 中的 title 标签需要是 <title><%= htmlWebpackPlugin.options.title %></title>
+            title: "医生端",
+        },
     },
     css: {
         loaderOptions: {
@@ -143,12 +161,12 @@ module.exports = {
         };
 
         //修改vue-cli4中htmlplugin参数
-        config.plugin('html')
-            .tap(args => {
-                args[0].title = ''
-                args[0].cdn = cdn;
-                return args;
-            })
+        // config.plugin('html')
+        //     .tap(args => {
+        //         args[0].title = ''
+        //         args[0].cdn = cdn;
+        //         return args;
+        //     })
         return config;
     },
     pluginOptions: {

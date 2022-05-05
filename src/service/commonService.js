@@ -36,17 +36,6 @@ export const logout = (data) => {
 
 
 /**
-* @Description: 更新用户信息
-* @Param: nickname  headimgurl
-* @return:
-* @Author: zzhihang@hotmail.com
-* @date: 2022/4/3 0:44
-*/
-export const updateUserInfo = (data) => {
-    return axios.post('/userinfo/update', data)
-};
-
-/**
 * @Description:  发送验证码
 * @Param: nickname  headimgurl
 * @return:
@@ -54,7 +43,7 @@ export const updateUserInfo = (data) => {
 * @date: 2022/4/3 0:44
 */
 export const sendSms = (phone) => {
-    return axios.post('/syssms/send', {phone})
+    return axios.post('/wx/sms/sendUser', {phone})
 };
 
 /**
@@ -65,6 +54,6 @@ export const sendSms = (phone) => {
  * @date: 2022/4/3 0:44
  */
 export const login = ({phone, code}) => {
-    return axios.post('/login', {phone, code})
+    return axios.post('/user/bind', {phone, code})
 };
 

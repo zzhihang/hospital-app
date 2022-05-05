@@ -30,7 +30,7 @@
         },
         methods: {
             onItemClick({id}) {
-                this.$router.push({name: 'familyAdd', query: {id}})
+                this.$router.push({name: 'familyAdd', query: {id, readonly: true}})
             }
         },
     }

@@ -16,3 +16,11 @@ export const userPatientInfo = (id) => {
 export const userPatientSave = (data) => {
     return axios.post(`/wx/userPatient/save`, data)
 };
+
+export const userPatientDelete = (id) => {
+    return axios.post(`/wx/userPatient/delete`, {id})
+};
+
+export const userPatientLogout = () => {
+    return axios.get(`/user/logout`)
+};

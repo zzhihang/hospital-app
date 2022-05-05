@@ -61,8 +61,8 @@
             },
             onConsultClick(){
                 if(!this.model.chat){
-                    this.$confirm({message: '此医生不支持免费咨询，需要先去下单哦~', showCancelButton: false}, async () => {
-
+                    this.$confirm({message: '此医生不支持免费咨询，需要先去下单哦~', confirmButtonText: '去下单', showCancelButton: false}, async () => {
+                        this.onAppointClick();
                     })
                 }else{
                     //去聊天
