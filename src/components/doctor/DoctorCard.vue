@@ -1,6 +1,6 @@
 <template>
     <div class="doctor-card" :class="mode">
-        <van-image v-if="avatar" :src="avatar" />
+        <van-image v-if="avatar" :src="avatar" round/>
         <div style="overflow:hidden;flex: 1;">
             <doctor-title :name="name" :color="mode" :title="title"></doctor-title>
             <p class="intro">{{dept}}</p>

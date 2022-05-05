@@ -1,5 +1,5 @@
 <template>
-    <div style="height: 100%">
+    <div id="app" style="height: 100%">
         <keep-alive>
             <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>

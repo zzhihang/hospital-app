@@ -58,6 +58,7 @@
             .right {
                 @flex-sb-center();
                 color: @main-color;
+                font-size: 12px;
             }
         }
     }

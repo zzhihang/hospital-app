@@ -1,4 +1,5 @@
-const routes = [
+import doctorRouterConfig from './doctorRouterConfig'
+let routes = [
     {
         path: '/login',
         component: r => require.ensure([], () => r(require('@routes/login'))),
@@ -114,8 +115,9 @@ const routes = [
         meta:{
             title: '关注列表',
         }
-    }
-
+    },
 ];
+
+routes = routes.concat(doctorRouterConfig);
 
 export default routes;
