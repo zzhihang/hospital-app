@@ -12,6 +12,7 @@
                 <li><i class="green-spot"></i><span>服务说明：{{desc}}</span></li>
             </ul>
         </div>
+        <slot name="action"></slot>
     </div>
 </template>
 
@@ -43,6 +44,9 @@
                 display: flex;
                 align-items: center;
                 margin-top: 10px;
+                &:first-child{
+                    margin-top: 0;
+                }
                 span{
                     margin-left: 2px;
                 }

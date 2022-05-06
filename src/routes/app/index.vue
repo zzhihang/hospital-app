@@ -30,7 +30,7 @@
                     :hospital="item.hospitalName"
                     :title="item.doctorTitle"
                     :key="index"
-                    @click.native="$router.push({path: '/doctor', query: {id: item.doctorId}})"
+                    @click.native="$router.push({path: '/doctor/detail', query: {id: item.doctorId}})"
                 />
             </div>
         </div>

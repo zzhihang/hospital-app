@@ -1,46 +1,13 @@
 <template>
     <div id="app" style="height: 100%">
-        <keep-alive>
-            <router-view v-if="$route.meta.keepAlive"></router-view>
-        </keep-alive>
-        <router-view v-if="!$route.meta.keepAlive"></router-view>
-        <van-tabbar v-if="ifShowTabBar" v-model="active" active-color="#367DF7">
-            <van-tabbar-item replace to="/app">
-                <span>首页</span>
-                <template #icon="props">
-                    <my-icon name="btn_shouye_default" />
-                </template>
-            </van-tabbar-item>
-            <van-tabbar-item icon="search" to="/message" :badge="userInfo.unReadCount > 0 ? userInfo.unReadCount : ''">
-                <span>消息</span>
-                <template #icon="props">
-                    <my-icon name="btn_xiaoxi_default" />
-                </template>
-            </van-tabbar-item>
-            <van-tabbar-item icon="friends-o" to="/focus">
-                <span>关注</span>
-                <template #icon="props">
-                    <my-icon name="icon_guanzhu_default" />
-                </template>
-            </van-tabbar-item>
-            <van-tabbar-item icon="friends-o" to="/my">
-                <span>我的</span>
-                <template #icon="props">
-                    <my-icon name="btn_wode_default" />
-                </template>
-            </van-tabbar-item>
-        </van-tabbar>
+        <router-view />
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
-    import {Tabbar, TabbarItem} from 'vant';
     import connect from "@/store/connect";
     import MyIcon from "@/components/common/MyIcon";
-
-    Vue.use(Tabbar);
-    Vue.use(TabbarItem);
 
     const {mapState, mapMutations} = connect('commonStore');
     export default {

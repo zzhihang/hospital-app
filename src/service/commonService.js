@@ -30,7 +30,7 @@ export const upload = (formData) => {
 * @Author: zzhihang@hotmail.com
 * @date: 2022/4/2 18:44
 */
-export const logout = (data) => {
+export const logout = () => {
     return axios.get('/logout')
 };
 
@@ -56,4 +56,5 @@ export const sendSms = (phone) => {
 export const login = ({phone, code}) => {
     return axios.post('/user/bind', {phone, code})
 };
+
 

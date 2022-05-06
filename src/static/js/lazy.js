@@ -2,6 +2,7 @@ import Vue from 'vue'
 // base library
 import {
     Area,
+    Badge,
     Button,
     Calendar,
     Cell,
@@ -21,7 +22,11 @@ import {
     Sidebar,
     SidebarItem,
     Sticky,
+    SwipeCell,
+    Switch,
     Tab,
+    Tabbar,
+    TabbarItem,
     Tabs,
     Tag
 } from 'vant'
@@ -51,3 +56,8 @@ Vue.use(Tab);
 Vue.use(Tabs);
 Vue.use(List);
 Vue.use(Sticky);
+Vue.use(Tabbar);
+Vue.use(TabbarItem);
+Vue.use(Switch);
+Vue.use(SwipeCell);
+Vue.use(Badge);

@@ -42,8 +42,6 @@
 <style lang="less" scoped>
     .order-card {
         border-radius: 9px;
-        padding: 5px;
-
         .content {
             background: #ffffff;
             border-radius: 9px;

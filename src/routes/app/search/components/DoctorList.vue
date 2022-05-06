@@ -8,7 +8,7 @@
                 :dept="item.deptName"
                 :hospital="item.hospitalName"
                 :title="item.doctorTitle"
-                @click.native="$router.push({path: '/doctor', query: {id: item.doctorId}})"
+                @click.native="$router.push({path: '/doctor/detail', query: {id: item.doctorId}})"
         />
     </div>
 </template>

@@ -1,6 +1,13 @@
 import doctorRouterConfig from './doctorRouterConfig'
-let routes = [
-    {
+import PatientRouterView from "@/components/PatientRouterView";
+
+let routes = [{
+    path: '/user/app',
+    name: 'patientApp',
+    component: PatientRouterView,
+    meta: { title: '主页' },
+    redirect: '/app',
+    children: [{
         path: '/login',
         component: r => require.ensure([], () => r(require('@routes/login'))),
         meta:{
@@ -48,7 +55,7 @@ let routes = [
             title: '按医院找',
         }
     },{
-        path: '/doctor',
+        path: '/doctor/detail',
         component: r => require.ensure([], () => r(require('@routes/app/doctor'))),
         meta:{
             title: '医生详情',
@@ -115,7 +122,8 @@ let routes = [
         meta:{
             title: '关注列表',
         }
-    },
+    }]
+}
 ];
 
 routes = routes.concat(doctorRouterConfig);

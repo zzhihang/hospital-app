@@ -4,14 +4,12 @@
             <doctor-card
                     mode="dark"
                     :avatar="require('../../static/img/logo.png')"
-                    v-for="(item, index) in recommendList"
-                    :name="item.doctorName"
-                    :dept="item.deptName"
-                    :hospital="item.hospitalName"
-                    :title="item.doctorTitle"
+                    :name="doctor.doctorName"
+                    :dept="doctor.deptName"
+                    :hospital="doctor.hospitalName"
+                    :title="doctor.doctorTitle"
                     :tag-list="['1','2']"
-                    :key="index"
-                    @click.native="$router.push({path: '/doctor', query: {id: item.doctorId}})"
+                    @click.native="$router.push({path: '/doctor/detail', query: {id: item.doctorId}})"
             />
             <div class="count-area">
                 <div class="count">
@@ -27,7 +25,7 @@
         <van-tabs v-model="active" color="#367DF7" sticky>
             <van-tab title="待接收订单">
                 <order-item-card
-                        v-for="(item, index) in orderList"
+                        v-for="(item, index) in orderList1"
                         @click.native="onOrderItemClick(item)"
                         @actionSuccess="onActionSuccess"
                         class="mt7"
@@ -35,7 +33,16 @@
                         :key="index"
                 />
             </van-tab>
-            <van-tab title="进行中订单">内容 2</van-tab>
+            <van-tab title="进行中订单">
+                <order-item-card
+                        v-for="(item, index) in orderList2"
+                        @click.native="onOrderItemClick(item)"
+                        @actionSuccess="onActionSuccess"
+                        class="mt7"
+                        :data="item"
+                        :key="index"
+                />
+            </van-tab>
         </van-tabs>
         <div class="link-me">
             <my-icon size="60" :name="require('../../static/img/index/icon_kefudianhua.png')"/>
@@ -48,10 +55,9 @@
     import OrderCard from "components/OrderCard/OrderCard";
     import DoctorCard from "@/components/doctor/DoctorCard";
     import MyIcon from "@/components/common/MyIcon";
-    import {doctorRecommend} from "@/service/doctorService";
     import {userCount} from "@/service/userService";
     import OrderItemCard from "@/routes/app/order/components/OrderItemCard";
-    import {orderDjs, orderJxz} from "@/service/doctorOrderService";
+    import {doctorOrderDjs, doctorOrderJxz} from "@/service/doctorOrderService";
     export default {
         components: {
             Search,
@@ -62,6 +68,8 @@
         },
         data() {
             return {
+                doctor: {},
+                active: '',
                 orderList1: [],
                 orderList2: [],
                 countMap: {},
@@ -78,10 +86,10 @@
             }
         },
         created() {
-            orderJxz().then(({data}) => {
+            doctorOrderJxz().then(({data}) => {
                 this.orderList1 = data;
             });
-            orderDjs().then(({data}) => {
+            doctorOrderDjs().then(({data}) => {
                 this.orderList2 = data;
             });
             userCount().then(({data}) => {
@@ -89,7 +97,6 @@
                 this.orderData[0].value = data.daijieshou;
                 this.orderData[1].value = data.daizhifu;
                 this.orderData[2].value = data.jinxingzhong;
-                this.orderData[3].value = data.beibohui;
             })
         },
         methods: {
@@ -112,12 +119,18 @@
     .count-area {
         background: rgba(54, 125, 247, 0.24);
         padding-top: 5px;
+        padding-bottom: 5px;
         box-shadow: 0 0 12px 0 rgba(54, 125, 247, 0.1);
         border-radius: 9px;
     }
 
     .doctor-card {
         background: transparent !important;
+    }
+
+    .order-card{
+        margin: 5px;
+        margin-bottom: 0;
     }
 
     .link-me {
