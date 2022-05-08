@@ -14,10 +14,10 @@
                 <div class="member-item" v-for="(item, index) in 20" :key="index">
                     <van-image :src="require('../../../static/img/pic_wujiuzhenren.png')"/>
                 </div>
-                <div class="member-item setting" @click="onMemberSetClick">
+                <div class="member-item setting" @click="onMemberSetClick('plus')">
                     <van-icon name="plus" />
                 </div>
-                <div class="member-item setting" @click="onMemberSetClick">
+                <div class="member-item setting" @click="onMemberSetClick('minus')">
                     <van-icon name="minus" />
                 </div>
             </div>
@@ -28,7 +28,7 @@
                 <van-button type="primary" @click="deleteGroup">删除此群聊</van-button>
             </div>
         </div>
-        <member-panel :show.sync="memberPanelShow"/>
+        <member-panel :show.sync="memberPanelShow" :member-action="memberAction"/>
         <modify-panel :show.sync="modifyPanelShow"/>
     </van-popup>
 </template>
@@ -49,14 +49,16 @@
             return {
                 memberPanelShow: false,
                 modifyPanelShow: false,
+                memberAction: 'plus'
             }
         },
         methods: {
             onClose() {
                 this.$emit('update:show', false)
             },
-            onMemberSetClick(){
+            onMemberSetClick(e){
                 this.memberPanelShow = true;
+                this.memberAction = e;
             },
             onModifyClick(){
                 this.modifyPanelShow = true;

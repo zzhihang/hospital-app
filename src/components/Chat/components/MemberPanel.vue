@@ -9,7 +9,7 @@
     >
         <van-sticky>
            <div class="top-box">
-               <h2>删除成员</h2>
+               <h2>{{titleText}}</h2>
                <van-search v-model="value" placeholder="搜索姓名关键字"/>
            </div>
         </van-sticky>
@@ -27,7 +27,7 @@
                 </div>
             </div>
             <div class="button-box">
-                <van-button type="primary" :disabled="!choose.length" @click="removeMember">删除</van-button>
+                <van-button type="primary" :disabled="!choose.length" @click="onButtonClick">{{buttonText}}</van-button>
             </div>
         </div>
     </van-popup>
@@ -38,7 +38,7 @@
     import FansCard from "@/components/fans/FansCard";
 
     export default {
-        props: ['show'],
+        props: ['show', 'memberAction'], //minus or plus
         components: {
             FansCard
         },
@@ -46,18 +46,37 @@
             return {
                 value: '',
                 choose: [],
+                titleMap: {
+                    plus: '添加成员',
+                    minus: '删除成员'
+                },
+                buttonMap: {
+                    plus: '添加',
+                    minus: '删除'
+                }
             }
         },
         methods: {
             onClose() {
                 this.$emit('update:show', false)
             },
-            removeMember() {
-                this.$confirm({message: '是否确定删除此群聊？删除后将解散此群。'}, async () => {
+            onButtonClick() {
+                if(this.memberAction === 'minus'){
+                    this.$confirm({message: '是否确定删除此群聊？删除后将解散此群。'}, async () => {
 
-                })
+                    })
+                }
+
             }
         },
+        computed: {
+            titleText(){
+                return this.titleMap[this.memberAction]
+            },
+            buttonText(){
+                return this.buttonMap[this.memberAction]
+            }
+        }
     }
 </script>
 
