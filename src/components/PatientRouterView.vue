@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div style="height: 100%;">
         <keep-alive>
             <router-view v-if="$route.meta.keepAlive"></router-view>
         </keep-alive>
@@ -34,7 +34,6 @@
 </template>
 
 <script>
-    import Vue from 'vue';
     import MyIcon from "@/components/common/MyIcon";
 
     export default {

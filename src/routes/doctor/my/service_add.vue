@@ -22,13 +22,12 @@
                 required
                 placeholder="请输入出诊地点"
                 :rules="[{ required: true }]"></van-field>
+        <h2 style="background: #ffffff;color: #646566;" class="pt16 pl16">服务说明</h2>
         <van-field
                 v-model="formData.serviceDescr"
-                label="服务说明"
                 type="textarea"
                 rows="3"
                 autosize
-                input-align="right"
                 placeholder="请输入服务说明"></van-field>
         <div class="bottom-button-box" style="display: flex;" v-if="formReadonly">
             <van-button type="primary" plain @click="deleteClick" class="mr10" style="width: 30%;flex-shrink: 0">删除</van-button>
@@ -112,5 +111,9 @@
 <style lang="less" scoped>
     .cancel{
         color: #999999 !important;
+    }
+    /deep/textarea{
+        padding: 10px;
+        background: #F6F6F6;
     }
 </style>

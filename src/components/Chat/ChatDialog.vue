@@ -6,7 +6,7 @@
 * @date: 2022/5/6 21:57
 */
 <template>
-    <div>
+    <div class="chat-body">
         <div class="chat-area">
             <div class="chat-scroll">
                 <div class="message-item he">
@@ -23,25 +23,95 @@
                 </div>
             </div>
         </div>
+        <div class="action-bar">
+            <div class="action">
+                <ul>
+                    <li>
+                        <van-icon @click="onRecorderClick" :name="require('../../static/img/icon/icon_yuyin.png')"/>
+                    </li>
+                    <li>
+                        <van-uploader
+                                accept="image/*"
+                                :max-size="maxSize"
+                                @oversize="onOversize"
+                                :after-read="afterRead"
+                                max-count="1"
+                        >
+                            <van-icon :name="require('../../static/img/icon/icon_tupian.png')"/>
+                        </van-uploader>
+                    </li>
+                    <li style="flex:1;text-align: right;">
+                        <van-icon @click="settingShow=true" name="setting-o" />
+                    </li>
+                </ul>
+            </div>
+            <div class="input-box van-hairline--top">
+                <van-field
+                    class="chat-input"
+                    v-model="message"
+                    rows="1"
+                    autosize
+                    type="textarea"
+                />
+                <van-icon @click="() => $emit('send')"
+                          class="ml20"
+                          :name="message.length ? require('../../static/img/icon/icon_fasong01.png') : require('../../static/img/icon/icon_fasong.png')"/>
+            </div>
+            <recorder :show.sync="recorderShow" @recorderSuccess="recorderSuccess" />
+            <setting-panel :show.sync="settingShow"/>
+        </div>
     </div>
 </template>
 
 <script>
     import Vue from 'vue';
+    import Recorder from './components/Recorder'
+    import SettingPanel from './components/SettingPanel'
 
     export default {
         components: {
+            Recorder,
+            SettingPanel
+        },
+        data() {
+            return {
+                message: '',
+                maxSize: 1024 * 1024 *30,
+                recorderShow: false,
+                settingShow: false
+            }
+        },
+        methods: {
+            onRecorderClick(){
+                this.recorderShow = true;
+            },
+            recorderSuccess() {
 
+            },
+            onOversize(){
+                this.$toast.fail('文件大小不能超过30M')
+            },
+            afterRead(){
+
+            }
         },
     }
 </script>
 
 <style lang="less" scoped>
+    .chat-body{
+        @flex-column();
+        height: 100%;
+    }
     .chat-area{
         padding: 15px;
+        flex: 1;
     }
     .chat-scroll{
         padding: 20px 15px;
+        height: 100%;
+        box-sizing: border-box;
+        border-radius: 9px;
         @white-bg();
         .van-image{
             height: 39px;
@@ -71,5 +141,31 @@
                 background: #F2F7FF;
             }
         }
+    }
+    .action-bar{
+        flex-shrink: 0;
+        position: relative;
+        box-shadow: 0px -1px 6px 0px rgba(102, 102, 102, 0.06);
+        @white-bg();
+        .action{
+            ul{
+                @flex-col-center();
+                height: 44px;
+                padding-left: 15px;
+                li{
+                    margin-right: 25px;
+                }
+            }
+        }
+    }
+    .chat-input{
+        background: #F6F6F6;
+        padding: 6px;
+        border-radius: 4px;
+    }
+    .input-box{
+        @flex-col-center();
+        padding: 10px 15px;
+
     }
 </style>

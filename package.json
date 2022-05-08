@@ -27,6 +27,7 @@
     "vue": "^2.6.11",
     "vue-pdf": "^4.3.0",
     "vue-router": "^3.5.1",
+    "easemob-websdk": "latest",
     "vue-wechat-title": "^2.0.7",
     "vuex": "^3.6.2",
     "vuex-persistedstate": "^4.1.0",

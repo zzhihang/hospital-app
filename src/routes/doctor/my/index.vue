@@ -13,7 +13,7 @@
                     <span>服务项目管理</span>
                     <span class="action">
                         <van-icon name="add-o" class="mr2"/>
-                        <span>新增服务项目</span>
+                        <span @click="$router.push({name: 'serviceAdd'})">新增服务项目</span>
                     </span>
                 </h2>
                 <van-cell title="免费咨询聊天" class="mt22">

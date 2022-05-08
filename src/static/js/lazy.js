@@ -7,6 +7,8 @@ import {
     Calendar,
     Cell,
     CellGroup,
+    Checkbox,
+    CheckboxGroup,
     DatetimePicker,
     Empty,
     Field,
@@ -14,6 +16,7 @@ import {
     Icon,
     Image as VanImage,
     List,
+    NoticeBar,
     Picker,
     Popup,
     Radio,
@@ -28,7 +31,8 @@ import {
     Tabbar,
     TabbarItem,
     Tabs,
-    Tag
+    Tag,
+    Uploader
 } from 'vant'
 
 Vue.use(VanImage);
@@ -61,3 +65,8 @@ Vue.use(TabbarItem);
 Vue.use(Switch);
 Vue.use(SwipeCell);
 Vue.use(Badge);
+Vue.use(Uploader);
+Vue.use(Checkbox);
+Vue.use(CheckboxGroup);
+Vue.use(Sticky);
+Vue.use(NoticeBar);
