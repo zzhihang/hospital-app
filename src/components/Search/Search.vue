@@ -5,7 +5,7 @@
                     v-model="value"
                     background="#78A9FF"
                     show-action
-                    placeholder="搜索关键字医院、医生、疾病"
+                    :placeholder="placeHolder"
                     @search="onSearch"
             >
                 <template #action>
@@ -22,6 +22,10 @@
             initValue: {
                 type: [String, Number],
                 default: ''
+            },
+            placeHolder: {
+                type: [String, Number],
+                default: '搜索关键字医院、医生、疾病'
             }
         },
         data() {

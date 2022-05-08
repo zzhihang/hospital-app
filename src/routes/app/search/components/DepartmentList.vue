@@ -5,12 +5,16 @@
                       v-for="(item, index) in dataSource"
                       :title="item.hospitalName"
                       :key="index"
-                      @click="onLeftItemClick(item)"
+                      @click="onLeftItemClick(item, hospitalId)"
             />
         </van-sidebar>
         <div class="list">
             <ul>
-                <li class="item van-hairline--bottom" v-for="(item, index) in departmentList" :key="index">
+                <li class="item van-hairline--bottom"
+                    v-for="(item, index) in departmentList"
+                    @click="$emit('onRightItemClick', item, hospitalId)"
+                    :key="index"
+                >
                     {{item.deptName}}
                 </li>
             </ul>
@@ -31,12 +35,14 @@
         data() {
             return {
                 activeKey: '',
+                hospitalId: '',
                 departmentList: []
             }
         },
         methods: {
-            onLeftItemClick(data) {
+            onLeftItemClick(data, hospitalId) {
                 this.departmentList = data.depts
+                this.hospitalId = hospitalId;
             }
         },
         watch: {
@@ -44,6 +50,7 @@
                 handler() {
                     if(this.dataSource.length){
                         this.departmentList = this.dataSource[0].depts
+                        this.hospitalId = this.dataSource[0].hospitalId
                     }else{
                         this.departmentList = []
                     }
@@ -71,6 +78,7 @@
     .van-sidebar{
         width: 50%;
         .van-sidebar-item{
+            padding: 12px 15px;
             border-bottom: 1px solid #e7e7ee;
         }
     }

@@ -5,7 +5,10 @@
         </div>
         <department-list/>
         <disease-list />
-        <doctor-list :data-source="doctorList"/>
+        <doctor-list :data-source="doctorList"
+                     doctor-name-field="doctorName"
+                     doctor-title-field="doctorTitle"
+                     doctor-id-field="doctorId"/>
     </div>
 </template>
 
@@ -32,10 +35,8 @@
             }
         },
         created() {
-            if (this.$route.query.value) {
-                this.value = this.$route.query.value;
-                this.searchAll()
-            }
+            this.value = this.$route.query.value || '';
+            this.searchAll()
         },
         methods: {
             async searchAll(){

@@ -1,17 +1,16 @@
 <template>
     <div>
         <div class="search-box">
-            <search @search="onSearch" :init-value="value"/>
+            <search @search="onSearch" place-holder="搜索疾病关键字"/>
         </div>
-        <department-list :data-source="list"/>
+        <disease-list :data-source="list" @onRightItemClick="onRightItemClick"/>
     </div>
 </template>
 
 <script>
-    import {queryHospital} from "@/service/searchService";
-    import DepartmentList from "@/routes/app/search/components/DepartmentList";
+    import {queryDisease} from "@/service/searchService";
+    import DiseaseList from "@/routes/app/search/components/DiseaseList";
     import Search from "@/components/Search/Search";
-
 
     export default {
         data() {
@@ -20,19 +19,22 @@
             }
         },
         components: {
-            DepartmentList,
+            DiseaseList,
             Search
         },
         created(){
-            this.queryHospital();
+            this.queryDisease();
         },
         methods: {
             onSearch(value){
-                this.queryHospital(value)
+                this.queryDisease(value)
             },
-            async queryHospital(value) {
-                const {data} = await queryHospital(value);
+            async queryDisease(value) {
+                const {data} = await queryDisease(value);
                 this.list = data;
+            },
+            onRightItemClick(label, diseaseId){
+                this.$router.push({name: 'entry_doctor', query: {label, diseaseId}})
             }
         },
     }

@@ -101,9 +101,6 @@
         },
         methods: {
             onSearch(value) {
-                if (!value.trim().length) {
-                    return this.$toast.fail('请输入搜索关键词')
-                }
                 this.$router.push({name: 'search', query: {value: value}})
             }
         },

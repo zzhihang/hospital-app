@@ -1,9 +1,9 @@
 <template>
     <div>
         <div class="search-box">
-            <search @search="onSearch" />
+            <search @search="onSearch" placeHolder="搜索医院关键字"/>
         </div>
-        <department-list :data-source="list"/>
+        <department-list :data-source="list" @onRightItemClick="onRightItemClick"/>
     </div>
 </template>
 
@@ -32,6 +32,10 @@
             async queryHospital(value) {
                 const {data} = await queryHospital(value);
                 this.list = data;
+            },
+            onRightItemClick(e, hospitalId){
+                const {deptId, deptName} = e;
+                this.$router.push({name: 'entry_doctor', query: {deptId, deptName, hospitalId}})
             }
         },
     }

@@ -41,18 +41,18 @@ let routes = [{
             title: '按疾病找',
         }
     },{
-        path: '/search/disease',
-        name: 'entry_disease',
-        component: r => require.ensure([], () => r(require('@routes/app/search/entry_disease'))),
-        meta:{
-            title: '按疾病找',
-        }
-    },{
         path: '/search/hospital',
         name: 'entry_hospital',
         component: r => require.ensure([], () => r(require('@routes/app/search/entry_hospital'))),
         meta:{
             title: '按医院找',
+        }
+    },{
+        path: '/search/doctor',
+        name: 'entry_doctor',
+        component: r => require.ensure([], () => r(require('@routes/app/search/entry_doctor'))),
+        meta:{
+            title: '医生列表',
         }
     },{
         path: '/doctor/detail',
