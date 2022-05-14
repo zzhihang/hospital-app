@@ -122,6 +122,13 @@ let routes = [{
         meta:{
             title: '关注列表',
         }
+    },{
+        path: '/message',
+        name: 'userMessage',
+        component: r => require.ensure([], () => r(require('@routes/app/message'))),
+        meta:{
+            title: '消息',
+        }
     }]
 }
 ];

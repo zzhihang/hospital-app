@@ -24,3 +24,4 @@ export const userPatientDelete = (id) => {
 export const userPatientLogout = () => {
     return axios.get(`/user/logout`)
 };
+

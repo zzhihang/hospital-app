@@ -16,13 +16,19 @@ const router = new VueRouter({
     mode: 'history',
     linkActiveClass: 'active',
 });
-const showList = ['/app', '/my', '/message'];
+const showList = ['/app', '/my', '/focus', '/message', '/doctor/app', '/doctor/message', '/doctor/fans', '/doctor/my'];
 router.beforeEach((to, from, next) => {
-    if(showList.includes(to.fullPath)){
-        store.state.commonStore.ifShowTabBar = true;
-    }else{
-        store.state.commonStore.ifShowTabBar = false;
+    const fullPath = to.path;
+    if(['/doctor/fans', '/focus'].includes(fullPath)){
+        store.state.commonStore.tabBarActive = 2;
+    }else if(['/message', '/doctor/message'].includes(fullPath)){
+        store.state.commonStore.tabBarActive = 1
+    }else if(['/my', '/doctor/my'].includes(fullPath)){
+        store.state.commonStore.tabBarActive = 3
+    }else if(['/app', '/doctor/app'].includes(fullPath)){
+        store.state.commonStore.tabBarActive = 0
     }
+    store.state.commonStore.ifShowTabBar = showList.includes(fullPath);
     if (to.meta.title) {
         window.document.title = to.meta.title
     }

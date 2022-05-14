@@ -20,7 +20,7 @@
     import Vue from 'vue';
     import DoctorTitle from "@/components/doctor/DoctorTitle";
     import MyIcon from "@/components/common/MyIcon";
-    import {doctorFollow, doctorUnFollow} from "@/service/doctorService";
+    import {doctorFollow, doctorUnFollow} from "@/service/doctorInfoService";
 
     export default {
         components: {

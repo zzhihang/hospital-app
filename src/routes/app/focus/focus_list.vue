@@ -16,7 +16,7 @@
 
 <script>
     import DoctorCard from "@/components/doctor/DoctorCard";
-    import {doctorFollowList} from "@/service/doctorService";
+    import {doctorFollowList} from "@/service/doctorInfoService";
     import myEmpty from "@/components/empty/myEmpty";
     export default {
         components: {

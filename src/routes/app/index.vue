@@ -45,7 +45,7 @@
     import OrderCard from "components/OrderCard/OrderCard";
     import DoctorCard from "@/components/doctor/DoctorCard";
     import MyIcon from "@/components/common/MyIcon";
-    import {doctorRecommend} from "@/service/doctorService";
+    import {doctorRecommend} from "@/service/doctorInfoService";
     import {userCount} from "@/service/userService";
 
     export default {

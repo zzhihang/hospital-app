@@ -38,7 +38,7 @@
 
 <script>
     import DoctorCard from "@/components/doctor/DoctorCard";
-    import {doctorService} from "@/service/doctorService";
+    import {doctorInfoService} from "@/service/doctorInfoService";
     import ServiceItem from "@/routes/app/doctor/components/ServiceItem";
     import connect from "@/store/connect";
     const {mapMutations} = connect('commonStore');
@@ -56,7 +56,7 @@
             }
         },
         created() {
-            doctorService(this.$route.query.id).then(({data}) => {
+            doctorInfoService(this.$route.query.id).then(({data}) => {
                 this.doctor = data.doctor;
                 this.serviceList = data.service
             })

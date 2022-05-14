@@ -44,6 +44,13 @@ const routes = [
                 title: '我的',
             }
         },{
+            path: '/doctor/my/info',
+            name: 'doctorInfo',
+            component: r => require.ensure([], () => r(require('@routes/doctor/my/my_info'))),
+            meta:{
+                title: '个人信息',
+            }
+        },{
             path: '/doctor/service/add',
             name: 'serviceAdd',
             component: r => require.ensure([], () => r(require('@routes/doctor/my/service_add'))),

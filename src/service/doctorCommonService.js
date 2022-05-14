@@ -15,10 +15,6 @@ export const doctorBind = () => {
     return axios.get('/doctor/bind')
 };
 
-export const doctorRedirect = () => {
-    return axios.get('/doctor/redirect')
-};
-
 /**
  * @Description:  发送验证码
  * @Param:
@@ -28,4 +24,15 @@ export const doctorRedirect = () => {
  */
 export const doctorSendSms = (phone) => {
     return axios.post('/wx/sms/sendDoctor', {phone})
+};
+
+/**
+* @Description: 医生信息接口
+* @Param:
+* @return:
+* @Author: zzhihang@hotmail.com
+* @date: 2022/5/14 16:02
+*/
+export const doctorUserInfo = () => {
+    return axios.get('/wx/doctor/info')
 };

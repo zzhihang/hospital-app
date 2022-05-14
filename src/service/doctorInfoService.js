@@ -8,7 +8,7 @@ export const doctorDetail = (id) => {
     return axios.post(`/wx/doctor/detail`,{id})
 };
 
-export const doctorService = (id) => {
+export const doctorInfoService = (id) => {
     return axios.post(`/wx/doctor/service`,{id})
 };
 

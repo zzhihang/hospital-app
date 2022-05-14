@@ -48,7 +48,7 @@
     import {Checkbox, CountDown, Field, Icon, Image as VanImage, Popup} from 'vant';
     import {login, sendSms} from "@/service/commonService";
     import connect from "@/store/connect";
-    import {doctorSendSms} from "@/service/doctorCommonService";
+    import {doctorBind, doctorSendSms} from "@/service/doctorCommonService";
 
     Vue.use(CountDown);
     Vue.use(Field);
@@ -104,7 +104,7 @@
                     return this.$toast.fail('请输入验证码');
                 }
                 const {phone, code} = this;
-                const result = await login({phone, code});
+                const result = await doctorBind({phone, code});
                 if(result.status === 200){
                     const data = result.data;
                     this.setUserInfo(data);

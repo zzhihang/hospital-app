@@ -1,53 +1,69 @@
 <template>
     <div class="chat">
         <div class="chat-action">
-            <div class="action-item ml20">
+            <div class="action-item ml20" @click="() => {$emit('removeUnRead')}">
                 <van-icon :name="require('../../static/img/icon/icon_qingchuweidu.png')"/>
                 <span>清除未读消息</span>
             </div>
-            <div class="action-item">
+            <div class="action-item" v-if="userType === 'doctor'" @click="onLaunchGroupChat">
                 <van-icon :name="require('../../static/img/icon/icon_faqiqunliao.png')"/>
                 <span>发起群聊</span>
             </div>
         </div>
         <div class="chat-list">
-            <chat-list-item @click.native="onChatItemClick" v-for="(item, index) in 10" :key="index"/>
+            <chat-list-item @click.native="() => {$emit('onChatItemClick')}" v-for="(item, index) in 10" :key="index"/>
         </div>
+        <member-panel :show.sync="memberPanelShow" member-action="launch"/>
     </div>
 </template>
 
 <script>
-    import Vue from 'vue';
-    import ChatListItem from "@/components/Chat/ChatListItem";
+  import ChatListItem from "@/components/Chat/ChatListItem";
+  import MemberPanel from "@/components/Chat/components/MemberPanel";
 
-    export default {
-        components: {
-            ChatListItem
-        },
-        methods: {
-            onChatItemClick() {
-                this.$router.push({name: 'doctorChat'})
-            }
-        },
-    }
+  export default {
+    components: {
+      ChatListItem,
+      MemberPanel
+    },
+    props: {
+      userType: {
+        type: String,
+        default: 'user'
+      }
+    },
+    data() {
+      return {
+        memberPanelShow: false,
+      }
+    },
+    methods: {
+      onLaunchGroupChat(){
+        this.memberPanelShow = true;
+      },
+    },
+  }
 </script>
 
 <style lang="less" scoped>
-    .chat{
+    .chat {
         padding: 5px 15px 50px;
     }
-    .chat-action{
+
+    .chat-action {
         background: #EEF2FA;
         text-align: right;
         height: 35px;
         @flex-col-center();
         flex-flow: row-reverse;
-        .action-item{
+
+        .action-item {
             @flex-col-center();
             font-size: 14px;
         }
     }
-    .chat-list{
+
+    .chat-list {
         margin-top: 5px;
         border-radius: 9px;
         overflow: hidden;

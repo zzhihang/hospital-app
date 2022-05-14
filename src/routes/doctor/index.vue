@@ -96,7 +96,7 @@
                 this.countMap = data;
                 this.orderData[0].value = data.daijieshou;
                 this.orderData[1].value = data.daizhifu;
-                this.orderData[2].value = data.jinxingzhong;
+                this.orderData[2].value = data.yiwanchegn;
             })
         },
         methods: {

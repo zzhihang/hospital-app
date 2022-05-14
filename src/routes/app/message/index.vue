@@ -6,7 +6,6 @@
 
 <script>
   import ChatList from "@/components/Chat/ChatList";
-  import {doctorRemoveUnRead} from "@/service/doctorMessage";
 
   export default {
     components: {
@@ -14,14 +13,7 @@
     },
     methods: {
       removeUnRead(){
-        this.$confirm({message: '确定清除所有未读消息？'}, async () => {
-          const result = await doctorRemoveUnRead();
-          if (result.success) {
-            this.$toast.success('操作成功');
-          } else {
-            this.$toast.fail(result.msg);
-          }
-        })
+
       },
       onChatItemClick() {
         this.$router.push({name: 'doctorChat'})

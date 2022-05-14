@@ -5,6 +5,10 @@
             <info-card
                     @click1="$router.push({name: 'focus'})"
                     @click2="$router.push({name: 'family'})"
+                    card-type="doctor"
+                    :avatar="doctorInfo.headimgurl"
+                    :name="doctorInfo.nickname"
+                    :phone="doctorInfo.phone"
                     @logout="logout"
             />
             <order-card class="mt10" :data-source="orderData"/>
@@ -18,7 +22,7 @@
                 </h2>
                 <van-cell title="免费咨询聊天" class="mt22">
                     <template #right-icon>
-                        <van-switch @change="onServiceFreeClick" v-model="serviceFree" size="20" />
+                        <van-switch @change="onServiceFreeClick" v-model="serviceFree" size="20"/>
                     </template>
                 </van-cell>
             </div>
@@ -33,7 +37,8 @@
                         <span class="status">已通过</span>
                         <div class="button-box">
                             <van-button plain size="mini" type="primary" @click="onEditClick(item)">编辑</van-button>
-                            <van-button class="ml10" type="primary" size="mini" @click="onDeleteClick(item)">删除</van-button>
+                            <van-button class="ml10" type="primary" size="mini" @click="onDeleteClick(item)">删除
+                            </van-button>
                         </div>
                     </div>
                 </template>
@@ -43,83 +48,89 @@
 </template>
 
 <script>
-    import InfoCard from "@/components/common/InfoCard";
-    import OrderCard from "@/components/OrderCard/OrderCard";
-    import {userCount} from "@/service/userService";
-    import {orderCancel} from "@/service/orderService";
-    import {doctorLogout} from "@/service/doctorCommonService";
-    import {doctorServiceDelete, doctorServiceList} from "@/service/doctorServiceItemService";
-    import ServiceItem from "@/routes/app/doctor/components/ServiceItem";
+  import InfoCard from "@/components/common/InfoCard";
+  import OrderCard from "@/components/OrderCard/OrderCard";
+  import {userCount} from "@/service/userService";
+  import {orderCancel} from "@/service/orderService";
+  import {doctorLogout, doctorUserInfo} from "@/service/doctorCommonService";
+  import {doctorServiceDelete, doctorServiceList} from "@/service/doctorServiceItemService";
+  import ServiceItem from "@/routes/app/doctor/components/ServiceItem";
 
-    export default {
-        components: {
-            InfoCard,
-            OrderCard,
-            ServiceItem
-        },
-        data() {
-            return {
-                orderData: [{
-                    text: '待接收订单',
-                    value: 0
-                },{
-                    text: '进行中订单',
-                    value: 0
-                },{
-                    text: '已完成订单',
-                    value: 0
-                }],
-                serviceFree: '',
-                serviceList: []
+  export default {
+    components: {
+      InfoCard,
+      OrderCard,
+      ServiceItem
+    },
+    data() {
+      return {
+        orderData: [{
+          text: '待接收订单',
+          value: 0
+        }, {
+          text: '进行中订单',
+          value: 0
+        }, {
+          text: '已完成订单',
+          value: 0
+        }],
+        serviceFree: '',
+        serviceList: [],
+        doctorInfo: {}
+      }
+    },
+    created() {
+      userCount().then(({data}) => {
+        this.orderData[0].value = data.daijieshou;
+        this.orderData[1].value = data.jinxingzhong;
+        this.orderData[2].value = data.yiwancheng;
+      });
+      doctorUserInfo().then(({data}) => {
+        this.doctorInfo = data;
+      });
+      doctorServiceList(({data}) => {
+        this.serviceList = data;
+      });
+    },
+    methods: {
+      onServiceFreeClick(open) {
+        if (open) {
+          this.$confirm({message: '是否确定开启免费咨询？'}, async () => {
+            const result = await orderCancel(open);
+            if (result.success) {
+              this.$toast.success('操作成功');
+            } else {
+              this.$toast.fail(result.msg);
             }
-        },
-        created(){
-            userCount().then(({data}) => {
-                this.orderData[0].value = data.daijieshou;
-                this.orderData[1].value = data.jinxingzhong;
-                this.orderData[2].value = data.yiwancheng;
-            });
-            doctorServiceList(({data}) => {
-                this.serviceList = data;
-            });
-        },
-        methods: {
-            onServiceFreeClick(open){
-                if(open){
-                    this.$confirm({message: '是否确定开启免费咨询？'}, async () => {
-                        const result = await orderCancel(open);
-                        if(result.success){
-                            this.$toast.success('操作成功');
-                        }else{
-                            this.$toast.fail(result.msg);
-                        }
-                    })
-                }
-            },
-            onEditClick({id}){
-                this.$router.push({name: 'serviceAdd', query: {id}})
-            },
-            onDeleteClick({id}){
-                this.$confirm({message: '是否确定删除此服务项目？'}, async () => {
-                    const result = await doctorServiceDelete(id);
-                    if(result.success){
-                        this.$toast.success('操作成功');
-                    }else{
-                        this.$toast.fail(result.msg);
-                    }
-                })
-            },
-            logout() {
-                doctorLogout(result => {
-                    if(result.success){
-                        this.$toast.success('退出成功');
-                    }else{
-                        this.$toast.fail(result.msg);
-                    }
-                })
+          })
+        }
+      },
+      onEditClick({id}) {
+        this.$router.push({name: 'serviceAdd', query: {id}})
+      },
+      onDeleteClick({id}) {
+        this.$confirm({message: '是否确定删除此服务项目？'}, async () => {
+          const result = await doctorServiceDelete(id);
+          if (result.success) {
+            this.$toast.success('操作成功');
+          } else {
+            this.$toast.fail(result.msg);
+          }
+        })
+      },
+      logout() {
+        this.$confirm({message: '退出后，将无法收到消息提醒，确认是否退出？'}, async () => {
+          doctorLogout(result => {
+            if (result.success) {
+              this.$toast.success('退出成功');
+            } else {
+              this.$toast.fail(result.msg);
             }
-        },
-    }
+          })
+        });
+      }
+    },
+  }
 </script>
 
 <style lang="less" scoped>
@@ -127,58 +138,72 @@
         background: @main-color;
         height: 88px;
     }
-    .info-card{
+
+    .info-card {
         box-shadow: 0 0 12px 0 rgba(54, 125, 247, 0.1);
     }
-    .back{
+
+    .back {
         transform: translateY(-50px);
         margin: 0 10px;
     }
-    .service{
+
+    .service {
         padding: 15px;
         border-radius: 9px;
         @white-bg();
-        h2{
+
+        h2 {
             @flex-sb-center();
         }
-        .action{
+
+        .action {
             font-size: 12px;
             color: #367DF7;
             font-weight: bold;
         }
-        .van-cell{
+
+        .van-cell {
             padding-left: 0;
             padding-right: 0;
         }
     }
-    .service-action{
+
+    .service-action {
         height: 44px;
         @flex-sb-center();
         padding: 0 15px;
-        .status{
+
+        .status {
             font-size: 14px;
             color: #33B4D1;
-            &.DSH{
+
+            &.DSH {
                 color: #367DF7;
             }
-            &.YBH{
+
+            &.YBH {
                 color: #F6AA26;
             }
         }
     }
-    .button-box{
+
+    .button-box {
         @flex-col-center();
-        .van-button{
+
+        .van-button {
             width: 52px;
             height: 24px;
             border-radius: 4px;
             font-size: 14px;
         }
     }
-    .service_item{
+
+    .service_item {
         border-radius: 9px;
         margin-top: 8px;
-        /deep/.detail{
+
+        /deep/ .detail {
             padding-left: 15px !important;
         }
     }

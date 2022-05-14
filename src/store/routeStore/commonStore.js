@@ -8,6 +8,8 @@ class CommonStore extends BaseStoreClass{
 
 export default new CommonStore({
     userInfo: {},
+    ifShowTabBar: false,
+    tabBarActive: false,
     orderDoctor: {},
     orderPatient: {},
     orderService: {},

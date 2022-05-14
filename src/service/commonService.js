@@ -58,3 +58,9 @@ export const login = ({phone, code}) => {
 };
 
 
+export const userInfo = () => {
+    return axios.get('/wx/user/info')
+};
+
+
+

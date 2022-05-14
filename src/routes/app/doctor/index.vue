@@ -38,7 +38,7 @@
 <script>
     import DoctorCard from "@/components/doctor/DoctorCard";
     import MyIcon from "@/components/common/MyIcon";
-    import {doctorDetail} from "@/service/doctorService";
+    import {doctorDetail} from "@/service/doctorInfoService";
 
     export default {
         components: {
