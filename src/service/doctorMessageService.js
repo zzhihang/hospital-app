@@ -22,8 +22,8 @@ export const doctorMessageList = () => {
 * @Author: zzhihang@hotmail.com
 * @date: 2022/5/15 17:40
 */
-export const doctorChatAddMember = ({groupId, userId}) => {
-  return axios.post(`/imgroupmember/add`,{groupId, userId})
+export const doctorChatAddMember = ({groupId, userIds}) => {
+  return axios.post(`/imgroupmember/add`,{groupId, userIds})
 };
 /**
  * @Description: 群组-删除成员
@@ -32,8 +32,8 @@ export const doctorChatAddMember = ({groupId, userId}) => {
  * @Author: zzhihang@hotmail.com
  * @date: 2022/5/15 17:40
  */
-export const doctorChatRemoveMember = ({groupId, userId}) => {
-  return axios.post(`/imgroupmember/del`, {groupId, userId})
+export const doctorChatRemoveMember = (ids) => {
+  return axios.post(`/imgroupmember/del`, {ids})
 };
 
 /**
@@ -54,8 +54,8 @@ export const doctorChatGroupMemberList = (groupId) => {
 * @Author: zzhihang@hotmail.com
 * @date: 2022/5/15 17:42
 */
-export const doctorChatGroupRename = ({groupName, id}) => {
-  return axios.post(`/imgroup/rename`, {groupName, id})
+export const doctorChatGroupRename = ({groupName, groupId}) => {
+  return axios.post(`/imgroup/rename`, {groupName, groupId})
 };
 
 /**

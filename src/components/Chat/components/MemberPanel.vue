@@ -19,7 +19,7 @@
                 <div class="member-list">
                     <van-checkbox-group v-model="choose">
                         <van-checkbox class="member-item van-hairline--bottom"
-                                      v-for="(item, index) in memberList"
+                                      v-for="(item, index) in chooseList"
                                       :key="index"
                                       :name="item.userId"
                         >
@@ -44,7 +44,7 @@
   import {doctorChatAddMember, doctorChatGroupCreate, doctorChatRemoveMember} from "@/service/doctorMessageService";
 
   export default {
-    props: ['show', 'memberAction'], //minus or plus or 发起群聊
+    props: ['show', 'memberAction', 'memberList'], //minus or plus or 发起群聊
     components: {
       FansCard
     },
@@ -62,36 +62,64 @@
           minus: '删除',
           launch: '添加'
         },
-        memberList: []
+        chooseList: []
       }
     },
-    created(){
-      this.getMemberList()
+    created() {
+
+    },
+    watch: {
+      memberAction: {
+        handler(val) {
+          if (this.memberAction === 'minus') {
+            this.chooseList = this.memberList;
+          } else {
+            this.getFansList()
+          }
+        },
+        immediate: true
+      }
     },
     methods: {
-      async getMemberList(){
+      async getFansList() {
         const {data} = await doctorFansList();
-        this.memberList = data;
+        this.chooseList = data;
       },
-      onClose() {
+      onClose(e) {
+        this.choose = [];
+        this.value = '';
         this.$emit('update:show', false)
       },
       async onButtonClick() {
         let result = {};
         if (this.memberAction === 'minus') {//移除群成员
           this.$confirm({message: '是否确定移除群成员？'}, async () => {
-            result = doctorChatRemoveMember()
+            result = doctorChatRemoveMember();
+            if (result.success) {
+              this.$emit('removeSuccess');
+              this.$toast.success('操作成功');
+            } else {
+              this.$toast.fail(result.msg);
+            }
           })
-        }else if(this.memberAction === 'launch'){//发起群聊
-          result = await doctorChatGroupCreate(JSON.stringify(this.choose));
-        }else{//添加群成员
-          result = await doctorChatAddMember({groupId: this.$attrs.chatId, userId: JSON.stringify(this.choose)});
-        }
-
-        if(result.success){
-          this.$toast.success('操作成功')
-        }else{
-          this.$toast.fail(result.msg);
+        } else if (this.memberAction === 'launch') {//发起群聊
+          result = await doctorChatGroupCreate(this.choose);
+          if (result.success) {
+            this.$toast.success('操作成功');
+            this.$emit('launchSuccess');
+            const {data} = await result;//创建群聊成功之后，直接进入群聊页面
+            this.$router.push({name: 'doctorChat', query: {bookType: data.bookType, id: data.id, toImid: data.toImid}})
+          } else {
+            this.$toast.fail(result.msg);
+          }
+        } else {//添加群成员
+          result = await doctorChatAddMember({groupId: this.$attrs.chatId, userIds: this.choose});
+          if (result.success) {
+            this.$emit('addSuccess');
+            this.$toast.success('操作成功');
+          } else {
+            this.$toast.fail(result.msg);
+          }
         }
       }
     },

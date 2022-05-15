@@ -40,8 +40,8 @@
           }
         })
       },
-      onChatItemClick({bookType, id, toImid}) {
-        this.$router.push({name: 'doctorChat', query: {bookType, id, toImid}})
+      onChatItemClick({bookType, id, toImid, name, groupId}) {
+        this.$router.push({name: 'doctorChat', query: {bookType, id, toImid, name, groupId}})
       },
     },
   }

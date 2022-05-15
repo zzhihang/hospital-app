@@ -4,6 +4,8 @@
                      :chat-type="chatType"
                      :chatId="chatId"
                      :toImid="toImid"
+                     :chatName="chatName"
+                     :groupId="groupId"
         />
     </div>
 </template>
@@ -23,17 +25,22 @@
       return {
         chatType: '',
         chatId: '',
-        toImid: ''
+        chatName: '',
+        toImid: '',
+        groupId: ''
       }
     },
     computed: {
       ...mapState(['userInfo', 'ifShowTabBar', 'tabBarActive'])
     },
     created() {
-      const {bookType, id, toImid} = this.$route.query;
+      const {bookType, id, toImid, name, groupId} = this.$route.query;
       this.chatType = bookType;
       this.chatId = id;
       this.toImid = toImid;
+      this.chatName = name;
+      this.groupId = groupId;
+      document.title = name;
     },
     mounted() {
       let username = this.userInfo.imId, password = this.userInfo.imPwd;
@@ -49,22 +56,15 @@
         onDisconnected: () => {
           console.log("Logout success !")
         },
+        onImageMessage: ( message ) => {},   // 收到图片消息。
         onTextMessage: (message) => {
-          console.log(message)
           console.log("Message from: " + message.from + " Message: " + message.msg)
         },
+        onOffline: () => {}, // 本机网络掉线。
         onError: (error) => {
           console.log('on error', error)
         }
       });
-      // 注册。 先注册才能登录
-      WebIM.conn.registerUser({username, password})
-        .then((res) => {
-          console.log(`register user ${username} success`)
-        })
-        .catch((e) => {
-          console.log(`${username} already exists`)
-        });
       // 登录。 //登出WebIM.conn.close();
       WebIM.conn.open({user: username, pwd: password})
         .then((res) => {
@@ -76,12 +76,12 @@
 
     },
     methods: {
-      send() {
+      send(message) {
         let option = {
-          chatType: 'singleChat',    // 会话类型，设置为单聊。
+          chatType: 'singleChat',    // 会话类型，设置为单聊。 groupChat为群聊
           type: 'txt',               // 消息类型。
-          to: '',                // 消息接收方（用户 ID)。
-          msg: 'test'           // 消息内容。
+          to: this.toImid,                // 消息接收方（用户 ID)。
+          msg: message          // 消息内容。
         };
         let msg = WebIM.message.create(option);
         WebIM.conn.send(msg).then((res) => {

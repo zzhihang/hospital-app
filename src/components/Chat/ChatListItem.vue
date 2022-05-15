@@ -2,7 +2,17 @@
     <van-swipe-cell>
         <div class="chat-list-item">
             <van-badge :dot="unRead">
-                <van-image :src="avatar"/>
+                <div class="avatar-box">
+                    <van-image :src="avatar"/>
+                    <van-image :src="avatar"/>
+                    <van-image :src="avatar"/>
+                    <van-image :src="avatar"/>
+                    <van-image :src="avatar"/>
+                    <van-image :src="avatar"/>
+                    <van-image :src="avatar"/>
+                    <van-image :src="avatar"/>
+                    <van-image :src="avatar"/>
+                </div>
             </van-badge>
             <div class="content">
                 <h2>
@@ -21,11 +31,9 @@
 </template>
 
 <script>
-    import Vue from 'vue';
-
-    export default {
-        props: ['avatar', 'name', 'lastMsg', 'lastTime', 'unRead']
-    }
+  export default {
+    props: ['avatar', 'name', 'lastMsg', 'lastTime', 'unRead'],
+  }
 </script>
 
 <style lang="less" scoped>
@@ -60,6 +68,17 @@
             color: #666666;
             font-size: 14px;
             margin-top: 7px;
+        }
+    }
+
+    .avatar-box{
+        width: 45px;
+        height: 45px;
+        @flex-all-center();
+        flex-wrap: wrap-reverse;
+        .van-image{
+            width: 33%;
+            height: 33%;
         }
     }
 </style>

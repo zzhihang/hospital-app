@@ -53,21 +53,24 @@
                         autosize
                         type="textarea"
                 />
-                <van-icon @click="() => $emit('send')"
+                <van-icon @click="onSendClick"
                           class="ml20"
                           :name="message.length ? require('../../static/img/icon/icon_fasong01.png') : require('../../static/img/icon/icon_fasong.png')"/>
             </div>
             <recorder :show.sync="recorderShow" @recorderSuccess="recorderSuccess"/>
-            <setting-panel :show.sync="settingShow" :member-list="memberList" v-bind="$attrs"/>
+            <setting-panel :show.sync="settingShow"
+                           :member-list="memberList"
+                           v-bind="$attrs"
+                           v-on="$listeners"
+            />
         </div>
     </div>
 </template>
 
 <script>
-  import Vue from 'vue';
   import Recorder from './components/Recorder'
   import SettingPanel from './components/SettingPanel'
-  import {doctorChatGroupMemberList, doctorChatHistory} from "@/service/doctorMessageService";
+  import {doctorChatHistory} from "@/service/doctorMessageService";
 
   export default {
     props: {
@@ -91,15 +94,10 @@
     },
     created() {
       this.getDoctorChatHistory();
-      this.getDoctorChatGroupMemberList()
     },
     methods: {
       async getDoctorChatHistory() {
-        const {data} = await doctorChatHistory(this.chatId)
-      },
-      async getDoctorChatGroupMemberList() {
-        const {data} = await doctorChatGroupMemberList(this.chatId);
-        this.memberList = data;
+        const {data} = await doctorChatHistory(this.$attrs.chatId)
       },
       onRecorderClick() {
         this.recorderShow = true;
@@ -112,7 +110,14 @@
       },
       afterRead() {
 
-      }
+      },
+      onSendClick(){
+        this.$emit('send', this.message)
+      },
+      hideAllPanel() {
+        this.recorderShow = false;
+        this.settingShow = false
+      },
     },
   }
 </script>
