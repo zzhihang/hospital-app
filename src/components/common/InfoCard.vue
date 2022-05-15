@@ -75,9 +75,7 @@
         default: 0
       },
     },
-    computed: {
-
-    },
+    computed: {},
   }
 </script>
 
@@ -102,6 +100,7 @@
             font-size: 12px;
             color: #999999;
             margin-top: 8px;
+            min-height: 10px;
         }
 
         .van-image {
@@ -135,11 +134,13 @@
             margin-right: 3px;
         }
     }
-    .info-set{
+
+    .info-set {
         position: absolute;
         right: 20px;
         bottom: 37px;
-        span{
+
+        span {
             font-size: 14px;
             margin-right: 6px;
         }

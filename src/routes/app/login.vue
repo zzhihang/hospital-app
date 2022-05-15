@@ -3,7 +3,7 @@
         <div class="login-content">
             <div class="login-item">
                 <div class="login-title">
-                    <van-icon :name="require('../static/img/icon/icon_shouji.png')" size="16"/>
+                    <van-icon :name="require('../../static/img/icon/icon_shouji.png')" size="16"/>
                     <span>手机号</span>
                 </div>
                 <div class="login-input">
@@ -12,7 +12,7 @@
             </div>
             <div class="login-item">
                 <div class="login-title">
-                    <van-icon :name="require('../static/img/icon/icon_yanzhengma.png')" size="16"/>
+                    <van-icon :name="require('../../static/img/icon/icon_yanzhengma.png')" size="16"/>
                     <span>验证码</span>
                 </div>
                 <div class="login-input">
@@ -46,8 +46,8 @@
 <script>
     import Vue from 'vue';
     import {Checkbox, CountDown, Field, Icon, Image as VanImage, Popup} from 'vant';
-    import {login, sendSms} from "@/service/commonService";
-    import connect from "@/store/connect";
+    import {login, sendSms} from "../../service/userCommonService";
+    import connect from "../../store/connect";
 
     Vue.use(CountDown);
     Vue.use(Field);
@@ -124,7 +124,7 @@
         padding: 20px 15px;
         background-size: cover;
         box-sizing: border-box;
-        background: url("../static/img/bg.png");
+        background: url("../../static/img/bg.png");
         background-size: cover;
     }
     .login-content{

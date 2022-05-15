@@ -1,8 +1,13 @@
 import axios from "axios";
 
+export const doctorOrderList = (params) => {
+    return axios.post(`/wx/order/doctor/list`, params)
+};
+
 export const doctorOrderJxz = () => {
     return axios.post(`/wx/doctor/order/jxz`)
 };
+
 export const doctorOrderDjs = () => {
     return axios.post(`/wx/doctor/order/djs`)
 };

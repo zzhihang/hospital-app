@@ -9,14 +9,14 @@ let routes = [{
     redirect: '/app',
     children: [{
         path: '/login',
-        component: r => require.ensure([], () => r(require('@routes/login'))),
+        component: r => require.ensure([], () => r(require('@routes/app/login'))),
         meta:{
             title: '登录',
             //keepAlive: true
         }
     },{
         path: '/auth',
-        component: r => require.ensure([], () => r(require('@routes/auth'))),
+        component: r => require.ensure([], () => r(require('@routes/app/auth'))),
         meta:{
             title: '登录',
         }
@@ -128,6 +128,13 @@ let routes = [{
         component: r => require.ensure([], () => r(require('@routes/app/message'))),
         meta:{
             title: '消息',
+        }
+    },{
+        path: '/chat',
+        name: 'userChat',
+        component: r => require.ensure([], () => r(require('@routes/app/message/chat'))),
+        meta:{
+            title: '聊天室',
         }
     }]
 }

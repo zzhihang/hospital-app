@@ -19,8 +19,8 @@
   import Vue from 'vue';
   import InfoCard from "@/components/common/InfoCard";
   import OrderCard from "@/components/OrderCard/OrderCard";
-  import {userCount, userPatientLogout} from "@/service/userService";
-  import {userInfo} from "@/service/commonService";
+  import {userCount, userPatientLogout} from "@/service/userInfoService";
+  import {userInfo} from "@/service/userCommonService";
 
   export default {
     components: {

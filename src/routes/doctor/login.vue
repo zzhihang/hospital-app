@@ -46,7 +46,7 @@
 <script>
     import Vue from 'vue';
     import {Checkbox, CountDown, Field, Icon, Image as VanImage, Popup} from 'vant';
-    import {login, sendSms} from "@/service/commonService";
+    import {login, sendSms} from "@/service/userCommonService";
     import connect from "@/store/connect";
     import {doctorBind, doctorSendSms} from "@/service/doctorCommonService";
 

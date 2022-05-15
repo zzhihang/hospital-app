@@ -34,7 +34,7 @@
 <script>
     import Vue from 'vue';
     import {Button, Cell, CellGroup, Image as VanImage, Overlay} from 'vant';
-    import {aliPay, orderStatus, wxPay, wxYanQian} from "@/service/orderService";
+    import {aliPay, orderStatus, wxPay, wxYanQian} from "@/service/userOrderService";
     import {LONG_MAP} from "@/static/js/const";
     import {isWeixin} from "@/static/js/util";
 

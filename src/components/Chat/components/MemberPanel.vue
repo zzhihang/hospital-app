@@ -16,12 +16,16 @@
         <div class="action-area">
             <div class="height10block"></div>
             <div class="setting-box">
-
                 <div class="member-list">
                     <van-checkbox-group v-model="choose">
-                        <van-checkbox class="member-item van-hairline--bottom" v-for="(item, index) in 10" :key="index"
-                                      :name="index">
-                            <fans-card/>
+                        <van-checkbox class="member-item van-hairline--bottom"
+                                      v-for="(item, index) in memberList"
+                                      :key="index"
+                                      :name="item.userId"
+                        >
+                            <fans-card :avatar="item.headimgurl"
+                                       :name="item.nickname"
+                                       :phone="item.phone"/>
                         </van-checkbox>
                     </van-checkbox-group>
                 </div>
@@ -36,6 +40,8 @@
 <script>
 
   import FansCard from "@/components/fans/FansCard";
+  import {doctorFansList} from "@/service/doctorFansService";
+  import {doctorChatAddMember, doctorChatGroupCreate, doctorChatRemoveMember} from "@/service/doctorMessageService";
 
   export default {
     props: ['show', 'memberAction'], //minus or plus or 发起群聊
@@ -55,20 +61,38 @@
           plus: '添加',
           minus: '删除',
           launch: '添加'
-        }
+        },
+        memberList: []
       }
     },
+    created(){
+      this.getMemberList()
+    },
     methods: {
+      async getMemberList(){
+        const {data} = await doctorFansList();
+        this.memberList = data;
+      },
       onClose() {
         this.$emit('update:show', false)
       },
-      onButtonClick() {
-        if (this.memberAction === 'minus') {
+      async onButtonClick() {
+        let result = {};
+        if (this.memberAction === 'minus') {//移除群成员
           this.$confirm({message: '是否确定移除群成员？'}, async () => {
-
+            result = doctorChatRemoveMember()
           })
+        }else if(this.memberAction === 'launch'){//发起群聊
+          result = await doctorChatGroupCreate(JSON.stringify(this.choose));
+        }else{//添加群成员
+          result = await doctorChatAddMember({groupId: this.$attrs.chatId, userId: JSON.stringify(this.choose)});
         }
 
+        if(result.success){
+          this.$toast.success('操作成功')
+        }else{
+          this.$toast.fail(result.msg);
+        }
       }
     },
     computed: {

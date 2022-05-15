@@ -1,4 +1,4 @@
-import {wxYanQian} from "@/service/orderService";
+import {wxYanQian} from "@/service/userOrderService";
 
 export const wxPay = async (orderNo) => {
     const result = await wxYanQian(window.location.href.split('?')[0]);

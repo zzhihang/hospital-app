@@ -1,37 +1,37 @@
 <template>
     <div class="fans-card">
-        <van-image :src="require('../../static/img/pic_wujiuzhenren.png')"/>
+        <van-image :src="avatar"/>
         <div class="info">
-            <h2>朱志航</h2>
-            <p>女 24岁</p>
+            <h2>{{name}}</h2>
+            <p>{{phone}}</p>
         </div>
     </div>
 </template>
 
 <script>
-    import Vue from 'vue';
 
-    export default {
-        components: {
-
-        },
-    }
+  export default {
+    props: ['name', 'phone', 'avatar']
+  }
 </script>
 
 <style lang="less" scoped>
-    .fans-card{
+    .fans-card {
         @flex-sb-center();
         @white-bg();
         padding: 15px;
-        .van-image{
+
+        .van-image {
             height: 42px;
             width: 42px;
             flex-shrink: 0;
         }
-        .info{
+
+        .info {
             padding-left: 11px;
             flex: 1;
-            p{
+
+            p {
                 color: #666666;
                 font-size: 14px;
                 margin-top: 7px;

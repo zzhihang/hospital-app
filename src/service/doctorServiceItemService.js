@@ -22,3 +22,11 @@ export const doctorServiceDetail = (id) => {
 export const doctorServiceDelete = (id) => {
     return axios.post('/wx/doctorgs/delete', {id})
 };
+
+export const doctorServiceFreeDisable = () => {
+    return axios.post('/wx/doctor/free/disable')
+};
+
+export const doctorServiceFreeEnable = () => {
+    return axios.post('/wx/doctor/free/enable')
+};

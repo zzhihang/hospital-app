@@ -51,20 +51,21 @@
     computed: {
       ...mapState(['userInfo', 'ifShowTabBar', 'tabBarActive'])
     },
-    mounted(){
+    created(){
+      this.getUserInfo();
     },
     methods: {
       ...mapMutations(['setUserInfo']),
       async getUserInfo(){
-        const {data} = await doctorUserInfo();
-        this.setUserInfo(data);
+        if(!this.userInfo.id){
+          const {data} = await doctorUserInfo();
+          this.setUserInfo(data);
+        }
       }
     },
     watch:{
       $route(to,from){
-        if(!this.userInfo.login){
-            this.getUserInfo();
-        }
+        this.getUserInfo();
       }
     }
   }

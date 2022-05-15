@@ -18,7 +18,6 @@ const routes = [
             component: r => require.ensure([], () => r(require('@routes/doctor/login'))),
             meta:{
                 title: '登录',
-                //keepAlive: true
             }
         },{
             path: '/doctor/auth',
@@ -32,10 +31,10 @@ const routes = [
             meta: { title: '主页'},
         },{
             path: '/doctor/fans',
+            name: 'fansList',
             component: r => require.ensure([], () => r(require('@routes/doctor/fans/fans_list'))),
             meta:{
                 title: '粉丝列表',
-                //keepAlive: true
             }
         },{
             path: '/doctor/my',
@@ -49,6 +48,20 @@ const routes = [
             component: r => require.ensure([], () => r(require('@routes/doctor/my/my_info'))),
             meta:{
                 title: '个人信息',
+            }
+        },{
+            path: '/doctor/order',
+            name: 'doctorOrderList',
+            component: r => require.ensure([], () => r(require('@routes/doctor/order/my_order'))),
+            meta:{
+                title: '我的订单',
+            }
+        },{
+            path: '/doctor/order/detail',
+            name: 'doctorOrderDetail',
+            component: r => require.ensure([], () => r(require('@routes/doctor/order/order_detail'))),
+            meta:{
+                title: '订单详情',
             }
         },{
             path: '/doctor/service/add',

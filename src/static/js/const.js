@@ -9,3 +9,8 @@ export const ORDER_STATUS = {
     YTK: "已退款"
 };
 
+export const DOCTOR_ORDER_STATUS = {
+    DJS: "待接收",
+    JXZ: "进行中",
+    YWC: "已完成",
+};

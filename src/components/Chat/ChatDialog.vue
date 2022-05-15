@@ -40,130 +40,162 @@
                             <van-icon :name="require('../../static/img/icon/icon_tupian.png')"/>
                         </van-uploader>
                     </li>
-                    <li style="flex:1;text-align: right;">
-                        <van-icon @click="settingShow=true" name="setting-o" />
+                    <li style="flex:1;text-align: right;" v-if="chatType === 'group'">
+                        <van-icon @click="settingShow=true" name="setting-o"/>
                     </li>
                 </ul>
             </div>
             <div class="input-box van-hairline--top">
                 <van-field
-                    class="chat-input"
-                    v-model="message"
-                    rows="1"
-                    autosize
-                    type="textarea"
+                        class="chat-input"
+                        v-model="message"
+                        rows="1"
+                        autosize
+                        type="textarea"
                 />
                 <van-icon @click="() => $emit('send')"
                           class="ml20"
                           :name="message.length ? require('../../static/img/icon/icon_fasong01.png') : require('../../static/img/icon/icon_fasong.png')"/>
             </div>
-            <recorder :show.sync="recorderShow" @recorderSuccess="recorderSuccess" />
-            <setting-panel :show.sync="settingShow"/>
+            <recorder :show.sync="recorderShow" @recorderSuccess="recorderSuccess"/>
+            <setting-panel :show.sync="settingShow" :member-list="memberList" v-bind="$attrs"/>
         </div>
     </div>
 </template>
 
 <script>
-    import Vue from 'vue';
-    import Recorder from './components/Recorder'
-    import SettingPanel from './components/SettingPanel'
+  import Vue from 'vue';
+  import Recorder from './components/Recorder'
+  import SettingPanel from './components/SettingPanel'
+  import {doctorChatGroupMemberList, doctorChatHistory} from "@/service/doctorMessageService";
 
-    export default {
-        components: {
-            Recorder,
-            SettingPanel
-        },
-        data() {
-            return {
-                message: '',
-                maxSize: 1024 * 1024 *30,
-                recorderShow: false,
-                settingShow: false
-            }
-        },
-        methods: {
-            onRecorderClick(){
-                this.recorderShow = true;
-            },
-            recorderSuccess() {
+  export default {
+    props: {
+      chatType: {
+        type: String,
+        default: 'single'
+      },
+    },
+    components: {
+      Recorder,
+      SettingPanel
+    },
+    data() {
+      return {
+        message: '',
+        maxSize: 1024 * 1024 * 30,
+        recorderShow: false,
+        settingShow: false,
+        memberList: [], //群成员
+      }
+    },
+    created() {
+      this.getDoctorChatHistory();
+      this.getDoctorChatGroupMemberList()
+    },
+    methods: {
+      async getDoctorChatHistory() {
+        const {data} = await doctorChatHistory(this.chatId)
+      },
+      async getDoctorChatGroupMemberList() {
+        const {data} = await doctorChatGroupMemberList(this.chatId);
+        this.memberList = data;
+      },
+      onRecorderClick() {
+        this.recorderShow = true;
+      },
+      recorderSuccess() {
 
-            },
-            onOversize(){
-                this.$toast.fail('文件大小不能超过30M')
-            },
-            afterRead(){
+      },
+      onOversize() {
+        this.$toast.fail('文件大小不能超过30M')
+      },
+      afterRead() {
 
-            }
-        },
-    }
+      }
+    },
+  }
 </script>
 
 <style lang="less" scoped>
-    .chat-body{
+    .chat-body {
         @flex-column();
         height: 100%;
     }
-    .chat-area{
+
+    .chat-area {
         padding: 15px;
         flex: 1;
     }
-    .chat-scroll{
+
+    .chat-scroll {
         padding: 20px 15px;
         height: 100%;
         box-sizing: border-box;
         border-radius: 9px;
         @white-bg();
-        .van-image{
+
+        .van-image {
             height: 39px;
             width: 39px;
         }
-        .message-item{
+
+        .message-item {
             display: flex;
             align-items: center;
         }
-        .message{
+
+        .message {
             color: #333333;
             font-size: 16px;
             padding: 7px 15px 5px;
         }
-        .he{
-            .message{
+
+        .he {
+            .message {
                 margin-left: 10px;
                 border-radius: 0 24px 24px 24px;
                 background: #F6F6F6;
             }
         }
-        .me{
+
+        .me {
             flex-flow: row-reverse;
-            .message{
+
+            .message {
                 margin-right: 10px;
                 border-radius: 24px 0 24px 24px;
                 background: #F2F7FF;
             }
         }
     }
-    .action-bar{
+
+    .action-bar {
         flex-shrink: 0;
         position: relative;
         box-shadow: 0px -1px 6px 0px rgba(102, 102, 102, 0.06);
         @white-bg();
-        .action{
-            ul{
+
+        .action {
+            ul {
                 @flex-col-center();
                 height: 44px;
                 padding-left: 15px;
-                li{
+
+                li {
                     margin-right: 25px;
                 }
             }
         }
     }
-    .chat-input{
+
+    .chat-input {
         background: #F6F6F6;
         padding: 6px;
         border-radius: 4px;
     }
-    .input-box{
+
+    .input-box {
         @flex-col-center();
         padding: 10px 15px;
 

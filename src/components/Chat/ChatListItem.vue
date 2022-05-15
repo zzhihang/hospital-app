@@ -1,16 +1,16 @@
 <template>
     <van-swipe-cell>
         <div class="chat-list-item">
-            <van-badge :content="5" dot>
-                <van-image :src="require('../../static/img/pic_wujiuzhenren.png')"/>
+            <van-badge :dot="unRead">
+                <van-image :src="avatar"/>
             </van-badge>
             <div class="content">
                 <h2>
-                    <span>朱志航</span>
-                    <span class="time">2022-03-21</span>
+                    <span>{{name}}</span>
+                    <span class="time">{{lastTime}}</span>
                 </h2>
                 <p class="message ellipsis1">
-                    哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈
+                    {{lastMsg}}
                 </p>
             </div>
         </div>
@@ -24,7 +24,7 @@
     import Vue from 'vue';
 
     export default {
-        components: {},
+        props: ['avatar', 'name', 'lastMsg', 'lastTime', 'unRead']
     }
 </script>
 

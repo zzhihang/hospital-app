@@ -3,7 +3,7 @@
         <div class="content">
             <h1 class="van-hairline--bottom">
                 <span>我的订单</span>
-                <span class="right" @click="$router.push({name: 'myOrder'})">
+                <span class="right" @click="$router.push({name: orderRouter})">
                     <span>全部订单</span>
                     <my-icon class="ml4" size="8" name="icon_jinru_01"/>
                 </span>
@@ -22,26 +22,31 @@
 </template>
 
 <script>
-    import MyIcon from "@/components/common/MyIcon";
+  import MyIcon from "@/components/common/MyIcon";
 
-    export default {
-        props: {
-            dataSource: {
-                type: Array,
-                default: () => []
-            }
-        },
-        components: {
-            MyIcon
-        },
-        methods: {},
-    }
+  export default {
+    props: {
+      dataSource: {
+        type: Array,
+        default: () => []
+      },
+      orderRouter: {
+        type: String,
+        default: 'myOrder'
+      }
+    },
+    components: {
+      MyIcon
+    },
+    methods: {},
+  }
 </script>
 
 
 <style lang="less" scoped>
     .order-card {
         border-radius: 9px;
+
         .content {
             background: #ffffff;
             border-radius: 9px;
@@ -62,20 +67,23 @@
     }
 
     .order-item {
-        ul{
+        ul {
             @flex-sb-center();
             padding-left: 24px;
             padding-right: 24px;
-            li{
+
+            li {
                 display: inline-block;
                 text-align: center;
                 padding: 14px 0 15px;
             }
-            h6{
+
+            h6 {
                 font-size: 21px;
                 color: @main-color;
             }
-            p{
+
+            p {
                 color: #666666;
                 margin-top: 6px;
             }

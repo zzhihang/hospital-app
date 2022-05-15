@@ -11,7 +11,16 @@
             </div>
         </div>
         <div class="chat-list">
-            <chat-list-item @click.native="() => {$emit('onChatItemClick')}" v-for="(item, index) in 10" :key="index"/>
+            <chat-list-item  v-for="(item, index) in list"
+                             class="van-hairline--bottom"
+                             @click.native="() => {$emit('onChatItemClick', item)}"
+                             :name="item.name"
+                             :unRead="item.unRead"
+                             :avatar="item.headimgurl"
+                             :lastMsg="item.lastMsg"
+                             :lastTime="item.lastTime"
+                             :key="index"
+            />
         </div>
         <member-panel :show.sync="memberPanelShow" member-action="launch"/>
     </div>
@@ -30,6 +39,10 @@
       userType: {
         type: String,
         default: 'user'
+      },
+      list: {
+        type: Array,
+        default: () => []
       }
     },
     data() {

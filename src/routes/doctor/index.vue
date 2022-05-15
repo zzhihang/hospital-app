@@ -1,15 +1,14 @@
 <template>
-    <div>
+    <div class="common-tab-bar-pb">
         <div class="search-box">
             <doctor-card
                     mode="dark"
-                    :avatar="require('../../static/img/logo.png')"
-                    :name="doctor.doctorName"
-                    :dept="doctor.deptName"
-                    :hospital="doctor.hospitalName"
-                    :title="doctor.doctorTitle"
-                    :tag-list="['1','2']"
-                    @click.native="$router.push({path: '/doctor/detail', query: {id: item.doctorId}})"
+                    :avatar="userInfo.headimgurl"
+                    :title="userInfo.title"
+                    :name="userInfo.name"
+                    :dept="userInfo.deptName"
+                    :hospital="userInfo.hospitalName"
+                    :tag-list="userInfo.diseaseLabel && userInfo.diseaseLabel.split(',')"
             />
             <div class="count-area">
                 <div class="count">
@@ -19,29 +18,37 @@
                     </div>
                     <span class="count-num">2112</span>
                 </div>
-                <order-card :data-source="orderData"></order-card>
+                <order-card order-router="doctorOrderList" :data-source="orderData"></order-card>
             </div>
         </div>
         <van-tabs v-model="active" color="#367DF7" sticky>
             <van-tab title="待接收订单">
-                <order-item-card
-                        v-for="(item, index) in orderList1"
-                        @click.native="onOrderItemClick(item)"
-                        @actionSuccess="onActionSuccess"
-                        class="mt7"
-                        :data="item"
-                        :key="index"
-                />
+                <div class="order-list" v-if="orderList1.length">
+                    <order-item-card
+                            v-for="(item, index) in orderList1"
+                            @click.native="onOrderItemClick(item)"
+                            @actionSuccess="onActionSuccess"
+                            class="mt7"
+                            user-type="doctor"
+                            :data="item"
+                            :key="index"
+                    />
+                </div>
+                <van-empty v-else description="暂无待接收订单"/>
             </van-tab>
             <van-tab title="进行中订单">
-                <order-item-card
-                        v-for="(item, index) in orderList2"
-                        @click.native="onOrderItemClick(item)"
-                        @actionSuccess="onActionSuccess"
-                        class="mt7"
-                        :data="item"
-                        :key="index"
-                />
+                <div class="order-list" v-if="orderList2.length">
+                    <order-item-card
+                            v-for="(item, index) in orderList2"
+                            @click.native="onOrderItemClick(item)"
+                            @actionSuccess="onActionSuccess"
+                            user-type="doctor"
+                            class="mt7"
+                            :data="item"
+                            :key="index"
+                    />
+                </div>
+                <van-empty v-else description="暂无进行中订单"/>
             </van-tab>
         </van-tabs>
         <div class="link-me">
@@ -51,60 +58,75 @@
 </template>
 
 <script>
-    import Search from "components/Search/Search";
-    import OrderCard from "components/OrderCard/OrderCard";
-    import DoctorCard from "@/components/doctor/DoctorCard";
-    import MyIcon from "@/components/common/MyIcon";
-    import {userCount} from "@/service/userService";
-    import OrderItemCard from "@/routes/app/order/components/OrderItemCard";
-    import {doctorOrderDjs, doctorOrderJxz} from "@/service/doctorOrderService";
-    export default {
-        components: {
-            Search,
-            OrderCard,
-            DoctorCard,
-            MyIcon,
-            OrderItemCard
-        },
-        data() {
-            return {
-                doctor: {},
-                active: '',
-                orderList1: [],
-                orderList2: [],
-                countMap: {},
-                orderData: [{
-                    text: '待接收订单',
-                    value: 0
-                }, {
-                    text: '进行中订单',
-                    value: 0
-                }, {
-                    text: '已完成订单',
-                    value: 0
-                }]
-            }
-        },
-        created() {
-            doctorOrderJxz().then(({data}) => {
-                this.orderList1 = data;
-            });
-            doctorOrderDjs().then(({data}) => {
-                this.orderList2 = data;
-            });
-            userCount().then(({data}) => {
-                this.countMap = data;
-                this.orderData[0].value = data.daijieshou;
-                this.orderData[1].value = data.daizhifu;
-                this.orderData[2].value = data.yiwanchegn;
-            })
-        },
-        methods: {
-            onSearch(value) {
-                this.$router.push({name: 'search', query: {value: value}})
-            }
-        },
-    }
+  import Search from "components/Search/Search";
+  import OrderCard from "components/OrderCard/OrderCard";
+  import DoctorCard from "@/components/doctor/DoctorCard";
+  import MyIcon from "@/components/common/MyIcon";
+  import {userCount} from "@/service/userInfoService";
+  import OrderItemCard from "@/components/OrderCard/OrderItemCard";
+  import {doctorOrderDjs, doctorOrderJxz} from "@/service/doctorOrderService";
+  import connect from "@/store/connect";
+  const {mapState} = connect('commonStore');
+
+  export default {
+    components: {
+      Search,
+      OrderCard,
+      DoctorCard,
+      MyIcon,
+      OrderItemCard
+    },
+    data() {
+      return {
+        doctor: {},
+        active: '',
+        orderList1: [],
+        orderList2: [],
+        countMap: {},
+        orderData: [{
+          text: '待接收订单',
+          value: 0
+        }, {
+          text: '进行中订单',
+          value: 0
+        }, {
+          text: '已完成订单',
+          value: 0
+        }]
+      }
+    },
+    created() {
+      this.getListData();
+      userCount().then(({data}) => {
+        this.countMap = data;
+        this.orderData[0].value = data.daijieshou;
+        this.orderData[1].value = data.daizhifu;
+        this.orderData[2].value = data.yiwanchegn;
+      })
+    },
+    computed: {
+      ...mapState(['userInfo'])
+    },
+    methods: {
+      getListData(){
+        doctorOrderDjs().then(({data}) => {
+          this.orderList1 = data;
+        });
+        doctorOrderJxz().then(({data}) => {
+          this.orderList2 = data;
+        });
+      },
+      onSearch(value) {
+        this.$router.push({name: 'search', query: {value: value}})
+      },
+      onActionSuccess() {
+        this.getListData();
+      },
+      onOrderItemClick({id}) {
+        this.$router.push({name: 'doctorOrderDetail', query: {id}})
+      }
+    },
+  }
 </script>
 
 <style lang="less" scoped>
@@ -125,7 +147,7 @@
         background: transparent !important;
     }
 
-    .order-card{
+    .order-card {
         margin: 5px;
         margin-bottom: 0;
     }
@@ -159,11 +181,20 @@
         background: none;
     }
 
-    /deep/.van-tab--active{
+    /deep/ .van-tab--active {
         font-weight: bold;
         font-size: 16px;
     }
-    /deep/.van-tab{
+
+    /deep/ .van-tab {
         font-size: 16px;
+    }
+    /deep/.van-sticky--fixed{
+        background: #ffffff;
+    }
+
+    .order-list{
+        padding-left: 15px;
+        padding-right: 15px;
     }
 </style>

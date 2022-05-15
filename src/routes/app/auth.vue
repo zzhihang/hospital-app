@@ -1,12 +1,12 @@
 <template>
     <div class="login">
-       <van-image :src="require('../static/img/logo.png')"/>
+       <van-image :src="require('../../static/img/logo.png')"/>
         <h1>普林互联网医院就诊端</h1>
        <div class="login-button-box">
            <van-button
                    class="login-button"
                    type="primary"
-                   :icon="require('../static/img/icon/icon_weixin.png')"
+                   :icon="require('../../static/img/icon/icon_weixin.png')"
                    @click="onLoginClick">微信授权登录</van-button>
        </div>
     </div>

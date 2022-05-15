@@ -36,7 +36,7 @@
 <script>
   import MyIcon from "@/components/common/MyIcon";
   import connect from "@/store/connect";
-  import {userInfo} from "@/service/commonService";
+  import {userInfo} from "@/service/userCommonService";
 
   const {mapState, mapMutations} = connect('commonStore');
   export default {
@@ -49,20 +49,21 @@
     computed: {
       ...mapState(['userInfo', 'ifShowTabBar', 'tabBarActive'])
     },
-    mounted() {
+    created() {
+      this.getUserInfo();
     },
     methods: {
       ...mapMutations(['setUserInfo']),
       async getUserInfo() {
-        const {data} = await userInfo();
-        this.setUserInfo(data);
+        if(!this.userInfo.id) {
+          const {data} = await userInfo();
+          this.setUserInfo(data);
+        }
       }
     },
     watch:{
       $route(to,from){
-        if(!this.userInfo.login){
-          this.getUserInfo();
-        }
+        this.getUserInfo();
       }
     }
   }

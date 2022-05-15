@@ -48,7 +48,7 @@
         orderStatus,
         wxPay,
         wxYanQian
-    } from "@/service/orderService";
+    } from "@/service/userOrderService";
     const {mapState, mapMutations} = connect('commonStore');
     export default {
         components: {

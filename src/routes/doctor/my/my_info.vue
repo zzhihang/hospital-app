@@ -1,32 +1,32 @@
 <template>
     <van-form :readonly="formReadonly">
         <van-field
-                v-model="doctorInfo.nickname"
+                v-model="doctorInfo.name"
                 label="姓名"
                 input-align="right"
                 ></van-field>
         <van-field
-                v-model="doctorInfo.serviceItem"
+                v-model="doctorInfo.hospitalName"
                 label="所属医院"
                 input-align="right"
         ></van-field>
         <van-field
-                v-model="doctorInfo.serviceItem"
+                v-model="doctorInfo.deptName"
                 label="所属科室"
                 input-align="right"
         ></van-field>
         <van-field
-                v-model="doctorInfo.serviceItem"
+                v-model="doctorInfo.title"
                 label="职称"
                 input-align="right"
         ></van-field>
         <van-field
-                v-model="doctorInfo.serviceItem"
+                v-model="doctorInfo.diseaseName"
                 label="疾病类型"
                 input-align="right"
         ></van-field>
         <van-field
-                v-model="doctorInfo.serviceItem"
+                v-model="doctorInfo.diseaseLabel"
                 label="疾病标签"
                 input-align="right"
         ></van-field>

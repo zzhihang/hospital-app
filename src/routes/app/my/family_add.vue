@@ -89,8 +89,8 @@
                 placeholder="请输入联系方式"
                 :rules="[{ required: true, message: '请输入' }]"></van-field>
         <div class="bottom-button-box" style="display: flex;" v-if="formReadonly">
-            <van-button type="primary" plain @click="deleteClick" class="mr10" style="width: 30%;flex-shrink: 0">删除</van-button>
-            <van-button type="primary" @click="onEditClick">修改</van-button>
+            <van-button type="primary" native-type="button" plain @click="deleteClick" class="mr10" style="width: 30%;flex-shrink: 0">删除</van-button>
+            <van-button type="primary" native-type="button" @click="onEditClick">修改</van-button>
         </div>
         <div style="margin: 16px;" v-else>
             <van-button block type="info" native-type="submit">保存</van-button>
@@ -101,7 +101,7 @@
 
 <script>
     import { areaList } from '@vant/area-data';
-    import {userPatientDelete, userPatientInfo, userPatientSave} from "@/service/userService";
+    import {userPatientDelete, userPatientInfo, userPatientSave} from "@/service/userInfoService";
     import {formatDate} from "@/static/js/util";
     export default {
         data() {

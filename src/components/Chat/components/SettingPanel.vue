@@ -11,7 +11,7 @@
         <div class="setting-box">
             <h2>群聊设置</h2>
             <div class="member-list">
-                <div class="member-item" v-for="(item, index) in 20" :key="index">
+                <div class="member-item" v-for="(item, index) in memberList" :key="index">
                     <van-image :src="require('../../../static/img/pic_wujiuzhenren.png')"/>
                 </div>
                 <div class="member-item setting" @click="onMemberSetClick('plus')">
@@ -28,8 +28,8 @@
                 <van-button type="primary" @click="deleteGroup">删除此群聊</van-button>
             </div>
         </div>
-        <member-panel :show.sync="memberPanelShow" :member-action="memberAction"/>
-        <modify-panel :show.sync="modifyPanelShow"/>
+        <member-panel :show.sync="memberPanelShow" :member-action="memberAction" v-bind="$attrs"/>
+        <modify-panel :show.sync="modifyPanelShow" v-bind="$attrs"/>
     </van-popup>
 </template>
 
@@ -40,7 +40,7 @@
     import ModifyPanel from "@/components/Chat/components/ModifyPanel";
 
     export default {
-        props: ['show'],
+        props: ['show', 'memberList'],
         components: {
             MemberPanel,
             ModifyPanel

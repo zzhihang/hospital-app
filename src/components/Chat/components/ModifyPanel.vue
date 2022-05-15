@@ -23,35 +23,46 @@
 
 <script>
 
-    import {doctorServiceDelete} from "@/service/doctorServiceItemService";
+  import {doctorChatGroupRename} from "@/service/doctorMessageService";
 
-    export default {
-        props: ['show'],
-        data() {
-            return {
-                groupName: ''
-            }
-        },
-        methods: {
-            onClose() {
-                this.$emit('update:show', false)
-            },
-            onSaveClick(){
-                if(!this.groupName.trim().length){
-                    return this.$toast.fail('群聊名称不能为空')
-                }
-            }
-        },
-    }
+  export default {
+    props: ['show'],
+    data() {
+      return {
+        groupName: ''
+      }
+    },
+    created(){
+
+    },
+    methods: {
+      onClose() {
+        this.$emit('update:show', false)
+      },
+      async onSaveClick() {
+        if (!this.groupName.trim().length) {
+          return this.$toast.fail('群聊名称不能为空')
+        }
+        const result = await doctorChatGroupRename({id: this.$attrs.chatId, groupName: this.groupName});
+        if(result.success){
+          this.$toast.success('修改成功');
+          this.onClose()
+        }else{
+          this.$toast.fail(result.msg);
+        }
+      }
+    },
+  }
 </script>
 
 <style lang="less" scoped>
-    h2{
+    h2 {
         height: 40px;
         text-align: center;
         line-height: 53px;
     }
-    .save-button{
+
+    .save-button {
         position: fixed;
         left: 15px;
         right: 15px;

@@ -2,7 +2,7 @@
     <div class="item">
         <h2>
             <slot></slot>
-            <span>{{name}}</span>
+            <span class="ellipsis1">{{name}}</span>
         </h2>
         <div class="van-hairline--bottom"></div>
         <div class="detail">

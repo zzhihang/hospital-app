@@ -1,19 +1,36 @@
 <template>
     <div>
-        <chat-list user-type="doctor" @onChatItemClick="onChatItemClick" @removeUnRead="removeUnRead"/>
+        <chat-list
+            user-type="doctor"
+            :list="list"
+            @onChatItemClick="onChatItemClick"
+            @removeUnRead="removeUnRead"
+        />
     </div>
 </template>
 
 <script>
   import ChatList from "@/components/Chat/ChatList";
-  import {doctorRemoveUnRead} from "@/service/doctorMessage";
+  import {doctorMessageList, doctorRemoveUnRead} from "@/service/doctorMessageService";
 
   export default {
     components: {
       ChatList
     },
+    data() {
+      return {
+        list: []
+      }
+    },
+    created() {
+      this.getMessageList();
+    },
     methods: {
-      removeUnRead(){
+      async getMessageList() {
+        const {data} = await doctorMessageList();
+        this.list = data;
+      },
+      removeUnRead() {
         this.$confirm({message: '确定清除所有未读消息？'}, async () => {
           const result = await doctorRemoveUnRead();
           if (result.success) {
@@ -23,8 +40,8 @@
           }
         })
       },
-      onChatItemClick() {
-        this.$router.push({name: 'doctorChat'})
+      onChatItemClick({bookType, id, toImid}) {
+        this.$router.push({name: 'doctorChat', query: {bookType, id, toImid}})
       },
     },
   }

@@ -13,7 +13,7 @@
 <script>
     import Vue from 'vue';
     import myEmpty from "@/components/empty/myEmpty";
-    import {userPatientList} from "@/service/userService";
+    import {userPatientList} from "@/service/userInfoService";
     export default {
         components: {
             myEmpty

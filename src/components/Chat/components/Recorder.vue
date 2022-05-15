@@ -23,7 +23,7 @@
     import Vue from 'vue';
     import {ActionSheet, Circle, Image as VanImage} from 'vant';
     import Recorder from 'js-audio-recorder';
-    import {upload} from "../../../service/commonService";
+    import {upload} from "../../../service/userCommonService";
 
     Vue.use(Circle);
     Vue.use(VanImage);
