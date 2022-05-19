@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="bottom-button-box-fixed">
         <doctor-card
                 mode="dark"
                 :avatar="doctor.headimgurl"

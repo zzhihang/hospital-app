@@ -7,7 +7,7 @@
             <fans-card class="van-hairline--bottom"
                        v-for="(item, index) in list"
                        :key="index"
-                       @click.native="onFansItemClick"
+                       @click.native="onFansItemClick(item)"
                        :avatar="item.headimgurl"
                        :name="item.nickname"
                        :phone="item.phone"
@@ -23,6 +23,7 @@
   import FansCard from "@/components/fans/FansCard";
   import Search from "@/components/Search/Search";
   import {deepClone} from "@/static/js/util";
+  import {doctorCreateChat} from "@/service/doctorMessageService";
 
   export default {
     components: {
@@ -39,6 +40,13 @@
     methods: {
       onSearch(e) {
         this.list = this.originalList.filter((item) => item.nickname.includes(e.trim()));
+      },
+      async onFansItemClick({userId}) {
+        const {data} = await doctorCreateChat(userId);
+        this.$router.push({
+          name: 'chat',
+          query: {bookType: data.bookType, id: data.id, toImid: data.toImid, name: data.name}
+        })
       }
     },
     created() {

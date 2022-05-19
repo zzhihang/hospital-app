@@ -19,6 +19,7 @@ import {
     NoticeBar,
     Picker,
     Popup,
+    PullRefresh,
     Radio,
     RadioGroup,
     Search,
@@ -70,3 +71,4 @@ Vue.use(Checkbox);
 Vue.use(CheckboxGroup);
 Vue.use(Sticky);
 Vue.use(NoticeBar);
+Vue.use(PullRefresh);

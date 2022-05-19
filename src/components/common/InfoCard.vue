@@ -14,7 +14,7 @@
                     <span>{{cardType === 'doctor' ? '粉丝' : '关注医生'}}</span>
                     <my-icon size="6" name="icon_jinru_01"/>
                 </div>
-                <div @click="() => $emit('click2')" v-if="familyNum">
+                <div @click="() => $emit('click2')" v-if="cardType === 'user'">
                     <span class="num">{{familyNum}}</span>
                     <span>就诊人管理</span>
                     <my-icon size="6" name="icon_jinru_01"/>

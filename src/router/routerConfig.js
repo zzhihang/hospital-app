@@ -131,8 +131,8 @@ let routes = [{
         }
     },{
         path: '/chat',
-        name: 'userChat',
-        component: r => require.ensure([], () => r(require('@routes/app/message/chat'))),
+        name: 'chat',
+        component: r => require.ensure([], () => r(require('@routes/chat/chat'))),
         meta:{
             title: '聊天室',
         }

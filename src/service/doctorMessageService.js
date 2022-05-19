@@ -70,13 +70,61 @@ export const doctorChatGroupCreate = (userIds) => {
 };
 
 /**
+* @Description: 消息一键已读
+* @Param:
+* @return:
+* @Author: zzhihang@hotmail.com
+* @date: 2022/5/15 17:42
+*/
+export const messageReadAll = () => {
+  return axios.post(`/immessage/readAll`)
+};
+
+
+/**
+ * @Description: 医生创建会话
+ * @Param:
+ * @return:
+ * @Author: zzhihang@hotmail.com
+ * @date: 2022/5/19 16:05
+ */
+
+export const doctorCreateChat = (userId) => {
+  return axios.post(`/wx/imbooks/doctor/create`, {userId})
+};
+
+/**
 * @Description: 聊天记录获取
 * @Param:
 * @return:
 * @Author: zzhihang@hotmail.com
 * @date: 2022/5/15 17:42
 */
-export const doctorChatHistory = (id) => {
-  return axios.post(`/immessage/history`, {id})
+export const doctorChatHistory = ({booksId, page, pageSize}) => {
+  return axios.post(`/immessage/history`, {booksId, page, pageSize})
 };
 
+
+/**
+* @Description: 删除某条聊天会话
+* @Param:
+* @return:
+* @Author: zzhihang@hotmail.com
+* @date: 2022/5/19 16:05
+*/
+
+export const messageDelete = (id) => {
+  return axios.post(`/wx/imbooks/delete`, {id})
+};
+
+/**
+* @Description: 聊天记录-保存
+* @Param:
+* @return:
+* @Author: zzhihang@hotmail.com
+* @date: 2022/5/19 16:05
+*/
+
+export const messageSave = ({booksId, content, type}) => {
+  return axios.post(`/immessage/save`, {booksId, content, type})
+};

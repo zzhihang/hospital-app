@@ -39,6 +39,8 @@
     import DoctorCard from "@/components/doctor/DoctorCard";
     import MyIcon from "@/components/common/MyIcon";
     import {doctorDetail} from "@/service/doctorInfoService";
+    import {doctorCreateChat} from "@/service/doctorMessageService";
+    import {userChatCreate} from "@/service/userMessageService";
 
     export default {
         components: {
@@ -56,16 +58,20 @@
         methods: {
             async doctorDetail() {
                 const {id} = this.$route.query;
-                const {data} = await doctorDetail(id)
+                const {data} = await doctorDetail(id);
                 this.model = data;
             },
-            onConsultClick(){
+            async onConsultClick(){
                 if(!this.model.chat){
                     this.$confirm({message: '此医生不支持免费咨询，需要先去下单哦~', confirmButtonText: '去下单', showCancelButton: false}, async () => {
                         this.onAppointClick();
                     })
                 }else{
-                    //去聊天
+                  const {data} = await userChatCreate(this.$route.query.id);
+                  this.$router.push({
+                    name: 'chat',
+                    query: {bookType: data.bookType, id: data.id, toImid: data.toImid, name: data.name}
+                  })
                 }
             },
             onAppointClick(){

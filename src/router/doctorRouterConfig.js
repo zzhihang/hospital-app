@@ -77,13 +77,6 @@ const routes = [
             meta:{
                 title: '消息',
             }
-        },{
-            path: '/doctor/chat',
-            name: 'doctorChat',
-            component: r => require.ensure([], () => r(require('@routes/doctor/message/chat'))),
-            meta:{
-                title: '聊天室',
-            }
         }]
     },
 ];

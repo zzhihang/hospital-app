@@ -69,7 +69,7 @@
     },
     methods: {
       async getMemberList() {
-        const {data} = await doctorChatGroupMemberList(this.$attrs.chatId);
+        const {data} = await doctorChatGroupMemberList(this.$attrs.groupId);
         this.memberList = data;
       },
       onClose() {

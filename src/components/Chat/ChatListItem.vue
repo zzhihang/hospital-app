@@ -1,18 +1,11 @@
 <template>
     <van-swipe-cell>
         <div class="chat-list-item">
-            <van-badge :dot="unRead">
-                <div class="avatar-box">
-                    <van-image :src="avatar"/>
-                    <van-image :src="avatar"/>
-                    <van-image :src="avatar"/>
-                    <van-image :src="avatar"/>
-                    <van-image :src="avatar"/>
-                    <van-image :src="avatar"/>
-                    <van-image :src="avatar"/>
-                    <van-image :src="avatar"/>
-                    <van-image :src="avatar"/>
+            <van-badge :dot="!!unRead">
+                <div class="avatar-box" v-if="bookType === 'group'">
+                    <van-image v-for="(item, index) in groupImg" :key="index" :src="item"/>
                 </div>
+                <van-image :src="avatar" v-else/>
             </van-badge>
             <div class="content">
                 <h2>
@@ -25,14 +18,46 @@
             </div>
         </div>
         <template #right>
-            <van-button style="height: 100%;" square type="danger" text="删除"/>
+            <van-button style="height: 100%;" square type="danger" text="删除" @click="onDeleteClick"/>
         </template>
     </van-swipe-cell>
 </template>
 
 <script>
+  import {messageDelete} from "@/service/doctorMessageService";
+
   export default {
-    props: ['avatar', 'name', 'lastMsg', 'lastTime', 'unRead'],
+    props: {
+      'avatar': {},
+      'name': {},
+      'lastMsg': {},
+      'lastTime': {},
+      'unRead': {},
+      'id': {},
+      'groupId': {},
+      'groupImg': {
+        type: Array,
+        default: () => []
+      },
+      'bookType': {
+        type: String,
+        default: 'single'
+      }
+    },
+    methods: {
+      onDeleteClick() {
+        this.$confirm({message: '确定删除此会话？'}, async () => {
+          const result = await messageDelete(this.id);
+          if (result.success) {
+            this.$emit('deleteItemSuccess')
+            this.$toast.success('操作成功');
+          } else {
+            this.$toast.fail(result.msg);
+          }
+        })
+
+      }
+    },
   }
 </script>
 

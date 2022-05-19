@@ -1,7 +1,7 @@
 <template>
     <div class="recorder" @click="play">
-        <van-image :src="require('../../../static/img/dynamic/icon_shengbo.png')"/>
         <span>{{long}}S</span>
+        <van-image :src="require('../../../static/img/icon/icon_shengbo.png')"/>
         <audio style="display:none;" :src="url" ref="player" controls="controls"></audio>
         <van-icon @click.stop="onDeleteClick" v-if="allowClose" class="delete-icon" size="14" name="close" />
     </div>
@@ -36,18 +36,17 @@
 
 <style lang="less" scoped>
     .recorder{
-        width: 185px;
-        height: 40px;
-        margin-bottom: 15px;
+        width: 90px;
+        height: 33px;
         background: #FFFAF7;
         border-radius: 6px;
-        background: url("../../../static/img/dynamic/bg_yuyin.png");
         background-size: 100% 100%;
-        padding-left: 18px;
         line-height: 35px;
         position: relative;
         display: flex;
         align-items: center;
+        padding: 0 10px;
+        box-sizing: border-box;
         .van-image{
             width: 20px;
             height: 15px;
@@ -55,8 +54,10 @@
         span{
             color: #FE7B35;
             font-weight: bold;
-            font-size: 14px;
-            margin-left: 10px;
+            font-size: 12px;
+            flex: 1;
+            text-align: right;
+            padding-right: 23px;
         }
     }
     .delete-icon{

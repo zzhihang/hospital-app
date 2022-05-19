@@ -1,5 +1,5 @@
 <template>
-    <van-action-sheet class="luyin-panel" v-model="show" @close="onClose" closeable>
+    <div class="luyin-panel" v-model="show" @close="onClose" closeable>
         <div @click="onStart" v-if="!recording">
             <van-image :src="require('../../../static/img/icon/btn_luzhi.png')"></van-image>
             <p>点击开始录制</p>
@@ -14,9 +14,9 @@
             >
                 <div class="circle-spot"></div>
             </van-circle>
-            <p>录制中,点击完成录制</p>
+            <p>录制中,点击完成录制并发送</p>
         </div>
-    </van-action-sheet>
+    </div>
 </template>
 
 <script>

@@ -20,6 +20,7 @@
                     <van-checkbox-group v-model="choose">
                         <van-checkbox class="member-item van-hairline--bottom"
                                       v-for="(item, index) in chooseList"
+                                      :disabled="memberAction === 'launch' && memberList && memberList.find(member => member.userId === item.userId)"
                                       :key="index"
                                       :name="item.userId"
                         >
@@ -108,7 +109,17 @@
             this.$toast.success('操作成功');
             this.$emit('launchSuccess');
             const {data} = await result;//创建群聊成功之后，直接进入群聊页面
-            this.$router.push({name: 'doctorChat', query: {bookType: data.bookType, id: data.id, toImid: data.toImid}})
+            debugger
+            this.$router.push({
+              name: 'chat',
+              query: {
+                bookType: data.bookType,
+                id: data.id,
+                toImid: data.toImid,
+                name: data.name,
+                groupId: data.groupId,
+              }
+            })
           } else {
             this.$toast.fail(result.msg);
           }

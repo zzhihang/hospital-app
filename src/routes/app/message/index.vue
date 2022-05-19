@@ -1,17 +1,18 @@
 <template>
     <div>
         <chat-list
-                user-type="doctor"
-                :list="list"
-                @onChatItemClick="onChatItemClick"
-                @removeUnRead="removeUnRead"
+            :list="list"
+            @onChatItemClick="onChatItemClick"
+            @removeUnRead="removeUnRead"
+            @deleteItemSuccess="deleteItemSuccess"
         />
     </div>
 </template>
 
 <script>
   import ChatList from "@/components/Chat/ChatList";
-  import {userMessageList, userRemoveUnRead} from "@/service/userMessageService";
+  import {userMessageList} from "@/service/userMessageService";
+  import {messageReadAll} from "@/service/doctorMessageService";
 
   export default {
     components: {
@@ -32,7 +33,7 @@
       },
       removeUnRead() {
         this.$confirm({message: '确定清除所有未读消息？'}, async () => {
-          const result = await userRemoveUnRead();
+          const result = await messageReadAll();
           if (result.success) {
             this.$toast.success('操作成功');
           } else {
@@ -40,8 +41,11 @@
           }
         })
       },
+      deleteItemSuccess(){
+        this.getMessageList();
+      },
       onChatItemClick({bookType, id, toImid, name, groupId}) {
-        this.$router.push({name: 'doctorChat', query: {bookType, id, toImid, name, groupId}})
+        this.$router.push({name: 'chat', query: {bookType, id, toImid, name, groupId}})
       },
     },
   }
