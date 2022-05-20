@@ -13,7 +13,7 @@
             <h2>群聊设置</h2>
             <div class="member-list">
                 <div class="member-item" v-for="(item, index) in memberList" :key="index">
-                    <van-image :src="require('../../../static/img/pic_wujiuzhenren.png')"/>
+                    <van-image :src="item.headimgurl"/>
                 </div>
                 <div class="member-item setting" @click="onMemberSetClick('plus')">
                     <van-icon name="plus"/>

@@ -22,7 +22,7 @@
                                       v-for="(item, index) in chooseList"
                                       :disabled="memberAction === 'launch' && memberList && memberList.find(member => member.userId === item.userId)"
                                       :key="index"
-                                      :name="item.userId"
+                                      :name="item.id"
                         >
                             <fans-card :avatar="item.headimgurl"
                                        :name="item.nickname"

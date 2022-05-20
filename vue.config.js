@@ -12,7 +12,7 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const IS_PROD = ["production", "prod"].includes(process.env.NODE_ENV);
 
 const productionGzipExtensions = /\.(js|css|json|txt|html|ico|svg)(\?.*)?$/i;
-const target = 'http://hiswx.shouzimu.xyz';
+const target = 'https://knowledge.shouzimu.xyz';
 
 module.exports = {
     publicPath: '/',

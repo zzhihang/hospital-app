@@ -7,7 +7,7 @@
 */
 <template>
     <div class="chat-body">
-        <van-pull-refresh v-model="isLoading" @refresh="onRefresh" >
+        <van-pull-refresh v-model="isLoading" @refresh="onRefresh">
             <div class="chat-area" @click="recorderShow = false">
                 <div class="chat-scroll">
                     <div v-for="(item, index) in messageList"
@@ -16,13 +16,13 @@
                          :ref="index === messageList.length - 1 && 'last'"
                          :class="{me: item.self, he: !item.self}"
                     >
-                        <van-image :src="item.fromHeadimgurl"/>
+                        <van-image class="avatar" :src="item.fromHeadimgurl"/>
                         <div v-if="item.type === 'audio'">
                             <audio-player long="3"/>
                         </div>
-                        <div class="chat-image" v-else-if="item.type === 'image'">
-                            <van-image src="https://www.baidu.com/img/flexible/logo/pc/result.png"
-                                       @click="onImageClick"/>
+                        <div class="chat-image" v-else-if="item.type === 'img'">
+                            <van-image :src="item.url"
+                                       @click="onImageClick(item.url)"/>
                         </div>
                         <div class="message" v-else>
                             {{item.contentObject}}
@@ -62,7 +62,7 @@
                             autosize
                             type="textarea"
                     />
-                    <van-icon @click="onSendClick"
+                    <van-icon @click="sendTxtMessage"
                               class="ml20"
                               :name="message.length ? require('../../static/img/icon/icon_fasong01.png') : require('../../static/img/icon/icon_fasong.png')"/>
                 </template>
@@ -88,6 +88,7 @@
   import connect from "@/store/connect";
   import AudioPlayer from "@/components/Chat/components/AudioPlayer";
   import {ImagePreview} from 'vant';
+  import {upload} from "@/service/uploadService";
 
   const {mapState} = connect('commonStore');
   export default {
@@ -125,6 +126,7 @@
       // 初始化客户端。
       WebIM.conn = new WebIM.connection({
         appKey: WEB_IM_APP_KEY,
+        useOwnUploadFun: true
       });
       // 添加消息回调函数。
       WebIM.conn.addEventHandler('connection&message', {
@@ -135,23 +137,20 @@
             console.log("Logout success !")
           },
           onImageMessage: (message) => {
-
-          },   // 收到图片消息。
-          onAudioMessage: () => {
-            let options = {
+            debugger
+            this.messageList.push({
+              self: false,
+              contentObject: message.msg,
+              type: message.type,
               url: message.url,
-              headers: {
-                Accept: 'audio/mp3'
-              },
-              onFileDownloadComplete: function (response) {
-                let objectUrl = WebIM.utils.parseDownloadResponse.call(WebIM.conn, response)
-                message.audioSrcUrl = message.url;
-                message.url = objectUrl
-              },
-              onFileDownloadError: function () {
-              }
-            }
-            WebIM.utils.download.call(WebIM.conn, options)
+              fromHeadimgurl: message.ext.avatar
+            });
+            this.$nextTick(() => {
+              this.$refs.last && this.$refs.last[0].scrollIntoView(true)
+            });
+          },
+          onAudioMessage: (message) => {
+            console.log("音频消息: " + message.from + " 音频消息: " + message.msg)
           },
           onTextMessage: (message) => {
             this.messageList.push({
@@ -165,10 +164,9 @@
             });
             console.log("Message from: " + message.from + " Message: " + message.msg)
           },
-          onOffline:
-            () => {
-              this.$toast.fail('本机网络掉线')
-            },
+          onOffline: () => {
+            this.$toast.fail('本机网络掉线')
+          },
         }
       )
       ;
@@ -191,7 +189,7 @@
         const {data} = await doctorChatHistory({booksId: this.$attrs.chatId, page: this.page, pageSize: 20});
         this.messageList = data.records.concat(this.messageList);
         this.isLoading = false;
-        if(data.records.length === 0){
+        if (data.records.length === 0) {
           this.page = this.page - 1;
           return this.$toast('没有更多记录了')
         }
@@ -203,56 +201,87 @@
       onRecorderClick() {
         this.recorderShow = !this.recorderShow;
       },
-      recorderSuccess() {
-        this.recorderShow = false;
+      recorderSuccess(audio) {
+        //this.recorderShow = false;
+        this.sendAudioMessage(audio)
       },
       onOversize() {
         this.$toast.fail('文件大小不能超过30M')
       },
-      afterRead() {
-
+      async afterRead(file) {
+        const formData = new FormData();
+        formData.append('file', file.file);
+        const result = await upload(formData);
+        if (result.status === 200) {
+          this.url = result.data.data.url;
+          this.sendImgMessage(this.url)
+        } else {
+          this.$toast.fail(result.msg);
+        }
       },
-      onImageClick() {
-        ImagePreview(['https://img01.yzcdn.cn/vant/apple-1.jpg']);
+      onImageClick(url) {
+        ImagePreview([url]);
       },
-      onSendClick() {
-        let option = {
-          chatType: 'singleChat',    // 会话类型，设置为单聊。 groupChat为群聊
-          type: 'txt',               // 消息类型。
-          to: this.$attrs.toImid,                // 消息接收方（用户 ID)。
-          msg: this.message,          // 消息内容。
+      sendImgMessage(url) {
+        const msg = this.getMessageOption({
+          body: {
+            type: 'file',
+            url: url,
+          },
+        }, 'img');
+        WebIM.conn.send(msg.body);
+      },
+      sendTxtMessage() {
+        const msg = this.getMessageOption({msg: this.message});
+        WebIM.conn.send(msg.body);
+      },
+      sendAudioMessage(audio){
+        const msg = this.getMessageOption({
+          file: {},
+          length: audio.timeLong,
+          ext: {
+            avatar: this.userInfo.headimgurl,
+            audioUrl: audio.url
+          },
+        }, 'audio');
+        WebIM.conn.send(msg.body);
+      },
+      getMessageOption(config, messageType = 'txt') {
+        let id = WebIM.conn.getUniqueId();                 // 生成本地消息id
+        let msg = new WebIM.message(messageType, id);      // 创建文本消息
+        msg.set(Object.assign({}, {
+          to: this.$attrs.toImid,                       // 接收消息对象（用户id）
+          chatType: this.chatType === 'single' ? 'singleChat' : 'groupChat',
           ext: {
             avatar: this.userInfo.headimgurl
+          },
+          success: async (id, serverMsgId) => {
+            this.messageList.push({
+              self: true,
+              fromHeadimgurl: this.userInfo.headimgurl,
+              contentObject: this.message,
+              type: messageType
+            });
+            const result = await messageSave({
+              type: messageType,
+              content: messageType === 'img' ? config.body.url : this.message,
+              booksId: this.$attrs.chatId
+            });
+            this.$nextTick(() => {
+              this.$refs.last && this.$refs.last[0].scrollIntoView(true)
+            });
+            if (result.success) {
+              this.message = '';
+            } else {
+              this.$toast.fail(result.msg);
+            }
+          },
+          fail: function (e) {
+            console.log(e);
+            this.$toast.fail('发送失败');
           }
-        };
-        if (this.chatType !== 'single') {//设置群聊
-          option.chatType = 'groupChat';
-          option.to = this.$attrs.toImid
-        }
-        let msg = WebIM.message.create(option);
-        WebIM.conn.send(msg).then(async (res) => {//环信发送成功 然后前端渲染 然后保存到数据库
-          this.messageList.push({
-            self: true,
-            fromHeadimgurl: this.userInfo.headimgurl,
-            contentObject: this.message,
-            type: option.type
-          });
-          const result = await messageSave({
-            type: option.type,
-            content: this.message,
-            booksId: this.$attrs.chatId
-          });
-          this.$nextTick(() => {
-            this.$refs.last && this.$refs.last[0].scrollIntoView(true)
-          });
-          if (result.success) {
-            this.message = '';
-          } else {
-            this.$toast.fail(result.msg);
-          }
-        }).catch(() => {
-          this.$toast.fail('发送失败');
-        });
+        }, config));
+        return msg;
       }
     }
   }
@@ -277,7 +306,7 @@
         border-radius: 9px;
         @white-bg();
 
-        .van-image {
+        .avatar {
             height: 39px;
             width: 39px;
         }
@@ -345,12 +374,17 @@
     }
 
     .chat-image {
+        margin-left: 10px;
+
         .van-image {
+            border-radius: 6px;
+            overflow: hidden;
             min-width: 80px;
             max-width: 110px;
         }
     }
-    .van-pull-refresh{
+
+    .van-pull-refresh {
         flex: 1;
         overflow: scroll;
     }
