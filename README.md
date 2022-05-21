@@ -41,3 +41,6 @@ webpack额外配置优化项目打包；
             // e.type === '501' 消息包含敏感词
             // e.type === '502' 被设置的自定义拦截捕获
             // e.type === '503' 未知错误
+            
+### 接口文档
+https://knowledge.shouzimu.xyz/api/doc.html#/documentManager/OfficelineDocument-1.0%E7%89%88%E6%9C%AC

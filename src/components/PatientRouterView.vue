@@ -53,7 +53,7 @@
       this.getUserInfo();
     },
     methods: {
-      ...mapMutations(['setUserInfo']),
+      ...mapMutations(['setUserInfo', 'setIfShowTabBar', 'setTabBarActive']),
       async getUserInfo() {
         if(!this.userInfo.id) {
           const {data} = await userInfo();

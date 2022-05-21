@@ -17,12 +17,13 @@
                          :class="{me: item.self, he: !item.self}"
                     >
                         <van-image class="avatar" :src="item.fromHeadimgurl"/>
-                        <div v-if="item.type === 'audio'">
-                            <audio-player long="3"/>
+                        <div class="chat-audio" v-if="item.type === 'audio'">
+                            <audio-player :long="item.contentObject && item.contentObject.timeLong"
+                                          :url="item.contentObject && item.contentObject.url"/>
                         </div>
                         <div class="chat-image" v-else-if="item.type === 'img'">
-                            <van-image :src="item.url"
-                                       @click="onImageClick(item.url)"/>
+                            <van-image :src="item.contentObject"
+                                       @click="onImageClick(item.contentObject)"/>
                         </div>
                         <div class="message" v-else>
                             {{item.contentObject}}
@@ -137,20 +138,26 @@
             console.log("Logout success !")
           },
           onImageMessage: (message) => {
-            debugger
             this.messageList.push({
               self: false,
-              contentObject: message.msg,
+              contentObject: message.url,
               type: message.type,
               url: message.url,
               fromHeadimgurl: message.ext.avatar
             });
-            this.$nextTick(() => {
-              this.$refs.last && this.$refs.last[0].scrollIntoView(true)
-            });
+            this.scrollIntoView();
           },
           onAudioMessage: (message) => {
-            console.log("音频消息: " + message.from + " 音频消息: " + message.msg)
+            this.messageList.push({
+              self: false,
+              contentObject: {
+                url: message.ext.audioUrl,
+                timeLong: message.length
+              },
+              type: message.type,
+              fromHeadimgurl: message.ext.avatar
+            });
+            this.scrollIntoView();
           },
           onTextMessage: (message) => {
             this.messageList.push({
@@ -159,9 +166,7 @@
               type: message.type,
               fromHeadimgurl: message.ext.avatar
             });
-            this.$nextTick(() => {
-              this.$refs.last && this.$refs.last[0].scrollIntoView(true)
-            });
+            this.scrollIntoView();
             console.log("Message from: " + message.from + " Message: " + message.msg)
           },
           onOffline: () => {
@@ -180,6 +185,13 @@
         });
     },
     methods: {
+      scrollIntoView(){
+        this.$nextTick(() => {
+          setTimeout(() => {
+            this.$refs.last && this.$refs.last[0].scrollIntoView(true)
+          })
+        });
+      },
       onRefresh() {
         this.page = this.page + 1;
         this.isLoading = true;
@@ -187,16 +199,14 @@
       },
       async getDoctorChatHistory() {
         const {data} = await doctorChatHistory({booksId: this.$attrs.chatId, page: this.page, pageSize: 20});
-        this.messageList = data.records.concat(this.messageList);
+        this.messageList = data.records.reverse().concat(this.messageList);
         this.isLoading = false;
-        if (data.records.length === 0) {
+        if (this.page !== 1 && data.records.length === 0) {
           this.page = this.page - 1;
           return this.$toast('没有更多记录了')
         }
         //只有首次进来才自动拉到最下面
-        this.page === 1 && this.$nextTick(() => {
-          this.$refs.last && this.$refs.last[0].scrollIntoView(true)
-        });
+        this.page === 1 && this.scrollIntoView();
       },
       onRecorderClick() {
         this.recorderShow = !this.recorderShow;
@@ -232,10 +242,13 @@
         WebIM.conn.send(msg.body);
       },
       sendTxtMessage() {
+        if(!this.message.trim().length){
+          return this.$toast.fail('不能发送空白消息')
+        }
         const msg = this.getMessageOption({msg: this.message});
         WebIM.conn.send(msg.body);
       },
-      sendAudioMessage(audio){
+      sendAudioMessage(audio) {
         const msg = this.getMessageOption({
           file: {},
           length: audio.timeLong,
@@ -256,20 +269,44 @@
             avatar: this.userInfo.headimgurl
           },
           success: async (id, serverMsgId) => {
-            this.messageList.push({
-              self: true,
-              fromHeadimgurl: this.userInfo.headimgurl,
-              contentObject: this.message,
-              type: messageType
-            });
-            const result = await messageSave({
+            if (messageType === 'img') {
+              this.messageList.push({
+                type: messageType,
+                self: true,
+                fromHeadimgurl: this.userInfo.headimgurl,
+                contentObject: config.body.url
+              });
+            } else if (messageType === 'audio') {
+              this.messageList.push({
+                self: true,
+                type: messageType,
+                fromHeadimgurl: this.userInfo.headimgurl,
+                contentObject: {
+                  url: config.ext.audioUrl,
+                  timeLong: config.length
+                }
+              });
+            } else {
+              this.messageList.push({
+                self: true,
+                type: messageType,
+                fromHeadimgurl: this.userInfo.headimgurl,
+                contentObject: this.message
+              });
+            }
+            const params = {
               type: messageType,
               content: messageType === 'img' ? config.body.url : this.message,
               booksId: this.$attrs.chatId
-            });
-            this.$nextTick(() => {
-              this.$refs.last && this.$refs.last[0].scrollIntoView(true)
-            });
+            };
+            if(messageType === 'audio'){
+             params.content = JSON.stringify({
+               url: config.ext.audioUrl,
+               timeLong: config.length
+             })
+            }
+            const result = await messageSave(params);
+            this.scrollIntoView();
             if (result.success) {
               this.message = '';
             } else {
@@ -294,9 +331,11 @@
     }
 
     .chat-area {
-        padding: 15px;
         flex: 1;
         overflow: scroll;
+        min-height: 100%;
+        box-sizing: border-box;
+        @white-bg();
     }
 
     .chat-scroll {
@@ -304,7 +343,6 @@
         min-height: 100%;
         box-sizing: border-box;
         border-radius: 9px;
-        @white-bg();
 
         .avatar {
             height: 39px;
@@ -315,6 +353,10 @@
             display: flex;
             align-items: center;
             margin-bottom: 20px;
+
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
 
         .message {
@@ -324,8 +366,11 @@
         }
 
         .he {
-            .message {
+            .chat-image, .message, .chat-audio {
                 margin-left: 10px;
+            }
+
+            .message {
                 border-radius: 0 24px 24px 24px;
                 background: #F6F6F6;
             }
@@ -334,8 +379,11 @@
         .me {
             flex-flow: row-reverse;
 
-            .message {
+            .chat-image, .message, .chat-audio {
                 margin-right: 10px;
+            }
+
+            .message {
                 border-radius: 24px 0 24px 24px;
                 background: #F2F7FF;
             }
@@ -387,5 +435,9 @@
     .van-pull-refresh {
         flex: 1;
         overflow: scroll;
+        /deep/.van-pull-refresh__track{
+            padding: 15px;
+            box-sizing: border-box;
+        }
     }
 </style>
