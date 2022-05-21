@@ -4,6 +4,10 @@ export const doctorOrderList = (params) => {
     return axios.post(`/wx/order/doctor/list`, params)
 };
 
+export const doctorOrderDetail = (id) => {
+    return axios.post(`/wx/order/doctor/info`, {id})
+};
+
 export const doctorOrderJxz = () => {
     return axios.post(`/wx/doctor/order/jxz`)
 };

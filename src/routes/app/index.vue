@@ -4,7 +4,7 @@
             <search @search="onSearch"/>
             <div class="search-by">
                 <div class="search-by-item">
-                    <van-image :src="require('../../static/img/index/icon_yiyuan.png')"/>
+                    <van-image :src="require('../../static/img/icon/icon_yiyuan.png')"/>
                     <div @click="$router.push({name: 'entry_hospital'})">
                         <h1>按医院找</h1>
                         <p>{{countMap.hospital}}家医院</p>
@@ -24,134 +24,142 @@
             <h2 class="">专家医生</h2>
             <div class="card-list">
                 <doctor-card
-                    v-for="(item, index) in recommendList"
-                    :name="item.doctorName"
-                    :dept="item.deptName"
-                    :hospital="item.hospitalName"
-                    :title="item.doctorTitle"
-                    :key="index"
-                    @click.native="$router.push({path: '/doctor/detail', query: {id: item.doctorId}})"
+                        v-for="(item, index) in recommendList"
+                        :name="item.doctorName"
+                        :dept="item.deptName"
+                        :hospital="item.hospitalName"
+                        :title="item.doctorTitle"
+                        :key="index"
+                        @click.native="$router.push({path: '/doctor/detail', query: {id: item.doctorId}})"
                 />
             </div>
         </div>
-        <div class="link-me">
-            <my-icon size="60" :name="require('../../static/img/index/icon_kefudianhua.png')"/>
-        </div>
+        <customer-service />
     </div>
 </template>
 
 <script>
-    import Search from "components/Search/Search";
-    import OrderCard from "components/OrderCard/OrderCard";
-    import DoctorCard from "@/components/doctor/DoctorCard";
-    import MyIcon from "@/components/common/MyIcon";
-    import {doctorRecommend} from "@/service/doctorInfoService";
-    import {userCount} from "@/service/userInfoService";
+  import Search from "components/Search/Search";
+  import OrderCard from "components/OrderCard/OrderCard";
+  import DoctorCard from "@/components/doctor/DoctorCard";
+  import MyIcon from "@/components/common/MyIcon";
+  import {doctorRecommend} from "@/service/doctorInfoService";
+  import {userCount} from "@/service/userInfoService";
+  import CustomerService from "@/components/common/CustomerLink";
 
-    export default {
-        components: {
-            Search,
-            OrderCard,
-            DoctorCard,
-            MyIcon
-        },
-        data() {
-            return {
-                recommendList: [],
-                countMap: {},
-                orderData: [{
-                    text: '待接收',
-                    value: 0
-                },{
-                    text: '待支付',
-                    value: 0
-                },{
-                    text: '进行中',
-                    value: 0
-                },{
-                    text: '被驳回',
-                    value: 0
-                }]
-            }
-        },
-        created(){
-            doctorRecommend().then(({data}) => {
-                this.recommendList = data;
-            });
-            userCount().then(({data}) => {
-                this.countMap = data;
-                this.orderData[0].value = data.daijieshou;
-                this.orderData[1].value = data.daizhifu;
-                this.orderData[2].value = data.jinxingzhong;
-                this.orderData[3].value = data.beibohui;
-            })
-        },
-        methods: {
-            onSearch(value) {
-                this.$router.push({name: 'search', query: {value: value}})
-            }
-        },
-    }
+  export default {
+    components: {
+      Search,
+      OrderCard,
+      DoctorCard,
+      MyIcon,
+      CustomerService
+    },
+    data() {
+      return {
+        recommendList: [],
+        countMap: {},
+        orderData: [{
+          text: '待接收',
+          value: 0
+        }, {
+          text: '待支付',
+          value: 0
+        }, {
+          text: '进行中',
+          value: 0
+        }, {
+          text: '被驳回',
+          value: 0
+        }]
+      }
+    },
+    created() {
+      doctorRecommend().then(({data}) => {
+        this.recommendList = data;
+      });
+      userCount().then(({data}) => {
+        this.countMap = data;
+        this.orderData[0].value = data.daijieshou;
+        this.orderData[1].value = data.daizhifu;
+        this.orderData[2].value = data.jinxingzhong;
+        this.orderData[3].value = data.beibohui;
+      })
+    },
+    methods: {
+      onSearch(value) {
+        this.$router.push({name: 'search', query: {value: value}})
+      }
+    },
+  }
 </script>
 
 <style lang="less" scoped>
-    .search-box{
+    .search-box {
         padding: 10px 15px;
         background: linear-gradient(180deg, #367DF7 0%, rgba(54, 125, 247, 0) 100%);
     }
-    .order-card{
+
+    .order-card {
         background: rgba(54, 125, 247, 0.24);
         box-shadow: 0 0 12px 0 rgba(54, 125, 247, 0.1);
+        padding: 5px;
     }
-    .recommend{
+
+    .recommend {
         padding: 10px 15px;
     }
-    .search-by{
+
+    .search-by {
         @flex-sb-center();
         margin-top: 15px;
     }
-    .search-by-item{
+
+    .search-by-item {
         width: 50%;
         background: url("../../static/img/index/bg_anyiyuan.png");
         background-size: cover;
         @flex-sb-center();
         padding: 15px 20px 10px;
-        &:last-child{
+
+        &:last-child {
             background: url("../../static/img/index/bg_anjibing.png");
             background-size: cover;
         }
-        .van-image{
+
+        .van-image {
             width: 33px;
             height: 50px;
         }
-        h1{
+
+        h1 {
             color: #FFFFFF;
             font-size: 19px;
         }
-        p{
+
+        p {
             font-size: 14px;
             color: rgba(255, 255, 255, 0.8);
             margin-top: 10px;
         }
     }
-    .card-list{
+
+    .card-list {
         display: flex;
         flex-wrap: wrap;
         justify-content: space-between;
         flex: 1;
         margin-top: 15px;
-        .doctor-card{
+
+        .doctor-card {
             margin-right: 10px;
             margin-bottom: 10px;
             width: 42%;
-            &:nth-of-type(2n){
+
+            &:nth-of-type(2n) {
                 margin-right: 0;
             }
         }
     }
-    .link-me{
-        position: fixed;
-        bottom: 60px;
-        right: 0;
-    }
+
 </style>

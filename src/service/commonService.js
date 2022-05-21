@@ -14,3 +14,15 @@ const uploadInstance = axios.create({
 export const upload = (formData) => {
   return uploadInstance.post('/upload', formData)
 };
+
+/**
+* @Description: 获取系统配置
+* @Param:
+* @return:
+* @Author: zzhihang@hotmail.com
+* @date: 2022/5/21 23:44
+*/
+
+export const getSystemSetting = () => {
+  return axios.post('/wx/syssetting/get')
+};

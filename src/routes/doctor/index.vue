@@ -51,9 +51,7 @@
                 <van-empty v-else description="暂无进行中订单"/>
             </van-tab>
         </van-tabs>
-        <div class="link-me">
-            <my-icon size="60" :name="require('../../static/img/index/icon_kefudianhua.png')"/>
-        </div>
+        <customer-service />
     </div>
 </template>
 
@@ -65,6 +63,7 @@
   import {userCount} from "@/service/userInfoService";
   import OrderItemCard from "@/components/OrderCard/OrderItemCard";
   import {doctorOrderDjs, doctorOrderJxz} from "@/service/doctorOrderService";
+  import CustomerService from "@/components/common/CustomerLink";
   import connect from "@/store/connect";
   const {mapState} = connect('commonStore');
 
@@ -74,7 +73,8 @@
       OrderCard,
       DoctorCard,
       MyIcon,
-      OrderItemCard
+      OrderItemCard,
+      CustomerService
     },
     data() {
       return {
@@ -150,12 +150,6 @@
     .order-card {
         margin: 5px;
         margin-bottom: 0;
-    }
-
-    .link-me {
-        position: fixed;
-        bottom: 60px;
-        right: 0;
     }
 
     .count {

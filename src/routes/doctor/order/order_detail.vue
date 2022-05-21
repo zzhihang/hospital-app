@@ -6,9 +6,9 @@
         <van-cell-group class="mt10">
             <van-cell title="就诊时间" :value="orderInfo.businessTime"/>
             <van-cell title="就诊人" :value="orderInfo.patientName"/>
-            <van-cell title="性别" :value="orderInfo.patientName"/>
-            <van-cell title="身份证号" :value="orderInfo.patientIdNum"/>
-            <van-cell title="就诊人关系" :value="orderInfo.patientIdNum"/>
+            <van-cell title="性别" :value="orderInfo.patientSex"/>
+            <van-cell title="身份证号" :value="orderInfo.patientIdNumber"/>
+            <van-cell title="就诊人关系" :value="orderInfo.patientRelationship"/>
             <van-cell title="就诊人联系方式" :value="orderInfo.patientPhone"/>
         </van-cell-group>
 
@@ -32,8 +32,7 @@
 </template>
 
 <script>
-  import {orderInfo} from "@/service/userOrderService";
-  import {doctorOrderAccept, doctorOrderReject} from "@/service/doctorOrderService";
+  import {doctorOrderAccept, doctorOrderDetail, doctorOrderReject} from "@/service/doctorOrderService";
 
   export default {
     data() {
@@ -50,7 +49,7 @@
     },
     methods: {
       async getOrderInfo() {
-        const {data} = await orderInfo(this.id);
+        const {data} = await doctorOrderDetail(this.id);
         this.orderInfo = data;
       },
       onAcceptClick() {

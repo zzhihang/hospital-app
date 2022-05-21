@@ -89,7 +89,7 @@
   import connect from "@/store/connect";
   import AudioPlayer from "@/components/Chat/components/AudioPlayer";
   import {ImagePreview} from 'vant';
-  import {upload} from "@/service/uploadService";
+  import {upload} from "@/service/commonService";
 
   const {mapState} = connect('commonStore');
   export default {
