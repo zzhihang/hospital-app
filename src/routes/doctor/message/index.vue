@@ -1,12 +1,14 @@
 <template>
     <div>
         <chat-list
+                v-if="list.length > 0"
                 user-type="doctor"
                 :list="list"
                 @onChatItemClick="onChatItemClick"
                 @deleteItemSuccess="deleteItemSuccess"
                 @removeUnRead="removeUnRead"
         />
+        <van-empty v-else description="暂无消息"/>
     </div>
 </template>
 

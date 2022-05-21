@@ -190,7 +190,7 @@
           setTimeout(() => {
             this.$refs.last && this.$refs.last[0].scrollIntoView(true)
           })
-        });
+        }, 300);
       },
       onRefresh() {
         this.page = this.page + 1;
@@ -205,7 +205,6 @@
           this.page = this.page - 1;
           return this.$toast('没有更多记录了')
         }
-        //只有首次进来才自动拉到最下面
         this.page === 1 && this.scrollIntoView();
       },
       onRecorderClick() {
@@ -263,7 +262,7 @@
         let id = WebIM.conn.getUniqueId();                 // 生成本地消息id
         let msg = new WebIM.message(messageType, id);      // 创建文本消息
         msg.set(Object.assign({}, {
-          to: this.$attrs.toImid,                       // 接收消息对象（用户id）
+          to: this.$attrs.toImid,
           chatType: this.chatType === 'single' ? 'singleChat' : 'groupChat',
           ext: {
             avatar: this.userInfo.headimgurl
@@ -313,7 +312,7 @@
               this.$toast.fail(result.msg);
             }
           },
-          fail: function (e) {
+          fail: (e) => {
             console.log(e);
             this.$toast.fail('发送失败');
           }

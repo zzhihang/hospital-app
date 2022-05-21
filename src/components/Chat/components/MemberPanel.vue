@@ -32,7 +32,12 @@
                 </div>
             </div>
             <div class="button-box">
-                <van-button type="primary" :disabled="!choose.length" @click="onButtonClick">{{buttonText}}</van-button>
+                <van-button type="primary"
+                            :disabled="!choose.length"
+                            :loading="buttonLoading"
+                            :loading-text="`${buttonText}中...`"
+                            @click="onButtonClick">{{buttonText}}
+                </van-button>
             </div>
         </div>
     </van-popup>
@@ -63,7 +68,8 @@
           minus: '删除',
           launch: '添加'
         },
-        chooseList: []
+        chooseList: [],
+        buttonLoading: false
       }
     },
     created() {
@@ -92,6 +98,7 @@
         this.$emit('update:show', false)
       },
       async onButtonClick() {
+        this.buttonLoading = true;
         let result = {};
         if (this.memberAction === 'minus') {//移除群成员
           this.$confirm({message: '是否确定移除群成员？'}, async () => {
@@ -109,7 +116,6 @@
             this.$toast.success('操作成功');
             this.$emit('launchSuccess');
             const {data} = await result;//创建群聊成功之后，直接进入群聊页面
-            debugger
             this.$router.push({
               name: 'chat',
               query: {
@@ -132,6 +138,7 @@
             this.$toast.fail(result.msg);
           }
         }
+        this.buttonLoading = false;
       }
     },
     computed: {
@@ -169,7 +176,6 @@
         box-shadow: 0px -4px 10px 0px rgba(102, 102, 102, 0.06);
 
         .van-button {
-            width: 76px;
             height: 33px;
             margin-right: 15px;
         }

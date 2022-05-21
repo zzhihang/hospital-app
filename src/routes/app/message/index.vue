@@ -1,11 +1,13 @@
 <template>
     <div>
         <chat-list
-            :list="list"
-            @onChatItemClick="onChatItemClick"
-            @removeUnRead="removeUnRead"
-            @deleteItemSuccess="deleteItemSuccess"
+                v-if="list.length > 0"
+                :list="list"
+                @onChatItemClick="onChatItemClick"
+                @removeUnRead="removeUnRead"
+                @deleteItemSuccess="deleteItemSuccess"
         />
+        <van-empty v-else description="暂无消息"/>
     </div>
 </template>
 
@@ -41,7 +43,7 @@
           }
         })
       },
-      deleteItemSuccess(){
+      deleteItemSuccess() {
         this.getMessageList();
       },
       onChatItemClick({bookType, id, toImid, name, groupId}) {
