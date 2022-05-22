@@ -8,6 +8,8 @@
                     :avatar="userInfo.headimgurl"
                     :name="userInfo.nickname"
                     :phone="userInfo.phone"
+                    :fans-or-focus-num="userInfo.followCount"
+                    :family-num="userInfo.jzrCount"
                     @logout="logout"
             />
             <order-card class="mt10" :data-source="orderData"/>

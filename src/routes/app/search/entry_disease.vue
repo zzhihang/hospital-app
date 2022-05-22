@@ -33,9 +33,7 @@
                 const {data} = await queryDisease(value);
                 this.list = data;
             },
-            onRightItemClick(label, diseaseId){
-                this.$router.push({name: 'entry_doctor', query: {label, diseaseId}})
-            }
+
         },
     }
 </script>

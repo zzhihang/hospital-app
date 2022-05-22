@@ -37,6 +37,7 @@
         this.$confirm({message: '确定清除所有未读消息？'}, async () => {
           const result = await messageReadAll();
           if (result.success) {
+            this.getMessageList();
             this.$toast.success('操作成功');
           } else {
             this.$toast.fail(result.msg);

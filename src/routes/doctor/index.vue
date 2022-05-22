@@ -16,7 +16,7 @@
                         <van-icon size="16" :name="require('../../static/img/icon/icon_shouyi.png')"/>
                         <span class="font14 ml5">累计收益（元）</span>
                     </div>
-                    <span class="count-num">2112</span>
+                    <span class="count-num">{{countMap.doctorFee}}</span>
                 </div>
                 <order-card order-router="doctorOrderList" :data-source="orderData"></order-card>
             </div>
@@ -60,11 +60,12 @@
   import OrderCard from "components/OrderCard/OrderCard";
   import DoctorCard from "@/components/doctor/DoctorCard";
   import MyIcon from "@/components/common/MyIcon";
-  import {userCount} from "@/service/userInfoService";
   import OrderItemCard from "@/components/OrderCard/OrderItemCard";
   import {doctorOrderDjs, doctorOrderJxz} from "@/service/doctorOrderService";
   import CustomerService from "@/components/common/CustomerLink";
   import connect from "@/store/connect";
+  import {doctorOrderCount} from "@/service/doctorInfoService";
+
   const {mapState} = connect('commonStore');
 
   export default {
@@ -97,11 +98,11 @@
     },
     created() {
       this.getListData();
-      userCount().then(({data}) => {
+      doctorOrderCount().then(({data}) => {
         this.countMap = data;
-        this.orderData[0].value = data.daijieshou;
-        this.orderData[1].value = data.daizhifu;
-        this.orderData[2].value = data.yiwanchegn;
+        this.orderData[0].value = data.djs;
+        this.orderData[1].value = data.jxz;
+        this.orderData[2].value = data.ywc;
       })
     },
     computed: {

@@ -23,4 +23,6 @@ export const doctorFollowList = () => {
     return axios.post(`/wx/doctorfollow/list`)
 };
 
-
+export const doctorOrderCount = () => {
+    return axios.post('/wx/doctor/count')
+}

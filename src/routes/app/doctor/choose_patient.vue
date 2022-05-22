@@ -22,12 +22,12 @@
 </template>
 
 <script>
-    import Vue from 'vue';
-    import {userPatientList} from "@/service/userInfoService";
-    import {getAgeById} from "@/static/js/util";
-    import connect from "@/store/connect";
-    import myEmpty from "@/components/empty/myEmpty";
-    const {mapMutations} = connect('commonStore');
+  import {userPatientList} from "@/service/userInfoService";
+  import {getAgeById} from "@/static/js/util";
+  import connect from "@/store/connect";
+  import myEmpty from "@/components/empty/myEmpty";
+
+  const {mapMutations} = connect('commonStore');
 
     export default {
         components: {

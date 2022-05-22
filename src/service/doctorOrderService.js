@@ -23,3 +23,4 @@ export const doctorOrderAccept = (orderId) => {
 export const doctorOrderReject = (orderId) => {
     return axios.post(`/wx/order/reject`, {orderId})
 };
+

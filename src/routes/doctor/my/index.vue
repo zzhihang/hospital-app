@@ -9,7 +9,7 @@
                     :name="doctorInfo.name"
                     :deptName="doctorInfo.deptName"
                     :phone="doctorInfo.phone"
-                    :fansOrFocusNum="doctorInfo.fansCount"
+                    :fansOrFocusNum="countMap.fansCount"
                     @logout="logout"
             />
             <order-card class="mt10" order-router="doctorOrderList" :data-source="orderData"/>
@@ -60,7 +60,6 @@
 <script>
   import InfoCard from "@/components/common/InfoCard";
   import OrderCard from "@/components/OrderCard/OrderCard";
-  import {userCount} from "@/service/userInfoService";
   import {doctorLogout, doctorUserInfo} from "@/service/doctorCommonService";
   import {
     doctorServiceDelete,
@@ -69,6 +68,7 @@
     doctorServiceList
   } from "@/service/doctorServiceItemService";
   import ServiceItem from "@/routes/app/doctor/components/ServiceItem";
+  import {doctorOrderCount} from "@/service/doctorInfoService";
 
   export default {
     components: {
@@ -88,17 +88,19 @@
           text: '已完成订单',
           value: 0
         }],
+        countMap: {},
         serviceFree: '',
         serviceList: [],
         doctorInfo: {}
       }
     },
     created() {
-      userCount().then(({data}) => {
-        this.orderData[0].value = data.daijieshou;
-        this.orderData[1].value = data.jinxingzhong;
-        this.orderData[2].value = data.yiwancheng;
-      });
+      doctorOrderCount().then(({data}) => {
+        this.countMap = data;
+        this.orderData[0].value = data.djs;
+        this.orderData[1].value = data.jxz;
+        this.orderData[2].value = data.ywc;
+      })
       doctorUserInfo().then(({data}) => {
         this.doctorInfo = data;
         this.serviceFree = this.doctorInfo.serviceFree
