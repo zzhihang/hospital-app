@@ -39,7 +39,7 @@
     methods: {
       onLoginClick() {
         const {kcode} = getParams();
-        window.location.href = '/doctor/redirect?kcode=' + kcode
+        window.location.href = '/api/doctor/redirect?kcode=' + kcode
       },
     },
   }

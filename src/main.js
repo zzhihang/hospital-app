@@ -53,7 +53,7 @@ axios.interceptors.response.use(function (response) {
   }
   if(result.status === -102){
     toast.fail('请重新登录');
-    router.push('/login');
+    router.push(result.data.redirect);
     return;
   }
   return result;

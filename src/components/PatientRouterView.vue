@@ -63,7 +63,11 @@
     },
     watch:{
       $route(to,from){
-        this.getUserInfo();
+        const fullPath = to.path;
+        const list = ['/doctor/app', '/doctor/message', '/doctor/focus', '/doctor/my'];
+        if(list.includes(fullPath)){
+          this.getUserInfo();
+        }
       }
     }
   }

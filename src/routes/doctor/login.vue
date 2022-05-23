@@ -44,13 +44,12 @@
 </template>
 
 <script>
-    import Vue from 'vue';
-    import {Checkbox, CountDown, Field, Icon, Image as VanImage, Popup} from 'vant';
-    import {login, sendSms} from "@/service/userCommonService";
-    import connect from "@/store/connect";
-    import {doctorBind, doctorSendSms} from "@/service/doctorCommonService";
+  import Vue from 'vue';
+  import {Checkbox, CountDown, Field, Icon, Image as VanImage, Popup} from 'vant';
+  import connect from "@/store/connect";
+  import {doctorBind, doctorSendSms} from "@/service/doctorCommonService";
 
-    Vue.use(CountDown);
+  Vue.use(CountDown);
     Vue.use(Field);
     Vue.use(Icon);
     Vue.use(Checkbox);

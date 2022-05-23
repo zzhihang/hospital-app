@@ -34,7 +34,7 @@
     methods: {
       onLoginClick() {
         const {kcode} = getParams();
-        window.location.href = '/user/redirect?kcode=' + kcode
+        window.location.href = '/api/user/redirect?kcode=' + kcode
       },
     },
     created() {

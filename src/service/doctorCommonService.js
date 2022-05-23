@@ -11,9 +11,13 @@ export const doctorLogout = () => {
     return axios.get('/doctor/logout')
 };
 
-export const doctorBind = () => {
-    return axios.get('/doctor/bind')
+export const doctorBind = ({phone, code}) => {
+    return axios.post('/doctor/bind', {phone, code})
 };
+
+export const doctorAuth = () => {
+    return axios.post('/doctor/redirect')
+}
 
 /**
  * @Description:  发送验证码

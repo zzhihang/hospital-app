@@ -9,6 +9,8 @@ import VueRouter from 'vue-router'
 import Vue from 'vue'
 import store from '../store/index';
 import routes from "./routerConfig";
+import {doctorUserInfo} from "@/service/doctorCommonService";
+import {userInfo} from "@/service/userCommonService";
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -29,6 +31,23 @@ router.beforeEach((to, from, next) => {
         store.state.commonStore.tabBarActive = 0
     }
     store.state.commonStore.ifShowTabBar = showList.includes(fullPath);
+    const list = ['/doctor/app', '/doctor/message', '/doctor/fans', '/doctor/my'];
+    if(list.includes(fullPath)){
+        // if(!store.state.commonStore.userInfo.id){
+        //     doctorUserInfo().then(({data}) => {
+        //         store.state.commonStore.userInfo = data;
+        //     })
+        // }
+        doctorUserInfo().then(({data}) => {
+            store.state.commonStore.userInfo = data;
+        })
+    }
+    const userList = ['/app', '/message', '/focus', '/my'];
+    if(userList.includes(fullPath)){
+        userInfo().then(({data}) => {
+            store.state.commonStore.userInfo = data;
+        })
+    }
     if (to.meta.title) {
         window.document.title = to.meta.title
     }

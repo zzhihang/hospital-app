@@ -51,9 +51,6 @@
     computed: {
       ...mapState(['userInfo', 'ifShowTabBar', 'tabBarActive'])
     },
-    created(){
-      this.getUserInfo();
-    },
     methods: {
       ...mapMutations(['setUserInfo', 'setIfShowTabBar', 'setTabBarActive']),
       async getUserInfo(){
@@ -64,8 +61,12 @@
       }
     },
     watch:{
-      $route(to,from){
-        this.getUserInfo();
+      $route(to, from){
+        const fullPath = to.path;
+        const list = ['/app', '/message', '/focus', '/my'];
+        if(list.includes(fullPath)){
+          this.getUserInfo();
+        }
       }
     }
   }
