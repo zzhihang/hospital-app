@@ -18,8 +18,10 @@
                     >
                         <van-image class="avatar" :src="item.fromHeadimgurl"/>
                         <div class="chat-audio" v-if="item.type === 'audio'">
-                            <audio-player :long="item.contentObject && item.contentObject.timeLong"
-                                          :url="item.contentObject && item.contentObject.url"/>
+                            <audio-player :long="resolveAudioContent(item.contentObject).timeLong"
+                                          :url="resolveAudioContent(item.contentObject).url"
+                                          :background="item.self ? '#F2F7FF' : '#F6F6F6'"
+                            />
                         </div>
                         <div class="chat-image" v-else-if="item.type === 'img'">
                             <van-image :src="item.contentObject"
@@ -210,6 +212,18 @@
       onRecorderClick() {
         this.recorderShow = !this.recorderShow;
       },
+      resolveAudioContent(data){
+        if(data){
+          if(typeof data === 'string'){
+            data = JSON.parse(data);
+          }
+          return {
+            url: data.url,
+            timeLong: data.timeLong
+          }
+        }
+        return {};
+      },
       recorderSuccess(audio) {
         //this.recorderShow = false;
         this.sendAudioMessage(audio)
@@ -380,6 +394,15 @@
 
             .chat-image, .message, .chat-audio {
                 margin-right: 10px;
+                .recorder{
+                    flex-flow: row-reverse;
+                    /deep/.icon-saying{
+                        transform: rotate(180deg);
+                    }
+                    /deep/.voicePlay{
+                        transform: rotate(180deg) scale(0.6);
+                    }
+                }
             }
 
             .message {

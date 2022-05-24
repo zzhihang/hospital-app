@@ -10,7 +10,7 @@
                 input-align="right"
                 required
                 placeholder="请输入就诊人姓名"
-                :rules="[{ required: true, message: '请输入' }]"></van-field>
+                :rules="[{ required: true}]"></van-field>
         <van-field
                 v-model="formData.idNumber"
                 label="身份证号"
@@ -18,7 +18,7 @@
                 input-align="right"
                 required
                 placeholder="请输入就诊人身份证号"
-                :rules="[{ required: true, message: '请输入就诊人身份证号' }, { pattern, message: '身份证号码格式错误' }]"></van-field>
+                :rules="[{ required: true}, { pattern, message: '身份证号码格式错误' }]"></van-field>
         <van-field
                 name="radio"
                 label="就诊人性别"
@@ -41,7 +41,7 @@
                 clickable
                 name="datetimePicker"
                 placeholder="请选择出生日期"
-                :rules="[{ required: true, message: '请输入' }]"></van-field>
+                :rules="[{ required: true}]"></van-field>
         <van-popup v-model="showPicker" position="bottom">
             <van-datetime-picker
                     type="date"
@@ -76,7 +76,7 @@
                 clickable
                 placeholder="请选择与本人关系"
                 @click="formReadonly ? '' :showPicker2 = true"
-                :rules="[{ required: true, message: '请输入' }]"></van-field>
+                :rules="[{ required: true }]"></van-field>
         <van-popup v-model="showPicker2 " position="bottom">
             <van-picker
                     show-toolbar
@@ -91,7 +91,7 @@
                 input-align="right"
                 required
                 placeholder="请输入联系方式"
-                :rules="[{ required: true, message: '请输入' }]"></van-field>
+                :rules="[{ required: true }]"></van-field>
         <div class="bottom-button-box" style="display: flex;" v-if="formReadonly">
             <van-button type="primary" native-type="button" plain @click="deleteClick" class="mr10"
                         style="width: 30%;flex-shrink: 0">删除

@@ -61,9 +61,10 @@
     methods: {
       logout() {
         this.$confirm({message: '退出后，将无法收到消息提醒，确认是否退出？'}, async () => {
-          userPatientLogout(result => {
+          userPatientLogout().then(result => {
             if (result.success) {
               this.$toast.success('退出成功');
+              this.$router.push({path: '/login'})
             } else {
               this.$toast.fail(result.msg);
             }

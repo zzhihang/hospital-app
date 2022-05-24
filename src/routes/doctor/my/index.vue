@@ -100,16 +100,19 @@
         this.orderData[0].value = data.djs;
         this.orderData[1].value = data.jxz;
         this.orderData[2].value = data.ywc;
-      })
+      });
       doctorUserInfo().then(({data}) => {
         this.doctorInfo = data;
         this.serviceFree = this.doctorInfo.serviceFree
       });
-      doctorServiceList().then(({data}) => {
-        this.serviceList = data;
-      });
+      this.getDoctorServiceList();
     },
     methods: {
+      getDoctorServiceList(){
+        doctorServiceList().then(({data}) => {
+          this.serviceList = data;
+        });
+      },
       onServiceFreeClick(open) {
         const tip = open ? '是否确定开启免费咨询？' : '是否确定关闭免费咨询？';
         const service = open ? doctorServiceFreeEnable : doctorServiceFreeDisable;
@@ -131,6 +134,7 @@
           const result = await doctorServiceDelete(id);
           if (result.success) {
             this.$toast.success('操作成功');
+            this.getDoctorServiceList();
           } else {
             this.$toast.fail(result.msg);
           }
@@ -138,9 +142,10 @@
       },
       logout() {
         this.$confirm({message: '退出后，将无法收到消息提醒，确认是否退出？'}, async () => {
-          doctorLogout(result => {
+          doctorLogout().then(result => {
             if (result.success) {
               this.$toast.success('退出成功');
+              this.$router.push({path: '/doctor/login'})
             } else {
               this.$toast.fail(result.msg);
             }

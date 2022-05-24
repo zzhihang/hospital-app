@@ -10,7 +10,7 @@
                 doctor-name-field="doctorName"
                 doctor-title-field="doctorTitle"
                 doctor-id-field="doctorId"/>
-        <disease-list v-else/>
+        <disease-list v-else :data-source="diseaseList"/>
     </div>
 </template>
 

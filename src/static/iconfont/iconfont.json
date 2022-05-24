@@ -1,10 +1,17 @@
 {
   "id": "3366172",
-  "name": "蓝海医疗",
+  "name": "ma",
   "font_family": "iconfont",
   "css_prefix_text": "icon-",
   "description": "",
   "glyphs": [
+    {
+      "icon_id": "11061561",
+      "name": "语音",
+      "font_class": "saying",
+      "unicode": "e63c",
+      "unicode_decimal": 58940
+    },
     {
       "icon_id": "29385800",
       "name": "icon_xiala",

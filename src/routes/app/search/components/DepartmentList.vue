@@ -5,14 +5,14 @@
                     v-for="(item, index) in dataSource"
                     :title="item.hospitalName"
                     :key="index"
-                    @click="onLeftItemClick(item, hospitalId)"
+                    @click="onLeftItemClick(item)"
             />
         </van-sidebar>
         <div class="list">
             <ul>
                 <li class="item van-hairline--bottom"
                     v-for="(item, index) in departmentList"
-                    @click="onRightItemClick(item, hospitalId)"
+                    @click="onRightItemClick(item)"
                     :key="index"
                 >
                     {{item.deptName}}
@@ -39,20 +39,20 @@
       }
     },
     methods: {
-      onLeftItemClick(data, hospitalId) {
-        this.departmentList = data.depts
-        this.hospitalId = hospitalId;
+      onLeftItemClick(data) {
+        this.departmentList = data.depts;
+        this.hospitalId = data.hospitalId;
       },
-      onRightItemClick(e, hospitalId) {
+      onRightItemClick(e) {
         const {deptId, deptName} = e;
-        this.$router.push({name: 'entry_doctor', query: {deptId, deptName, hospitalId}})
+        this.$router.push({name: 'entry_doctor', query: {deptId, deptName, hospitalId: this.hospitalId}})
       }
     },
     watch: {
       dataSource: {
         handler() {
           if (this.dataSource.length) {
-            this.departmentList = this.dataSource[0].depts
+            this.departmentList = this.dataSource[0].depts;
             this.hospitalId = this.dataSource[0].hospitalId
           } else {
             this.departmentList = []
