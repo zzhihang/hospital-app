@@ -15,6 +15,7 @@ import toast from "@/components/toast";
 import {Toast} from "vant";
 import './static/js/lazy'
 import './static/iconfont/iconfont.css'
+import {getEnvConfig} from "@/static/js/env.config";
 // import Vconsole from 'vconsole'
 Vue.use(loading);
 
@@ -67,7 +68,7 @@ axios.interceptors.response.use(function (response) {
 if (process.env.NODE_ENV === 'development') {
   axios.defaults.baseURL = 'http://localhost:8083/api'
 }else{
-  axios.defaults.baseURL = 'https://knowledge.shouzimu.xyz/api'
+  axios.defaults.baseURL = `${getEnvConfig().HOST}/api`
 }
 
 

@@ -44,3 +44,25 @@ webpack额外配置优化项目打包；
             
 ### 接口文档
 https://knowledge.shouzimu.xyz/api/doc.html#/documentManager/OfficelineDocument-1.0%E7%89%88%E6%9C%AC
+
+### Project setup
+
+- 依赖安装
+```
+npm install
+```
+
+- 本地启动
+```
+npm run serve
+proxy代理域名在vue.config.js中
+```
+
+- 打包上线
+```
+npm run build 之后提取dist文件夹放到服务器目录下
+```
+- 域名修改
+```
+env.config.js prod 生产环境 test测试环境
+```
