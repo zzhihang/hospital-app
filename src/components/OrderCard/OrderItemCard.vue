@@ -1,7 +1,7 @@
 <template>
     <div class="order-item-card">
         <h2 v-if="userType === 'user'" class="title van-hairline--top van-hairline--bottom">
-            <span>{{data.patientName}}</span>
+            <span>{{data.doctorName}}</span>
             <span class="inner">{{data.deptName}}</span>
         </h2>
         <div class="content">

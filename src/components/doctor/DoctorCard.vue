@@ -70,9 +70,9 @@
     methods: {
       async onFollowClick() {
         if (this.follow) {
-          await doctorFollow(this.doctorId);
+          await doctorUnFollow(this.doctorId);
         } else {
-          await doctorUnFollow(this.doctorId)
+          await doctorFollow(this.doctorId)
         }
         this.follow = !this.follow
         this.$toast.success('操作成功')

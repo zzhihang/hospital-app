@@ -42,7 +42,7 @@
                     </li>
                     <li>
                         <van-uploader
-                                accept="image/*"
+                                accept=".png, .jpg, .jpeg"
                                 :max-size="maxSize"
                                 @oversize="onOversize"
                                 :after-read="afterRead"
@@ -307,9 +307,11 @@
                 contentObject: this.message
               });
             }
+            const message = this.message;
+            this.message = '';
             const params = {
               type: messageType,
-              content: messageType === 'img' ? config.body.url : this.message,
+              content: messageType === 'img' ? config.body.url : message,
               booksId: this.$attrs.chatId
             };
             if(messageType === 'audio'){
@@ -320,9 +322,7 @@
             }
             const result = await messageSave(params);
             this.scrollIntoView();
-            if (result.success) {
-              this.message = '';
-            } else {
+            if (!result.success) {
               this.$toast.fail(result.msg);
             }
           },
