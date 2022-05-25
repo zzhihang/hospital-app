@@ -33,16 +33,20 @@
       return {
         orderData: [{
           text: '待接收',
-          value: 0
+          value: 0,
+          code: 'DJS'
         }, {
           text: '待支付',
-          value: 0
+          value: 0,
+          code: 'DZF'
         }, {
           text: '进行中',
-          value: 0
+          value: 0,
+          code: 'JXZ'
         }, {
           text: '被驳回',
-          value: 0
+          value: 0,
+          code: 'BBH'
         }],
         userInfo: {}
       }

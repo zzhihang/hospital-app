@@ -24,6 +24,7 @@
                 label="就诊人性别"
                 input-align="right"
                 required
+                :rules="[{ required: true}]"
         >
             <template #input>
                 <van-radio-group v-model="formData.sex" direction="horizontal" :disabled="true">
@@ -60,6 +61,7 @@
                 :value="value"
                 label="所在地区"
                 placeholder="请选择所在省份地区"
+                :rules="[{ required: true}]"
                 @click="formReadonly ? '' :showArea = true"></van-field>
         <van-popup v-model="showArea" position="bottom">
             <van-area

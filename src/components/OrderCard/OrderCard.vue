@@ -10,7 +10,7 @@
             </h1>
             <div class="order-item">
                 <ul>
-                    <li v-for="(item, index) in dataSource" :key="index">
+                    <li v-for="(item, index) in dataSource" :key="index" @click="onOrderItemClick(item)">
                         <h6>{{item.value}}</h6>
                         <p>{{item.text}}</p>
                     </li>
@@ -38,7 +38,11 @@
     components: {
       MyIcon
     },
-    methods: {},
+    methods: {
+      onOrderItemClick({code}){
+        this.$router.push({name: this.orderRouter, query: {status: code}})
+      }
+    },
   }
 </script>
 

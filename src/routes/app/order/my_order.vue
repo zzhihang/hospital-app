@@ -1,7 +1,7 @@
 <template>
     <div>
         <van-tabs color="#367DF7" @change="tabChange" sticky v-model="active">
-            <van-tab v-for="(item, index) in tabList" :key="index" :title="item.title"></van-tab>
+            <van-tab v-for="(item, index) in tabList" :key="index" :title="item.title" :name="item.value"></van-tab>
             <van-list
                     :immediate-check="false"
                     v-model="loading"
@@ -44,6 +44,8 @@
       }
     },
     created() {
+      this.active = this.$route.query.status || '';
+      this.orderStatus = this.$route.query.status || '';
       this.getTabList();
       this.getOrderList();
     },
@@ -75,7 +77,7 @@
         this.getOrderList();
       },
       tabChange(e) {
-        this.orderStatus = this.tabList[e].value;
+        this.orderStatus = e;
         this.resetStatus();
       },
       onActionSuccess() {

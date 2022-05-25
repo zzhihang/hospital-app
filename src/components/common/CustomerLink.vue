@@ -45,7 +45,6 @@
         bottom: 60px;
         right: 10px;
         z-index: 999;
-        background: #FFFFFF;
     }
     .link-pop{
         border-radius: 16px;

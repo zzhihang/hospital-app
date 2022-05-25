@@ -41,7 +41,11 @@
     methods: {
       play() {
         this.$refs.player.play();
-        this.playing = true;
+        if(this.playing){
+          this.$refs.player.pause();
+          this.$refs.player.currentTime = 0;
+        }
+        this.playing = !this.playing;
       },
       onDeleteClick() {
         this.$emit('onDeleteClick', this.url)

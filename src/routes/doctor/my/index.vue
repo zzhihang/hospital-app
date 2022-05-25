@@ -80,13 +80,16 @@
       return {
         orderData: [{
           text: '待接收订单',
-          value: 0
+          value: 0,
+          code: 'DJS'
         }, {
           text: '进行中订单',
-          value: 0
+          value: 0,
+          code: 'JXZ'
         }, {
           text: '已完成订单',
-          value: 0
+          value: 0,
+          code: 'YWC'
         }],
         countMap: {},
         serviceFree: '',
