@@ -38,7 +38,8 @@
             <div class="action">
                 <ul>
                     <li>
-                        <van-icon @click="onRecorderClick" :name="require('../../static/img/icon/icon_yuyin.png')"/>
+                        <van-icon size="25" @click="onRecorderClick"
+                                  :name="require('../../static/img/icon/icon_yuyin.png')"/>
                     </li>
                     <li>
                         <van-uploader
@@ -48,7 +49,7 @@
                                 :after-read="afterRead"
                                 max-count="1"
                         >
-                            <van-icon :name="require('../../static/img/icon/icon_tupian.png')"/>
+                            <van-icon size="25" :name="require('../../static/img/icon/icon_tupian.png')"/>
                         </van-uploader>
                     </li>
                     <li style="flex:1;text-align: right;" v-if="chatType === 'group'">
@@ -56,18 +57,21 @@
                     </li>
                 </ul>
             </div>
-            <div class="input-box van-hairline--top">
+            <div class="van-hairline--top">
                 <template v-if="!recorderShow">
-                    <van-field
-                            class="chat-input"
-                            v-model="message"
-                            rows="1"
-                            autosize
-                            type="textarea"
-                    />
-                    <van-icon @click="sendTxtMessage"
-                              class="ml20"
-                              :name="message.length ? require('../../static/img/icon/icon_fasong01.png') : require('../../static/img/icon/icon_fasong.png')"/>
+                    <van-form @submit="sendTxtMessage" class="input-box">
+                        <van-field
+                                ref="input"
+                                class="chat-input"
+                                v-model="message"
+                                rows="1"
+                                autosize
+                                type="textarea"
+                        />
+                        <van-icon @click="sendTxtMessage"
+                                  class="ml20"
+                                  :name="message.length ? require('../../static/img/icon/icon_fasong01.png') : require('../../static/img/icon/icon_fasong.png')"/>
+                    </van-form>
                 </template>
             </div>
             <recorder v-if="recorderShow" @recorderSuccess="recorderSuccess"/>
@@ -140,6 +144,9 @@
             console.log("Logout success !")
           },
           onImageMessage: (message) => {
+            if (this.messageList.find(item => item.serverMsgId === message.id)) {//如果已经保存到历史消息 但是还没有推送 就不重新渲染了
+              return;
+            }
             this.messageList.push({
               self: false,
               contentObject: message.url,
@@ -150,6 +157,9 @@
             this.scrollIntoView();
           },
           onAudioMessage: (message) => {
+            if (this.messageList.find(item => item.serverMsgId === message.id)) {//如果已经保存到历史消息 但是还没有推送 就不重新渲染了
+              return;
+            }
             this.messageList.push({
               self: false,
               contentObject: {
@@ -162,6 +172,9 @@
             this.scrollIntoView();
           },
           onTextMessage: (message) => {
+            if (this.messageList.find(item => item.serverMsgId === message.id)) {//如果已经保存到历史消息 但是还没有推送 就不重新渲染了
+              return;
+            }
             this.messageList.push({
               self: false,
               contentObject: message.msg,
@@ -175,8 +188,7 @@
             this.$toast.fail('本机网络掉线')
           },
         }
-      )
-      ;
+      );
       // 登录。 //登出WebIM.conn.close();
       WebIM.conn.open({user: username, pwd: password})
         .then((res) => {
@@ -185,9 +197,13 @@
         .catch((e) => {
           console.log(`Login failed`);
         });
+
+      // this.$nextTick(() => {
+      //   this.$refs.input.$refs.input.setAttribute('enterkeyhint', 'send')
+      // })
     },
     methods: {
-      scrollIntoView(){
+      scrollIntoView() {
         this.$nextTick(() => {
           setTimeout(() => {
             this.$refs.last && this.$refs.last[0].scrollIntoView(true)
@@ -212,9 +228,9 @@
       onRecorderClick() {
         this.recorderShow = !this.recorderShow;
       },
-      resolveAudioContent(data){
-        if(data){
-          if(typeof data === 'string'){
+      resolveAudioContent(data) {
+        if (data) {
+          if (typeof data === 'string') {
             data = JSON.parse(data);
           }
           return {
@@ -255,7 +271,7 @@
         WebIM.conn.send(msg.body);
       },
       sendTxtMessage() {
-        if(!this.message.trim().length){
+        if (!this.message.trim().length) {
           return this.$toast.fail('不能发送空白消息')
         }
         const msg = this.getMessageOption({msg: this.message});
@@ -312,13 +328,14 @@
             const params = {
               type: messageType,
               content: messageType === 'img' ? config.body.url : message,
-              booksId: this.$attrs.chatId
+              booksId: this.$attrs.chatId,
+              serverMsgId: serverMsgId //保存环信消息id，用来过滤历史数据
             };
-            if(messageType === 'audio'){
-             params.content = JSON.stringify({
-               url: config.ext.audioUrl,
-               timeLong: config.length
-             })
+            if (messageType === 'audio') {
+              params.content = JSON.stringify({
+                url: config.ext.audioUrl,
+                timeLong: config.length
+              })
             }
             const result = await messageSave(params);
             this.scrollIntoView();
@@ -360,6 +377,7 @@
         .avatar {
             height: 39px;
             width: 39px;
+            flex-shrink: 0;
         }
 
         .message-item {
@@ -376,6 +394,7 @@
             color: #333333;
             font-size: 16px;
             padding: 7px 15px 5px;
+            word-break: break-all;
         }
 
         .he {
@@ -394,12 +413,15 @@
 
             .chat-image, .message, .chat-audio {
                 margin-right: 10px;
-                .recorder{
+
+                .recorder {
                     flex-flow: row-reverse;
-                    /deep/.icon-saying{
+
+                    /deep/ .icon-saying {
                         transform: rotate(180deg);
                     }
-                    /deep/.voicePlay{
+
+                    /deep/ .voicePlay {
                         transform: rotate(180deg) scale(0.6);
                     }
                 }
@@ -457,7 +479,8 @@
     .van-pull-refresh {
         flex: 1;
         overflow: scroll;
-        /deep/.van-pull-refresh__track{
+
+        /deep/ .van-pull-refresh__track {
             padding: 15px;
             box-sizing: border-box;
         }

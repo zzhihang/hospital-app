@@ -173,6 +173,7 @@
           const result = await userPatientDelete(this.id);
           if (result.success) {
             this.$toast.success('操作成功');
+            this.$router.go(-1)
           } else {
             this.$toast.fail(result.msg);
           }

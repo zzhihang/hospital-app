@@ -125,6 +125,6 @@ export const messageDelete = (id) => {
 * @date: 2022/5/19 16:05
 */
 
-export const messageSave = ({booksId, content, type}) => {
-  return axios.post(`/immessage/save`, {booksId, content, type})
+export const messageSave = ({booksId, content, type, serverMsgId}) => {
+  return axios.post(`/immessage/save`, {booksId, content, type, serverMsgId})
 };
